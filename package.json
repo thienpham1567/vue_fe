@@ -11,6 +11,7 @@
   "dependencies": {
     "@tanstack/vue-query": "^4.29.7",
     "core-js": "^3.30.2",
+    "jwt-decode": "^3.1.2",
     "pinia": "^2.0.36",
     "primevue": "^3.29.1",
     "vue": "^3.2.47",
