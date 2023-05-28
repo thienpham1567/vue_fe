@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tanstack/vue-query": "^4.29.7",
+    "axios": "^1.4.0",
     "core-js": "^3.30.2",
     "jwt-decode": "^3.1.2",
     "pinia": "^2.0.36",

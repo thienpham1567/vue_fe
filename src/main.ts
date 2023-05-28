@@ -1,15 +1,16 @@
 import { createApp } from 'vue'
-import '@/styles/global.scss'
-import App from './App.vue'
+import router from "@/router"
+import App from '@/App.vue'
 import PrimeVue from 'primevue/config'
 import { VueQueryPlugin } from "@tanstack/vue-query";
-import { createPinia } from 'pinia';
+import pinia from "@/store"
+import '@/styles/global.scss'
 import "primevue/resources/themes/lara-light-indigo/theme.css";     
 import "primevue/resources/primevue.min.css";
 
 const app = createApp(App);
-const pinia = createPinia();
 app.use(PrimeVue);
 app.use(VueQueryPlugin)
 app.use(pinia);
+app.use(router);
 app.mount('#app');
