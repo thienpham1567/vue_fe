@@ -1,9 +1,14 @@
+import type { BrandType } from "./brand";
+import type { CategoryType } from "./category";
+
 export interface ProductType {
   productId?: number;
+  brand: BrandType;
+  category: CategoryType;
   name?: string;
+  price?: number;
+  sku?: string;
   description?: string;
-  brandId?: number;
-  categoryId?: number;
   createdAt: Date;
   updatedAt: Date;
 }

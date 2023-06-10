@@ -1,7 +1,10 @@
 import type { ProductType } from "./product";
+import type { ColorType } from "./color";
 
 export interface ProductVariationType {
-  product?: ProductType;
+  productVariationld?: number;
+  product: ProductType;
+  color: ColorType;
 }
 
 export interface CreationParams {

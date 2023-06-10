@@ -1,7 +1,8 @@
 export interface CategoryType {
   categoryId?: number;
-  name?: string;
   parentCategory?: CategoryType;
+  name?: string;
+  code?: string;
 }
 
 export interface CreationParams {
