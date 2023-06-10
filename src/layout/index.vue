@@ -4,5 +4,5 @@ import ATFooter from '@/components/Layout/ATFooter.vue';
 </script>
 
 <template>
-    
+    <ATFooter />
 </template>
