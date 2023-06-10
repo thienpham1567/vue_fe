@@ -13,6 +13,7 @@
     "axios": "^1.4.0",
     "core-js": "^3.30.2",
     "jwt-decode": "^3.1.2",
+    "moment": "^2.29.4",
     "pinia": "^2.0.36",
     "primeicons": "^6.0.1",
     "primevue": "^3.29.1",
