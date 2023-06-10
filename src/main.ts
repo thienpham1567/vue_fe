@@ -5,7 +5,7 @@ import PrimeVue from 'primevue/config'
 import { VueQueryPlugin } from "@tanstack/vue-query";
 import pinia from "@/store"
 import '@/styles/global.scss'
-import "primevue/resources/themes/lara-light-indigo/theme.css";     
+import "primevue/resources/themes/lara-light-indigo/theme.css";
 import "primevue/resources/primevue.min.css";
 
 const app = createApp(App);

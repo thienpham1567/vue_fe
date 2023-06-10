@@ -1,0 +1,16 @@
+.footer {
+    background-color: black;
+    padding: 20px;
+    text-align: center;
+
+    .text-secondary {
+        color: white;
+        transition: color 0.3s ease;
+        /* Add transition effect */
+    }
+
+    .text-secondary:hover {
+        color: orange;
+        /* Change text color to orange on hover */
+    }
+}
