@@ -1,20 +1,45 @@
 <template>
+    <div class="flex items-center justify-center px-4">
+        <div class="flex items-center">
+            <a href="">
+                <Image :src="Logo" alt="Image" width="150" />
+            </a>
+        </div>
+    </div>
     <div class="mx-auto flex justify-center">
         <Card style="width: 25rem;">
             <template #title> Sign-In </template>
             <template #content>
                 <div class="mb-4">
                     <label for="email">Email</label>
-                    <InputText id="email" placeholder="example@gmail.com" class="w-full" />
+                    <InputText id="email" v-model="emailValue" placeholder="example@gmail.com" class="w-full" />
+                    <span v-if="emailError" class="text-red-500">{{ emailError }}</span>
                 </div>
                 <div class="mb-4">
-                    <label for="password">Password</label>
-                    <Password v-model="value" placeholder="Password" :feedback="false" class="w-full w-inherit" />
+                    <div class="flex justify-between">
+                        <label for="password">Password</label>
+                        <a class="block text-sm text-indigo-700 fontme hover:underline" href="#">Forgot your password?</a>
+                    </div>
+                    <Password v-model="passwordValue" placeholder="Password" :feedback="false" class="w-full w-inherit" />
+                    <span v-if="passwordError" class="text-red-500">{{ passwordError }}</span>
                 </div>
-                <a href="">Forgot your password?</a>
+                <div class="flex">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox"
+                            class="text-indigo-600 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500" />
+                        <span class="mx-2 text-sm text-gray-600">Remember me</span>
+                    </label>
+                </div>
+                <div>
+                    <a class="block text-sm text-indigo-700 fontme hover:underline mt-3" href="#">Create ATSport account</a>
+                </div>
             </template>
             <template #footer>
-                <Button type="submit" label="Submit" />
+                <Button type="submit" label="Submit" @click="validateForm()"
+                    class="w-full px-4 py-2 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
+                <span class="divider text-gray-500 text-sm">New to ATSport</span>
+                <Button type="submit" label="Create your new ATSport account"
+                    class="w-full px-4 py-2 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
             </template>
         </Card>
     </div>
@@ -26,8 +51,32 @@ import Password from 'primevue/password';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
+import Logo from "@/assets/images/logo.png";
+import Image from 'primevue/image';
 
 import { ref } from 'vue';
 
-const value = ref(null);
+const emailValue = ref('');
+const passwordValue = ref('');
+
+const emailError = ref('');
+const passwordError = ref('');
+
+function validateForm() {
+    emailError.value = emailValue.value ? '' : 'Email is required.';
+    passwordError.value = passwordValue.value ? '' : 'Password is required.';
+
+    // Kiểm tra định dạng email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailValue.value && !emailRegex.test(emailValue.value)) {
+        emailError.value = 'Invalid email format.';
+    }
+
+    // Kiểm tra xem có lỗi không
+    if (emailError.value || passwordError.value) {
+        return false;
+    }
+
+    return true;
+}
 </script>
