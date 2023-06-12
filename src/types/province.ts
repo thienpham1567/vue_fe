@@ -1,5 +1,5 @@
 export interface ProvinceType {
     provinceId?: number;
-    name: string;
-    code: string;
+    name?: string;
+    code?: string;
 }

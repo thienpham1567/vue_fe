@@ -3,9 +3,9 @@ import type { SizeType } from "./size";
 
 export interface ProductVariationSizeType {
   productVariationSizeId?: number;
-  productVariation: ProductVariationType;
-  size: SizeType;
-  quantity: number;
+  productVariation?: ProductVariationType;
+  size?: SizeType;
+  quantity?: number;
 }
 
 export interface CreationParams {

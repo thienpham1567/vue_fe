@@ -3,8 +3,8 @@ import type { ColorType } from "./color";
 
 export interface ProductVariationType {
   productVariationld?: number;
-  product: ProductType;
-  color: ColorType;
+  product?: ProductType;
+  color?: ColorType;
 }
 
 export interface CreationParams {

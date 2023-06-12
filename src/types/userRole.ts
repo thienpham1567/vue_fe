@@ -3,6 +3,6 @@ import type { UserType } from "./user";
 
 export interface UserRoleType {
     userRoleId?: number;
-    user: UserType;
-    role: RoleType;
+    user?: UserType;
+    role?: RoleType;
 }

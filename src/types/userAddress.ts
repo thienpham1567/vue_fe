@@ -3,7 +3,7 @@ import type { AddressType } from "./address";
 
 export interface UserAddressType {
     userAddressId?: number;
-    user: UserType;
-    address: AddressType;
-    isDefault: boolean;
+    user?: UserType;
+    address?: AddressType;
+    isDefault?: boolean;
 }

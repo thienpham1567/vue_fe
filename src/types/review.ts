@@ -3,8 +3,8 @@ import type { UserType } from "./user";
 
 export interface ReviewType {
     reviewId?: number;
-    product: ProductType;
-    user: UserType;
-    rateValue: number;
-    comment: string;
+    product?: ProductType;
+    user?: UserType;
+    rateValue?: number;
+    comment?: string;
 }

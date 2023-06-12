@@ -3,14 +3,14 @@ import type { CategoryType } from "./category";
 
 export interface ProductType {
   productId?: number;
-  brand: BrandType;
+  brand?: BrandType;
   category: CategoryType;
   name?: string;
   price?: number;
   sku?: string;
   description?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface CreationParams {
