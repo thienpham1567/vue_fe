@@ -42,7 +42,7 @@
                     <div class="mb-2 flex justify-end items-end">
                         <label for="price-0-100" class="mr-2 text-base md:text-lg cursor-pointer">$0 - $100</label>
                         <input type="checkbox" id="price-0-100" v-model="selectedPriceRanges" value="0-100"
-                            class="w-4 h-4 md:w-6 md:h-6 cursor-pointer  cursor-pointer" />
+                            class="w-4 h-4 md:w-6 md:h-6 cursor-pointer" />
                     </div>
                     <div class=" mb-2 flex justify-end items-end">
                         <label for="price-100-200" class="mr-2 text-base md:text-lg cursor-pointer">$100 - $200</label>
