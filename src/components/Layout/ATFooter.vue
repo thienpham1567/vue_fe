@@ -1,6 +1,6 @@
 <template>
     <!-- Footer Start -->
-    <div class="bg-black text-white text-secondary py-5 mt-5">
+    <div class="bg-black text-white text-secondary py-5">
         <div class="container mx-auto px-4">
             <div class="md:flex md:justify-between md:px-5">
                 <div class="md:w-1/4 mb-5 md:pr-5">
@@ -71,12 +71,13 @@
                         &copy; <a class="text-primary" href="#">Domain</a>. All Rights Reserved. Designed by
                         <a class="text-primary" href="https://htmlcodex.com">HTML Codex</a>
                     </p>
-                <img class="mx-auto md:mx-0" src="/assets/web/img/payments.png" alt="">
+                    <img class="mx-auto md:mx-0" src="/assets/web/img/payments.png" alt="">
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Footer End --></template>
+    <!-- Footer End -->
+</template>
 
 <script setup lang="ts">
 
