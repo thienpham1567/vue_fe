@@ -1,10 +1,6 @@
 <template>
-    <div class="flex items-center justify-center px-4">
-        <div class="flex items-center">
-            <a href="">
-                <Image :src="Logo" alt="Image" width="150" />
-            </a>
-        </div>
+    <div class="flex justify-center px-4" @click="router.push('/')">
+        <Image :src="Logo" alt="Image" width="150" />
     </div>
     <div class="mx-auto flex justify-center">
         <Card style="width: 33rem;">
@@ -77,15 +73,15 @@
 
 <script setup lang="ts">
 import Password from 'primevue/password';
-// import InlineMessage from 'primevue/inlinemessage';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Logo from "@/assets/images/logo.png";
 import Image from 'primevue/image';
-
+import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
+const router = useRouter();
 const firtNameValue = ref(null);
 const lastNameValue = ref(null);
 const rePasswordValue = ref(null);

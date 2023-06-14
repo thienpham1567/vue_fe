@@ -2,3 +2,12 @@
 *:focus {
   box-shadow: none !important;
 }
+
+.p-dialog-header {
+  display: unset;
+  padding: 0 !important;
+  
+  .p-dialog-header-icons {
+    display: none !important;
+  }
+}

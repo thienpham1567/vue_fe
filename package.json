@@ -16,7 +16,7 @@
     "moment": "^2.29.4",
     "pinia": "^2.0.36",
     "primeicons": "^6.0.1",
-    "primevue": "^3.29.1",
+    "primevue": "^3.29.2",
     "vee-validate": "^4.9.6",
     "vue": "^3.2.47",
     "vue-router": "^4.2.0"

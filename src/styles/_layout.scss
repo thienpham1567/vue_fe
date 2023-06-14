@@ -1,36 +1,88 @@
 nav {
-    .search-btn {
-        background-color: $dark-blue;
+  .p-inputgroup {
+    .p-autocomplete-input {
+      min-width: 500px;
+    }
+  }
 
-        &:hover {
-            background-color: $medium-blue !important;
-        }
+  .search-btn {
+    background-color: $dark-blue;
+
+    &:hover {
+      background-color: $medium-blue !important;
+    }
+  }
+
+  .cart-btn {
+    color: $medium-blue;
+    background-color: rgb(255, 188, 63);
+    border: none;
+
+    &:hover {
+      background-color: rgb(255, 214, 137) !important;
+    }
+  }
+
+  .nav-menu {
+    .p-megamenu {
+      background: rgb(250, 246, 246);
+      border: none;
+      border-radius: unset;
+      padding-top: 0;
+      padding-bottom: 0;
+
+      .p-menuitem-text {
+        color: $medium-blue !important;
+        font-weight: 600;
+      }
     }
 
-    .cart-btn {
-        color: $medium-blue;
-        background-color: rgb(255, 188, 63);
-        border: none;
+    .sign-in-register-btn {
+      color: $medium-blue;
+      padding-right: 1.25rem;
+      font-weight: 600;
 
-        &:hover {
-            background-color: rgb(255, 214, 137) !important;
-        }
+      &:hover {
+        color: $light-blue !important;
+      }
     }
+  }
 }
 
 .footer {
-    background-color: black;
-    padding: 20px;
-    text-align: center;
+  background: $dark-blue;
+  padding: 20px;
+  text-align: center;
 
-    .text-secondary {
-        color: white;
-        transition: color 0.3s ease;
-    }
+  .text-footer-hover {
+    color: white;
+    transition: color 0.2s ease;
+  }
 
-    .text-secondary:hover {
-        color: orange;
-    }
+  .text-footer-hover:hover {
+    color: $light-blue;
+  }
 }
 
+.sign-in-btns {
+  .btn {
+    min-width: 100%;
+    color: $medium-blue !important;
+    transition: color 0.2s ease;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 16px;
+    border: 2px solid $medium-blue !important;
 
+    &:hover {
+      background: $light-blue !important;
+      color: white !important;
+      border: 2px solid $light-blue !important;
+    } 
+  }
+
+  p {
+    font-weight: 600;
+  }
+
+}

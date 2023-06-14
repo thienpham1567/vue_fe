@@ -1,10 +1,9 @@
 <template>
-    <!-- Footer Start -->
-    <div class="bg-black text-white text-secondary py-5 mt-5">
+    <div class="footer text-white text-footer-hover py-5 mt-5">
         <div class="container mx-auto px-4">
             <div class="md:flex md:justify-between md:px-5">
                 <div class="md:w-1/4 mb-5 md:pr-5">
-                    <h5 class="text-secondary uppercase mb-4">Get In Touch</h5>
+                    <h5 class="text-footer-hover uppercase mb-4">Get In Touch</h5>
                     <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
                     <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
                     <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
@@ -12,33 +11,33 @@
                 <div class="md:w-3/4">
                     <div class="md:flex">
                         <div class="md:w-1/3 mb-5">
-                            <h5 class="text-secondary uppercase mb-4">Quick Shop</h5>
+                            <h5 class="text-footer-hover uppercase mb-4">Quick Shop</h5>
                             <div class="flex flex-col justify-start">
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop
                                     Detail</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping
                                     Cart</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                                <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
+                                <a class="text-footer-hover" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
                             </div>
                         </div>
                         <div class="md:w-1/3 mb-5">
-                            <h5 class="text-secondary uppercase mb-4">My Account</h5>
+                            <h5 class="text-footer-hover uppercase mb-4">My Account</h5>
                             <div class="flex flex-col justify-start">
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop
                                     Detail</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping
                                     Cart</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                                <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
+                                <a class="text-footer-hover" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
                             </div>
                         </div>
                         <div class="md:w-1/3 mb-5">
-                            <h5 class="text-secondary uppercase mb-4">Follow Us</h5>
+                            <h5 class="text-footer-hover uppercase mb-4">Follow Us</h5>
                             <div class="flex">
                                 <a class="btn btn-primary btn-square mr-3" href="#"><i class="fab fa-twitter fa-lg"></i></a>
                                 <a class="btn btn-primary btn-square mr-3" href="#"><i
@@ -64,19 +63,18 @@
                 </div>
             </div>
         </div>
-        <div class="border-top border-white mx-auto py-4" style="border-color: rgba(256, 256, 256, .1) !important;">
+        <div class="border-top border-white mx-auto py-4">
             <div class="container mx-auto px-4">
                 <div class="md:flex md:justify-between">
-                    <p class="mb-0 text-center md:text-left text-secondary">
-                        &copy; <a class="text-primary" href="#">Domain</a>. All Rights Reserved. Designed by
-                        <a class="text-primary" href="https://htmlcodex.com">HTML Codex</a>
+                    <p class="mb-0 text-center md:text-left text-footer-hover">
+                        &copy; <a class="text-primary" href="#">Domain</a>. All Rights Reserved
                     </p>
-                <img class="mx-auto md:mx-0" src="/assets/web/img/payments.png" alt="">
+                    <img class="mx-auto md:mx-0" src="/assets/web/img/payments.png" alt="">
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Footer End --></template>
+</template>
 
 <script setup lang="ts">
 

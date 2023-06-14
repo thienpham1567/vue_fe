@@ -1,8 +1,5 @@
-import Layout from "@/layout/index.vue";
-
 export const account = {
   path: "/account",
-  component: Layout,
   children: [
     {
       path: "login",
