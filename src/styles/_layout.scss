@@ -1,3 +1,23 @@
+nav {
+    .search-btn {
+        background-color: $dark-blue;
+
+        &:hover {
+            background-color: $medium-blue !important;
+        }
+    }
+
+    .cart-btn {
+        color: $medium-blue;
+        background-color: rgb(255, 188, 63);
+        border: none;
+
+        &:hover {
+            background-color: rgb(255, 214, 137) !important;
+        }
+    }
+}
+
 .footer {
     background-color: black;
     padding: 20px;
@@ -6,11 +26,11 @@
     .text-secondary {
         color: white;
         transition: color 0.3s ease;
-        /* Add transition effect */
     }
 
     .text-secondary:hover {
         color: orange;
-        /* Change text color to orange on hover */
     }
 }
+
+
