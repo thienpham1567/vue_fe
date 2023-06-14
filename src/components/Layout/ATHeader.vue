@@ -1,6 +1,6 @@
 <template>
     <nav>
-        <div class="flex items-center justify-between px-4">
+        <div class="flex items-center justify-between">
             <div class="flex items-center">
                 <Image :src="Logo" alt="Image" width="250" />
                 <div class="p-inputgroup w-96">

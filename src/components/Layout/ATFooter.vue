@@ -1,6 +1,6 @@
 <template>
     <!-- Footer Start -->
-    <div class="bg-black text-white text-secondary py-5">
+    <div class="bg-black text-white text-secondary">
         <div class="container mx-auto px-4">
             <div class="md:flex md:justify-between md:px-5">
                 <div class="md:w-1/4 mb-5 md:pr-5">
