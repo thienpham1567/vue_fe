@@ -4,9 +4,9 @@ import ATFooter from '@/components/Layout/ATFooter.vue';
 </script>
 
 <template>
-    <div class="w-screen h-screen">
+    <div>
         <header>
-            <ATHeader/>
+            <ATHeader />
         </header>
         <main>
             <router-view />
