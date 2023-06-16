@@ -8,8 +8,7 @@ export abstract class HTTPBaseService {
   protected instance: AxiosInstance;
 
   public constructor() {
-    const baseURL =
-      import.meta.env.VUE_APP_SERVICE_URL || "http://localhost:8080/api/v1";
+    const baseURL = "http://localhost:8080/api/v1";
 
     this.instance = axios.create({
       baseURL,
