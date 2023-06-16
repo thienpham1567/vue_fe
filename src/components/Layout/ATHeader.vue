@@ -23,6 +23,8 @@
     <div class="nav-menu">
       <MegaMenu :model="items">
         <template #end>
+          <Button class="sign-in-register-btn" text @click="goToProductDetail">ProductDetail</Button>
+          <Button class="sign-in-register-btn" text @click="goToProductList">ProductList</Button>
           <Button label="Sign In / Register" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
         </template>
       </MegaMenu>
@@ -118,5 +120,11 @@ function goToLogin() {
 
 function goToRegister() {
   router.push('/account/register')
+}
+function goToProductDetail() {
+  router.push('/products/ProductDetail')
+}
+function goToProductList() {
+  router.push('/products/ProductList')
 }
 </script>

@@ -14,5 +14,15 @@ export const product = {
       name: "Product",
       component: () => import("@/components/Product/Product.vue"),
     },
+    {
+      path: "productDetail",
+      name: "ProductDetail",
+      component: () => import("@/views/ProductDetail/ProductDetail.vue"),
+    },
+    {
+      path: "productList",
+      name: "ProductList",
+      component: () => import("@/views/ProductList/ProductList.vue"),
+    },
   ],
 };

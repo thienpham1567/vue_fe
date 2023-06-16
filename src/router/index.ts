@@ -9,11 +9,10 @@ import {
 import { product } from "./product";
 import { home } from "./home";
 import { cart } from "./cart";
-import { admin } from "./admin"
 import { checkout } from "./checkout";
 import { account } from "./account";
 
-const routes: Array<RouteRecordRaw> = [home, product, account, cart, admin, checkout];
+const routes: Array<RouteRecordRaw> = [home, product, account, cart, checkout];
 
 const router: Router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
