@@ -23,6 +23,8 @@
     <div class="nav-menu">
       <MegaMenu :model="items">
         <template #end>
+          <Button class="sign-in-register-btn" text @click="goToProductDetail">ProductDetail</Button>
+          <Button class="sign-in-register-btn" text @click="goToProductList">ProductList</Button>
           <Button label="Sign In / Register" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
         </template>
       </MegaMenu>
@@ -38,8 +40,7 @@
     <div class="sign-in-btns">
       <Button label="Sign in with atsport" class="btn" size="small" outlined @click="goToLogin" />
       <p class="text-center">or</p>
-      <Button label="Create your atsport account" class="btn" size="small" outlined
-        @click="goToRegister" />
+      <Button label="Create your atsport account" class="btn" size="small" outlined @click="goToRegister" />
     </div>
   </CoreDialog>
 </template>
@@ -159,5 +160,11 @@ function goToLogin() {
 
 function goToRegister() {
   router.push('/account/register')
+}
+function goToProductDetail() {
+  router.push('/products/ProductDetail')
+}
+function goToProductList() {
+  router.push('/products/ProductList')
 }
 </script>

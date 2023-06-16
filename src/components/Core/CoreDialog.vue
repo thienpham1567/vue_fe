@@ -8,6 +8,7 @@
       </div>
       <Divider />
     </template>
+
     <slot></slot>
   </Dialog>
 </template>
