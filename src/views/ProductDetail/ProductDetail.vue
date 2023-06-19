@@ -206,8 +206,8 @@ function toggleBorderRed(size: string) {
 
 function getRadioButtonClass(size: string) {
     return [
-        'w-8',
-        'h-4',
+        'w-16',
+        'h-16',
         'rounded-full',
         'border-4',
         'mr-2',
@@ -313,71 +313,4 @@ onMounted(() => {
 });
 </script>
   
-<style scoped>
-input[type="radio"] {
-    /* Hide the default radio button */
-    display: none;
-}
 
-label>div {
-    /* Styling for the rectangular box */
-    width: 4rem;
-    height: 4rem;
-}
-
-label>span {
-    /* Centering the text in the rectangular box */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.rounded-full {
-    border-radius: 1px;
-}
-
-.carousel {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-}
-
-.carousel-inner {
-    display: flex;
-    transition: transform 0.3s ease-in-out;
-}
-
-.carousel-item {
-    flex: 0 0 20%;
-    padding: 0 10px;
-}
-
-.card {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    text-align: center;
-}
-
-.card-image {
-    width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    margin-bottom: 10px;
-}
-
-.card-title {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.card-price {
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-.card-code {
-    font-size: 14px;
-    color: #888;
-}
-</style>
