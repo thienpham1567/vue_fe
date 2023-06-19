@@ -10,7 +10,7 @@
                 <div class="flex mb-4">
                     <span class="mr-4">
                         <label for="firtname">First Name</label>
-                        <InputText v-model="firtNameValue" class="w-full" placeholder="First Name"
+                        <InputText v-model="firstNameValue" class="w-full" placeholder="First Name"
                             :class="{ 'is-invalid': firstNameError }" />
                         <span v-if="firstNameError" class="text-red-500">{{ firstNameError }}</span>
                     </span>
@@ -79,10 +79,13 @@ import Card from 'primevue/card';
 import Logo from "@/assets/images/logo.png";
 import Image from 'primevue/image';
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { ref, Ref } from 'vue';
+import useUserStore from '@/store/UserStore';
+import { CreationParams } from '@/types/user';
+
 
 const router = useRouter();
-const firtNameValue = ref(null);
+const firstNameValue = ref(null);
 const lastNameValue = ref(null);
 const rePasswordValue = ref(null);
 const passwordValue = ref(null);
@@ -98,6 +101,12 @@ const passwordError = ref('');
 const rePasswordError = ref('');
 const termsError = ref('');
 
+
+const { addUser } = useUserStore();
+
+
+
+
 // Kiểm tra các điều kiện bổ sung (ví dụ: định dạng phone)
 function validatePhoneNumber() {
     const phoneNumberRegex = /^(0[2-9]|84[2-9])(\d{8})$/;
@@ -112,7 +121,7 @@ function validatePhoneNumber() {
 
 function validateForm() {
     // Kiểm tra lỗi cho từng trường
-    firstNameError.value = firtNameValue.value ? '' : 'First Name is required.';
+    firstNameError.value = firstNameValue.value ? '' : 'First Name is required.';
     lastNameError.value = lastNameValue.value ? '' : 'Last Name is required.';
     emailError.value = emailValue.value ? '' : 'Email is required.';
     passwordError.value = passwordValue.value ? '' : 'Password is required.';
@@ -146,6 +155,19 @@ function validateForm() {
         return false;
     }
 
+    const creationParams: CreationParams = {
+        firstName: firstNameValue.value!,
+        lastName: lastNameValue.value!,
+        emailAddress: emailValue.value!,
+        phoneNumber: phoneNumberValue.value!,
+        password: passwordValue.value!
+      };
+    
+    console.log(firstNameValue.value);
+    
+    addUser(creationParams);
     return true;
 }
+
+
 </script>

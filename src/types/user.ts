@@ -4,5 +4,13 @@ export interface UserType {
     firstName?: string;
     lastName?: string;
     emailAddress?: string;
-    phoneNumber?: number;
+    phoneNumber?: string;
+}
+
+export interface CreationParams {
+    password?: string;
+    firstName?: string;
+    lastName?: string;
+    emailAddress?: string;
+    phoneNumber?: string;
 }
