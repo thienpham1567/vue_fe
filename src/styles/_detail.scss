@@ -1,16 +1,16 @@
 input[type="radio"] {
-    // Hide the default radio button
+    /* Hide the default radio button */
     display: none;
 }
 
 label>div {
-    // Styling for the rectangular box
+    /* Styling for the rectangular box */
     width: 4rem;
     height: 4rem;
 }
 
 label>span {
-    // Centering the text in the rectangular box
+    /* Centering the text in the rectangular box */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,26 +41,26 @@ label>span {
     border-radius: 5px;
     padding: 10px;
     text-align: center;
-}
 
-.card-image {
-    width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    margin-bottom: 10px;
-}
+    .card-image {
+        width: 100%;
+        max-height: 200px;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
 
-.card-title {
-    font-size: 18px;
-    font-weight: bold;
-}
+    .card-title {
+        font-size: 18px;
+        font-weight: bold;
+    }
 
-.card-price {
-    font-size: 16px;
-    margin-bottom: 5px;
-}
+    .card-price {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
 
-.card-code {
-    font-size: 14px;
-    color: #888;
+    .card-code {
+        font-size: 14px;
+        color: #888;
+    }
 }
