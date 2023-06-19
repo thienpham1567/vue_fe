@@ -4,14 +4,11 @@ import type { BrandType, CreationParams } from "@/types/brand";
 import { defineStore } from "pinia";
 import { ref, type Ref } from "vue";
 import { computed } from "vue";
-import { useQuery } from '@tanstack/vue-query'
-
 
 const useBrandStore = defineStore("brand", () => {
   // State
   const brands: Ref<BrandType[]> = ref([]);
   const brand: Ref<BrandType> = ref({});
-  let isLoading
 
   // Getters
   const getBrands = computed(() => brands);
@@ -19,13 +16,7 @@ const useBrandStore = defineStore("brand", () => {
 
   // Action
   const fetchBrands = async () => {
-    const { isLoading, isError, data, error } = useQuery({
-      queryKey: ['brands'],
-      queryFn: async () => {
-        const { data } = await new Brand().list();
-        return data;
-      },
-    })
+    const { data } = await new Brand().list();
     setBrands(data);
   };
 

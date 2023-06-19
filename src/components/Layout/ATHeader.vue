@@ -55,72 +55,93 @@ import Logo from "@/assets/images/logo.png";
 import CoreDialog from '@/components/Core/CoreDialog.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import useAccountStore from '@/store/AccountStore';
+import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
+import { onMounted } from 'vue';
+
+enum MainCategories {
+  Men = 1,
+  Women = 2,
+  Kids = 3
+}
 
 const router = useRouter();
+const { getUser, logout } = useAccountStore();
+const { getBrands, fetchBrands } = useBrandStore();
+const { getCategories, getMainCategories, fetchCategories } = useCategoryStore();
 let selectedProduct = ref();
 let filteredProducts = ref([]);
-const { getUser, logout } = useAccountStore();
 let dialogCartVisible = ref(false);
 let dialogSignInVisible = ref(false);
 
-const items = ref([
-  {
-    label: "Women",
-    items: search()
-  },
-  {
-    label: "Men",
-    items: [
-      [
-        {
-          label: 'Video 1',
-          items: [{ label: 'Video 1.1' }, { label: 'Video 1.2' }]
-        },
-        {
-          label: 'Video 2',
-          items: [{ label: 'Video 2.1' }, { label: 'Video 2.2' }]
-        },
-      ],
-    ]
-  },
-  {
-    label: "Kids",
-    items: [
-      [
-        {
-          label: 'Video 1',
-          items: [{ label: 'Video 1.1' }, { label: 'Video 1.2' }]
-        },
-        {
-          label: 'Video 2',
-          items: [{ label: 'Video 2.1' }, { label: 'Video 2.2' }]
-        },
-      ],
-    ]
-  },
-]);
+const getAllBrands = () => {
+  return getBrands.value.map(brand => {
+    return {
+      label: brand.name,
+    }
+  });
+};
 
-function search() {
-  return [
-    [
-      {
-        label: 'Video 1',
-        items: [{ label: 'Video 1.1', to: '/account/login' }, { label: 'Video 1.2' }]
-      },
-      {
-        label: 'Video 2',
-        items: [{ label: 'Video 2.1' }, { label: 'Video 2.2' }]
-      },
-    ],
+const getSubCategories = (parentCategoryId: number, categoryCode: string) => {
+  let data = getCategories.value.map(category => {
+    const localParentCategoryId = category.parentCategory?.categoryId;
+    const localCategoryCode = category.code;
+    if (localParentCategoryId === parentCategoryId && localCategoryCode === categoryCode) {
+      return {
+        label: category.name,
+      }
+    }
+  });
+  return data.filter(category => category !== undefined);
+}
+
+const getCategoriesByParent = (parentCategoryId: number) => {
+  let data = getCategories.value.map(category => {
+    const localParentCategoryId = category.parentCategory?.categoryId;
+    if (localParentCategoryId === parentCategoryId) {
+      return {
+        label: category.code,
+        items: getSubCategories(parentCategoryId, category.code!),
+      }
+    }
+  });
+
+  return data.filter((value, index, categories) => categories.map(category => category?.label)?.indexOf(value?.label) === index && value !== undefined);
+}
+
+const items = ref([]);
+
+const setDataHeader = () => {
+  items.value = [
+    {
+      label: "Women",
+      items: [getCategoriesByParent(MainCategories.Women)],
+    },
+    {
+      label: "Men",
+      items: [getCategoriesByParent(MainCategories.Men)],
+    },
+    {
+      label: "Kids",
+      items: [getCategoriesByParent(MainCategories.Kids)],
+    },
+    {
+      label: "Brands",
+      items: [getAllBrands()],
+    },
   ];
 }
 
-function goToLogin() {
+const fetchData = async () => {
+  await fetchBrands();
+  await fetchCategories();
+  setDataHeader();
+}
+
+const goToLogin = () => {
   router.push('/account/login');
 }
 
-function goToRegister() {
+const goToRegister = () => {
   router.push('/account/register')
 }
 function goToProductDetail() {
@@ -130,4 +151,5 @@ function goToProductList() {
   router.push('/products/ProductList')
 }
 
+onMounted(fetchData);
 </script>
