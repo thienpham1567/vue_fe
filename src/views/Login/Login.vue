@@ -50,6 +50,7 @@ import Logo from "@/assets/images/logo.png";
 import Image from 'primevue/image';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import  useAccountStore  from "@/store/AccountStore";
 
 const router = useRouter();
 const emailValue = ref('');
@@ -57,6 +58,8 @@ const passwordValue = ref('');
 
 const emailError = ref('');
 const passwordError = ref('');
+
+const { login } = useAccountStore();
 
 function validateForm() {
     emailError.value = emailValue.value ? '' : 'Email is required.';
@@ -72,7 +75,7 @@ function validateForm() {
     if (emailError.value || passwordError.value) {
         return false;
     }
-
+    login(emailValue.value, passwordValue.value);
     return true;
 }
 </script>

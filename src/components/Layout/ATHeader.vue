@@ -26,6 +26,7 @@
           <Button class="sign-in-register-btn" text @click="goToProductDetail">ProductDetail</Button>
           <Button class="sign-in-register-btn" text @click="goToProductList">ProductList</Button>
           <Button label="Sign In / Register" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
+          <Button label="Logout" class="sign-in-register-btn" text @click="logout" />
         </template>
       </MegaMenu>
     </div>
@@ -54,11 +55,12 @@ import Logo from "@/assets/images/logo.png";
 import CoreDialog from '@/components/Core/CoreDialog.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import useAccountStore from '@/store/AccountStore';
 
 const router = useRouter();
 let selectedProduct = ref();
 let filteredProducts = ref([]);
-
+const { getUser, logout } = useAccountStore();
 let dialogCartVisible = ref(false);
 let dialogSignInVisible = ref(false);
 
@@ -127,4 +129,5 @@ function goToProductDetail() {
 function goToProductList() {
   router.push('/products/ProductList')
 }
+
 </script>

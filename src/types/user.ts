@@ -14,3 +14,8 @@ export interface CreationParams {
     emailAddress?: string;
     phoneNumber?: string;
 }
+
+export interface LoginParams {
+    email: String;
+    password: String;
+}
