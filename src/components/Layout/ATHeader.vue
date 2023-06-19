@@ -31,10 +31,9 @@
       </MegaMenu>
     </div>
   </nav>
-  <CoreDialog :visible="dialogCartVisible" header="My Cart" widthSize='400px' position="right"
-    @close-dialog="dialogCartVisible = false">
+  <Sidebar v-model:visible="dialogCartVisible" position="right">
     <p>My Cart</p>
-  </CoreDialog>
+  </Sidebar>
 
   <CoreDialog :visible="dialogSignInVisible" header="Sign In" widthSize='500px' position="center"
     @close-dialog="dialogSignInVisible = false">
@@ -53,6 +52,7 @@ import AutoComplete from 'primevue/autocomplete';
 import MegaMenu from 'primevue/megamenu';
 import Logo from "@/assets/images/logo.png";
 import CoreDialog from '@/components/Core/CoreDialog.vue';
+import Sidebar from 'primevue/sidebar';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
