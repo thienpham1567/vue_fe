@@ -1,4 +1,4 @@
-import Layout from "@/layout/index.vue";
+import Layout from '@/layout/CustomerLayout.vue';
 // import { useUserStore } from "@/store";
 import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 

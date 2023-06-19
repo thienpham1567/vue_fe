@@ -1,4 +1,4 @@
-import Layout from "@/layout/index.vue";
+import Layout from '@/layout/CustomerLayout.vue';
 
 export const cart = {
   path: "/cart",

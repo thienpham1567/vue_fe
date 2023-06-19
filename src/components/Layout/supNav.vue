@@ -1,5 +1,5 @@
 <template>
-    <nav class="flex items-center justify-between   p-4">
+    <div class="flex items-center justify-between p-4">
         <div>
             <h2 class="text-xl font-bold">Your Search Results</h2>
             <p>97879 items found</p>
@@ -13,11 +13,9 @@
                 <option value="newest">Newest</option>
             </select>
         </div>
-    </nav>
+    </div>
 </template>
 
 <script setup lang="ts">
 
 </script>
-
-<style></style>

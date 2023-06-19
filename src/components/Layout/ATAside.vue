@@ -85,41 +85,25 @@
         </aside>
     </div>
 </template>
-  
-<script lang="ts">
+
+<script setup lang="ts">
 import { ref } from 'vue';
 
-export default {
-    name: 'ATAside',
-    setup() {
-        const selectedBrands = ref<string[]>([]);
-        const selectedPriceRanges = ref<string[]>([]);
-        const selectedSizes = ref<string[]>([]);
-        const sizes = ['7', '8', '9', '10'];
-        const showBrandSection = ref(true);
-        const showPriceSection = ref(true);
-        const showSizeSection = ref(true);
+const selectedBrands = ref<string[]>([]);
+const selectedPriceRanges = ref<string[]>([]);
+const selectedSizes = ref<string[]>([]);
+const sizes = ['7', '8', '9', '10'];
+const showBrandSection = ref(true);
+const showPriceSection = ref(true);
+const showSizeSection = ref(true);
 
-        const toggleSection = (section: string) => {
-            if (section === 'brand') {
-                showBrandSection.value = !showBrandSection.value;
-            } else if (section === 'price') {
-                showPriceSection.value = !showPriceSection.value;
-            } else if (section === 'size') {
-                showSizeSection.value = !showSizeSection.value;
-            }
-        };
-
-        return {
-            selectedBrands,
-            selectedPriceRanges,
-            selectedSizes,
-            sizes,
-            showBrandSection,
-            showPriceSection,
-            showSizeSection,
-            toggleSection,
-        };
-    },
+const toggleSection = (section: string) => {
+    if (section === 'brand') {
+        showBrandSection.value = !showBrandSection.value;
+    } else if (section === 'price') {
+        showPriceSection.value = !showPriceSection.value;
+    } else if (section === 'size') {
+        showSizeSection.value = !showSizeSection.value;
+    }
 };
 </script>

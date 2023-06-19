@@ -1,4 +1,4 @@
-import Layout from '@/layout/index.vue';
+import Layout from '@/layout/CustomerLayout.vue';
 import Home from '@/views/Home/Home.vue';
 
 export const home = {
