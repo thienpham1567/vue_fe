@@ -273,6 +273,7 @@ const goToLogin = () => {
 }
 
 function goToCart() {
+  dialogCartVisible.value = false;
   router.push('/products/cart');
 }
 
@@ -280,13 +281,16 @@ const goToRegister = () => {
   router.push('/account/register')
 }
 function goToProductDetail() {
+  dialogCartVisible.value = false;
   router.push('/products/ProductDetail')
 }
 function goToProductList() {
+  dialogCartVisible.value = false;
   router.push('/products/ProductList')
 }
 
 function goToCheckout() {
+  dialogCartVisible.value = false;
   router.push('/checkout/Checkout');
 }
 
