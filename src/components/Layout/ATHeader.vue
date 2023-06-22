@@ -27,6 +27,8 @@
           <Button class="sign-in-register-btn" text @click="goToProductList">ProductList</Button>
           <Button label="Sign In / Register" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
           <Button label="Logout" class="sign-in-register-btn" text @click="logout" />
+          <Button label="My Account" class="sign-in-register-btn" text @click="goToMyAccount" />
+          <Button label="View order" class="sign-in-register-btn" text @click="goToViewOrders" />
         </template>
       </MegaMenu>
     </div>
@@ -292,6 +294,16 @@ function goToProductList() {
 function goToCheckout() {
   dialogCartVisible.value = false;
   router.push('/checkout/Checkout');
+}
+
+function goToMyAccount() {
+  dialogCartVisible.value = false;
+  router.push('/myaccount/myaccount');
+}
+
+function goToViewOrders() {
+  dialogCartVisible.value = false;
+  router.push('/myaccount/view-order');
 }
 
 onMounted(fetchData);
