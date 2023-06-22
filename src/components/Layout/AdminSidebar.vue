@@ -16,39 +16,37 @@
 
       <nav class="mt-10">
         <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[route.name === 'Dashboard' ? activeClass : inactiveClass]" to="/dashboard">
+          :class="[route.name === 'Dashboard' ? activeClass : inactiveClass]" to="">
           <i class="pi pi-box" style="font-size: 2rem"></i>
           <span class="mx-4">Product</span>
         </router-link>
 
         <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[route.name === 'UIElements' ? activeClass : inactiveClass]" to="/ui-elements">
+          :class="[route.name === 'CategoryAdmin' ? activeClass : inactiveClass]" to="/admin/categories">
           <i class="pi pi-sitemap" style="font-size: 2rem"></i>
-          <span class="mx-4">Caterogy</span>
+          <span class="mx-4">Category</span>
         </router-link>
 
         <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[route.name === 'Tables' ? activeClass : inactiveClass]" to="/tables">
+          :class="[route.name === 'BrandAdmin' ? activeClass : inactiveClass]" to="/admin/brands">
           <i class="pi pi-th-large" style="font-size: 2rem"></i>
           <span class="mx-4">Brand</span>
         </router-link>
 
         <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[route.name === 'Forms' ? activeClass : inactiveClass]" to="/forms">
+          :class="[route.name === 'Forms' ? activeClass : inactiveClass]" to="">
           <i class="pi pi-truck" style="font-size: 2rem"></i>
           <span class="mx-4">Order</span>
         </router-link>
 
-        </router-link>
-
         <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[route.name === 'Modal' ? activeClass : inactiveClass]" to="/modal">
+          :class="[route.name === 'Modal' ? activeClass : inactiveClass]" to="">
           <i class="pi pi-chart-bar" style="font-size: 2rem"></i>
           <span class="mx-4">Report</span>
         </router-link>
 
         <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[route.name === 'Blank' ? activeClass : inactiveClass]" to="/blank">
+          :class="[route.name === 'Blank' ? activeClass : inactiveClass]" to="">
           <i class="pi pi-users" style="font-size: 2rem"></i>
           <span class="mx-4">Account Management</span>
         </router-link>
