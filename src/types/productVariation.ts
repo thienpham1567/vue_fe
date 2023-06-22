@@ -1,3 +1,5 @@
+import { ProductImagesType } from './productImages';
+import { ProductVariationSizeType } from './productVariationSize';
 import type { ProductType } from "./product";
 import type { ColorType } from "./color";
 
@@ -5,6 +7,8 @@ export interface ProductVariationType {
   productVariationld?: number;
   product?: ProductType;
   color?: ColorType;
+  productVariationSizes?: ProductVariationSizeType[];
+  productImages?: ProductImagesType[];
 }
 
 export interface CreationParams {
@@ -18,7 +22,7 @@ export interface CreationResponse {
   message?: string;
 }
 
-export interface ProductItemResponse {
+export interface ProductVariationResponse {
   status: boolean;
   data?: ProductVariationType;
   message?: string;
@@ -28,4 +32,9 @@ export interface ListResponse {
   status: boolean;
   data: ProductVariationType[];
   message?: string;
+}
+
+export interface QueryProductVariationParams {
+  brand?: number;
+  category?: number;
 }
