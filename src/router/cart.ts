@@ -1,12 +1,12 @@
 import Layout from '@/layout/CustomerLayout.vue';
 
 export const cart = {
-  path: "/cart",
+  path: "/products",
   component: Layout,
   children: [
     {
-      path: "",
-      name: "Cart",
+      path: "cart",
+      name: "cart",
       component: () => import("@/views/Cart/Cart.vue"),
     },
   ],
