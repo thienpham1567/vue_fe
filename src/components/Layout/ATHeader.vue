@@ -303,17 +303,4 @@ const decrement = (products: Product) => {
 
 </script>
 
-<style>
-.p-sidebar-header {
-  justify-content: space-between;
-}
 
-.p-sidebar .p-sidebar-content {
-  padding: 0 !important;
-}
-
-.p-sidebar-right .p-sidebar {
-  width: 34rem;
-  height: 100%;
-}
-</style>
