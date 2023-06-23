@@ -26,9 +26,29 @@
           <Button class="sign-in-register-btn" text @click="goToProductDetail">ProductDetail</Button>
           <Button class="sign-in-register-btn" text @click="goToProductList">ProductList</Button>
           <Button label="Sign In / Register" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
-          <Button label="Logout" class="sign-in-register-btn" text @click="logout" />
-          <Button label="My Account" class="sign-in-register-btn" text @click="goToMyAccount" />
-          <Button label="View order" class="sign-in-register-btn" text @click="goToViewOrders" />
+          <button label="My Account" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
+            <div class="mb-3">
+              <span v-if="showMyAccountSection">
+                <span class="font-bold">My Account</span>
+                <i class="pi pi-chevron-down ml-2"></i>
+              </span>
+              <span v-else>
+                <span class="font-bold">My Account</span>
+                <i class="pi pi-chevron-up ml-2"></i>
+              </span>
+            </div>
+            <div :class="['my-account-section', { 'hidden': !showMyAccountSection }]">
+              <div class="mb-2 flex justify-start">
+                <Button label="View order" class="sign-in-register-btn" text @click="goToViewOrders" />
+              </div>
+              <div class="mb-2 flex justify-start">
+                <Button label="My Account" class="sign-in-register-btn" text @click="goToMyAccount" />
+              </div>
+              <div class="mb-2 flex justify-start">
+                <Button label="Logout" class="sign-in-register-btn" text @click="logout" />
+              </div>
+            </div>
+          </button>
         </template>
       </MegaMenu>
     </div>
@@ -243,6 +263,13 @@ const getCategoriesByParent = (parentCategoryId: number) => {
 
 const items = ref([]);
 
+const showMyAccountSection = ref(false);
+const toggleSection = (section: string) => {
+  if (section === 'myAccount') {
+    showMyAccountSection.value = !showMyAccountSection.value;
+  }
+};
+
 const setDataHeader = () => {
   items.value = [
     {
@@ -318,5 +345,21 @@ const decrement = (products: Product) => {
 };
 
 </script>
+
+<style>
+.hidden {
+  display: none;
+}
+
+.my-account-section {
+  position: absolute;
+  right: 1%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  z-index: 999;
+}
+</style>
 
 
