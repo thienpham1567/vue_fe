@@ -73,12 +73,20 @@ let filteredProducts = ref([]);
 let dialogCartVisible = ref(false);
 let dialogSignInVisible = ref(false);
 
-const getAllBrands = () => {
+function brands() {
   return getBrands.value.map(brand => {
     return {
       label: brand.name,
+      command: () => gotoProductList(brand.brandId, undefined)
     }
   });
+}
+
+const getAllBrands = () => {
+  return [{
+    label: "Our brands",
+    items: brands(),
+  }]
 };
 
 const getSubCategories = (parentCategoryId: number, categoryCode: string) => {
@@ -88,6 +96,7 @@ const getSubCategories = (parentCategoryId: number, categoryCode: string) => {
     if (localParentCategoryId === parentCategoryId && localCategoryCode === categoryCode) {
       return {
         label: category.name,
+        command: () => gotoProductList(undefined, category.categoryId)
       }
     }
   });
@@ -150,6 +159,13 @@ function goToProductDetail() {
 function goToProductList() {
   router.push('/products/ProductList')
 }
+
+const gotoProductList = (brand?: number, category?: number) => {
+  router.push({
+    name: "Products",
+    query: { category: category, brand: brand },
+  });
+};
 
 onMounted(fetchData);
 </script>

@@ -17,13 +17,13 @@ const useProductStore = defineStore("product", () => {
   const fetchAllProducts = async (brand?: number, category?: number) => {
     const { data } = await new Product().list({ brand, category });
     productList.value = data;
+    console.log(data);
+    
   };
 
   const fetchOneProduct = async (id: number) => {
     const { data } = await new Product().detail(id);
     product.value = data!;
-    console.log(data);
-    
   };
 
   return { getProduct, getProducts, fetchAllProducts, fetchOneProduct };

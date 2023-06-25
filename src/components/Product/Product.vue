@@ -24,5 +24,17 @@
 </template>
 
 <script setup lang="ts">
+import Card from 'primevue/card';
+import Button from 'primevue/button';
 
 </script>
+
+<style>
+.zoom-image {
+    transition: transform 0.3s;
+}
+
+.zoom-image:hover {
+    transform: scale(1.1);
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 justify-center p-4">
-    <Product/>
+    <Product v-for="product in getProducts"/>
   </div>
   <!-- <Paginator v-model:first="first" :rows="showMoreCount" :totalRecords="products.length" @onPageChange="onPageChange" /> -->
 </template>
@@ -8,17 +8,17 @@
   
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import Card from 'primevue/card';
-import Button from 'primevue/button';
 import Paginator from 'primevue/paginator';
 import { useProductStore } from '@/store';
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import Product from '@/components/Product/Product.vue'
+import { useRoute } from "vue-router";
 
-const { fetchOneProduct, getProduct } = useProductStore();
+const route = useRoute();
+const { fetchAllProducts, getProducts } = useProductStore();
 
-const showMoreCount = ref(8); // Số lượng sản phẩm hiển thị ban đầu
-const first = ref(0); // Vị trí bắt đầu
+// const showMoreCount = ref(8); // Số lượng sản phẩm hiển thị ban đầu
+// const first = ref(0); // Vị trí bắt đầu
 
 // // Tính toán danh sách sản phẩm hiển thị trên từng trang
 // const displayedProducts = computed(() => {
@@ -30,15 +30,17 @@ const first = ref(0); // Vị trí bắt đầu
 //   first.value = (event.page - 1) * showMoreCount.value;
 // };
 
-onMounted(() => fetchOneProduct(1));
-</script>
-  
-<style>
-.zoom-image {
-  transition: transform 0.3s;
-}
+watch(
+  () => route.query,
+  async toParams => {
+    if(toParams.brand || toParams.category){
+      await fetchAllProducts(toParams.brand, toParams.category);
+    }
+  }
+);
 
-.zoom-image:hover {
-  transform: scale(1.1);
-}
-</style>
+onMounted(async () => {
+  await fetchAllProducts(route.query.brand, route.query.category);
+});
+</script>
+
