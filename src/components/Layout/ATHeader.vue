@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <div class="flex items-center justify-between px-4">
+    <div class="flex items-center justify-between px-2">
       <div class="flex items-center h-36">
         <Image :src="Logo" alt="Image" width="180" />
         <div class="p-inputgroup">
@@ -17,18 +17,20 @@
           </AutoComplete>
           <Button icon="pi pi-search" class="search-btn" />
           <!-- ============================================= -->
-          <div>
-            <select v-model="selectedLanguage" @change="changeLanguage">
-              <option v-for=" language  in  languages " :value="language.code" :key="language.code">
-                {{ language.label }}
-              </option>
-            </select>
-            <p>{{ $t('hello') }}</p>
-          </div>
+          
         </div>
       </div>
       <Button icon="pi pi-shopping-cart" class="cart-btn" :label="$t('my-cart')" raised
         @click="dialogCartVisible = true" />
+      <!-- Multi Language -->
+        <div>
+          <select v-model="selectedLanguage" @change="changeLanguage">
+            <option v-for=" language  in  languages " :value="language.code" :key="language.code">
+              {{ language.label }}
+            </option>
+          </select>
+          <p>{{ $t('hello') }}</p>
+        </div>
     </div>
     <div class="nav-menu">
       <MegaMenu :model="items">
