@@ -24,6 +24,23 @@ const en = {
     'view-order': 'View order',
     'logout': 'Logout',
     //Heder-End
+
+    //OrderHistory
+    odh: 'Order History',
+    des: 'Search items in your order history',
+    text: 'Your order history is empty.',
+    //
+
+      //Account
+      info: 'Your Primary Account Information',
+      address: 'Primary Shipping Address',
+      paymentinfo: 'Primary Payment Information',
+      accountinfo: 'Name, Email & Password',
+      newadd: 'ADD A NEW SHIPPING ADDRESS',
+      newcard: 'ADD A NEW CARD',
+      manageaccount: 'MANAGE ACCOUNT INFO',
+      manageemail: 'MANAGE EMAIL SUBSCRIPTIONS',
+      //End account
 };
 
 export default en;

@@ -24,6 +24,23 @@ const vi = {
     'view-order': 'Hiển thị đơn hàng',
     'logout': 'Đăng xuất',
     //Heder-End
+
+    //OrderHistory
+    odh: 'Lịch sử mua hàng',
+    des: 'Tìm kiếm đơn hàng',
+    text: 'Lịch sử mua hàng của bạn chưa có gì !',
+    //End OrderHistory
+
+    //Account
+    info: 'Thông tin tài khoản',
+    address: 'Địa chỉ giao hàng',
+    paymentinfo: 'Thông tin thanh toán',
+    accountinfo: 'Tên, Email và mật khẩu',
+    newadd: 'Thêm địa chỉ giao hàng',
+    newcard: 'Thêm thẻ ngân hàng',
+    manageaccount: 'Quản lý tài khoản',
+    manageemail: 'Quản lý Email',
+    //End account
 };
 
 export default vi;
