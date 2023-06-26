@@ -3,10 +3,10 @@
         <!-- Left column start -->
         <div class="w-full lg:w-8/12 mx-4 mb-4 mt-4">
             <div class="bg-black flex justify-between text-white p-2">
-                <div class="ml-4">Item</div>
-                <div class="mr-4">Price / Quantity</div>
+                <div class="ml-16">{{ $t('item') }}</div>
+                <div class="mr-16">{{ $t('price') }} / {{ $t('quantity') }}</div>
             </div>
-            <div class="mb-1 flex flex-wrap">
+            <div class="mb-1 flex flex-wrap mt-2">
                 <div class="rounded-lg flex w-full ml-4 mr-4">
                     <div class="w-1/4 ">
                         <img src="https://m.media-amazon.com/images/I/71qvDARKU3L._AC_SR1840,1472_.jpg"
@@ -15,11 +15,11 @@
                     <div class="w-2/4 ml-4">
                         <div class="text-base font-light">Rebok Work</div>
                         <div class="text-xl font-bold">Adidas</div>
-                        <div class="text-base font-light">Color: black</div>
-                        <div class="text-base font-light">Size: Men 12</div>
+                        <div class="text-base font-light">{{ $t('color') }}: black</div>
+                        <div class="text-base font-light">{{ $t('size') }}: Men 12</div>
                     </div>
                     <div class="w-1/4">
-                        <div class="text-xl font-bold">$114</div>
+                        <div class="flex justify-center text-xl font-bold">$114</div>
                         <div class="flex justify-center mt-2">
                             <Button icon="pi pi-minus" class="p-button-secondary p-button-text mr-2"
                                 @click="decrement(products)"></Button>
@@ -28,7 +28,7 @@
                                 @click="increment(products)"></Button>
 
                         </div>
-                        <div class="mt-2">Remove</div>
+                        <div class="flex justify-center mt-2">{{ $t('remove') }}</div>
                     </div>
                 </div>
             </div>
@@ -41,17 +41,17 @@
                 <button @click="goToCheckout"
                     class="bg-blue-500 hover:bg-blue-600 text-white font-bold ml-5 mt-4 mb-4 py-2 px-4 rounded w-11/12 h-10"
                     type="submit">
-                    PROCEED TO CHECKOUT
+                    {{ $t('Proceed-to-checkout') }}
                 </button>
                 <div class="px-4 py-2 justify-items-center mt-2 mb-6">
                     <div class="flex justify-between">
-                        <div class="font-light text-lg">Cart summary (1 item)</div>
+                        <div class="font-light text-lg">{{ $t('cart-summary') }} (1 item)</div>
                     </div>
                     <div class="border-b border-gray-400"></div>
                     <div class="mt-2">
                         <div class="flex justify-between">
-                            <div class="font-light text-lg">Subtotal (1 item)</div>
-                            <div class="font-bold">$114</div>
+                            <div class="font-light text-lg">{{ $t('subtotal') }} (1 item)</div>
+                            <div class="font-bold">{{ formattedAmount }}</div>
                         </div>
                     </div>
                 </div>
@@ -62,13 +62,15 @@
 </template>
   
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import RadioButton from 'primevue/radiobutton';
 import InputSwitch from 'primevue/inputswitch';
 import InputText from 'primevue/inputtext';
 import Calendar from 'primevue/calendar';
 import Button from 'primevue/button';
 import { useRouter } from 'vue-router';
+import { useLanguageStore } from '@/store/language';
+import { translate } from '@/i18n';
 // import InputNumber from 'primevue/inputnumber';
 const checked = ref(false);
 const dates = ref();
@@ -180,6 +182,22 @@ const decrement = (product: Product) => {
 function goToCheckout() {
     router.push('/checkout/Checkout');
 }
+
+const languageStore = useLanguageStore();
+const formattedAmount = computed(() => {
+    const currentLanguage = languageStore.currentLanguage;
+    // Tương lai khi truyền data có price thì thay số 114 thành price
+    const amount = 114;
+
+    if (currentLanguage === 'vi') {
+        const exchangeRate = 23000;
+        const convertedValue = amount * exchangeRate;
+        return `${convertedValue.toLocaleString()} VND`;
+    }
+
+    return `$${amount}`;
+});
+const $t = translate;
 </script>
   
 

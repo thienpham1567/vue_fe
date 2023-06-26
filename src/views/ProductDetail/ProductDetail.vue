@@ -189,18 +189,18 @@
         </div>
         <div class="border-b-2 border-gray-400 mt-4 mr-4"></div>
         <div class="flex">
-            <div class="mt-4 text-lg w-2/12 font-semibold">
+            <div class="mt-4 text-lg w-1/4 font-semibold">
                 Overall rating *
             </div>
-            <div class=" flex w-full justify-content-center mt-4 mr-4">
+            <div class=" flex w-full mt-4 mr-4">
                 <Rating v-model="userStarValue" :cancel="false" />
             </div>
         </div>
         <div class="flex">
-            <div class="mt-4 text-lg w-2/12 font-semibold">
+            <div class="mt-4 text-lg w-1/4 font-semibold">
                 Review *
             </div>
-            <div class=" flex w-full justify-content-center mt-4  mr-4">
+            <div class=" flex w-full mt-4 mr-4">
                 <Textarea v-model="contentValue" rows="4" cols="20" class="w-full" />
             </div>
         </div>
