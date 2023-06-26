@@ -34,19 +34,19 @@
         </router-link>
 
         <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[route.name === 'Forms' ? activeClass : inactiveClass]" to="">
+          :class="[route.name === 'Forms' ? activeClass : inactiveClass]" to="/admin/orders">
           <i class="pi pi-truck" style="font-size: 2rem"></i>
           <span class="mx-4">Order</span>
         </router-link>
 
         <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[route.name === 'Modal' ? activeClass : inactiveClass]" to="">
+          :class="[route.name === 'Modal' ? activeClass : inactiveClass]" to="/admin/report">
           <i class="pi pi-chart-bar" style="font-size: 2rem"></i>
           <span class="mx-4">Report</span>
         </router-link>
 
         <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[route.name === 'Blank' ? activeClass : inactiveClass]" to="">
+          :class="[route.name === 'Blank' ? activeClass : inactiveClass]" to="/admin/accounts">
           <i class="pi pi-users" style="font-size: 2rem"></i>
           <span class="mx-4">Account Management</span>
         </router-link>
