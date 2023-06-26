@@ -46,16 +46,16 @@
             <aside class="">
                 <div>
                     <div class="mt-4">
-                        <label class="text-3xl ml-1">Product Name</label>
+                        <label class="text-3xl ml-1">{{ $t('pname') }}</label>
                     </div>
                     <div class="mt-4">
-                        <label class="text-2xl ml-1">Mã sản phẩm</label>
+                        <label class="text-2xl ml-1">{{ $t('pid') }}</label>
                     </div>
                     <div class="mt-4">
-                        <label class="text-xl ml-1">SKU Code</label>
+                        <label class="text-xl ml-1">{{ $t('sku') }}</label>
                     </div>
                     <div class="mt-4">
-                        <label class="text-2xl ml-1">Price</label>
+                        <label class="text-2xl ml-1">{{ $t('price') }}</label>
                     </div>
                     <div class="mt-4">
                         <label class="text-2xl ml-1">or 4 interest-free payments of $21.24 with </label>
@@ -64,7 +64,7 @@
                         <label class="text-2xl ml-1">star ratting</label>
                     </div>
                     <div class="mt-4">
-                        <label class="text-2xl ml-1">Color: White</label>
+                        <label class="text-2xl ml-1">{{ $t('color') }}</label>
                     </div>
                     <div class="flex flex-wrap">
                         <div class="img-item w-2/12 ml-1">
@@ -92,7 +92,7 @@
                         <label class="text-2xl ml-1">This fits true to size.</label>
                     </div>
                     <div>
-                        <label class="text-2xl ml-1">Sizes:</label>
+                        <label class="text-2xl ml-1">{{ $t('size') }}</label>
                         <div class="text-2xl ml-1 flex flex-wrap">
                             <div v-for="size in sizes" :key="size" class="flex items-center mt-1">
                                 <input :type="radioType" :id="'radio-' + size" :aria-label="'Size ' + size" name="d3"
@@ -109,7 +109,7 @@
                         <button
                             class="bg-blue-500 hover:bg-blue-600 text-white font-semibold text-xl py-2 px-4 rounded w-full h-12"
                             type="submit">
-                            Add to Cart
+                            {{ $t('add') }}
                         </button>
                     </div>
                 </div>
@@ -217,12 +217,18 @@
 import { ref, onMounted } from 'vue';
 import Textarea from 'primevue/textarea';
 import Rating from 'primevue/rating';
+import { useLanguageStore } from '@/store/language';
+import { translate } from '@/i18n';
+
 const isBorderRed = ref<string | null>(null);
 const sizes = ref<string[]>(Array.from({ length: 15 }, (_, i) => (i + 4).toString()));
 const radioType = ref('radio');
 const starValue = ref(0);
 const contentValue = ref('');
 const userStarValue = ref(0);
+
+const $t = translate;
+const languageStore = useLanguageStore();
 
 function toggleBorderRed(size: string) {
     isBorderRed.value = size;

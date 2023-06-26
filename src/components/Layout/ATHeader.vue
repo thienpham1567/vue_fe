@@ -1,9 +1,9 @@
 <template>
   <nav>
-    <div class="flex items-center justify-between px-2">
-      <div class="flex items-center h-36">
+    <div class="flex items-center justify-between px-4 ">
+      <div class="flex items-center h-36 ">
         <Image :src="Logo" alt="Image" width="180" />
-        <div class="p-inputgroup">
+        <div class="p-inputgroup ">
           <AutoComplete v-model="selectedProduct" optionLabel="name" :suggestions="filteredProducts" @complete="search"
             :placeholder="$t('search-placehoder')">
             <!-- <template #option="slotProps">
@@ -20,10 +20,10 @@
           
         </div>
       </div>
-      <Button icon="pi pi-shopping-cart" class="cart-btn" :label="$t('my-cart')" raised
+      <Button icon="pi pi-shopping-cart " class="cart-btn justify-self-end"  :label="$t('my-cart')" raised
         @click="dialogCartVisible = true" />
       <!-- Multi Language -->
-        <div>
+        <div class="flex  space-x-4 ">
           <select v-model="selectedLanguage" @change="changeLanguage">
             <option v-for=" language  in  languages " :value="language.code" :key="language.code">
               {{ language.label }}

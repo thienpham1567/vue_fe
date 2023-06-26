@@ -41,6 +41,16 @@ const en = {
       manageaccount: 'MANAGE ACCOUNT INFO',
       manageemail: 'MANAGE EMAIL SUBSCRIPTIONS',
       //End account
+
+      //ProductList
+      brand: 'Brand',
+      pricerange: 'Price range',
+
+      //ProductDetail
+      pname: 'Tên sản phẩm',
+      pid: 'Mã sản phẩm',
+      sku: 'Mã SKU',
+      add: 'Thêm vào giỏ hàng',  
 };
 
 export default en;

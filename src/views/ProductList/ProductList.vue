@@ -5,7 +5,7 @@
                 <aside class="p-4 flex-grow rounded-lg md:w-64 lg:w-60 ">
                     <div class="mb-4 flex justify-between" @click="toggleSection('brand')">
                         <button class="text-xl font-bold ">
-                            <div>Brand</div>
+                            <div>{{ $t('brand') }}</div>
                         </button>
                         <span v-if="showBrandSection">
                             <i class="pi pi-chevron-down"></i>
@@ -30,7 +30,7 @@
 
                     <div class="mb-4 flex justify-between" @click="toggleSection('price')">
                         <button class="text-xl font-bold">
-                            <div>Price range</div>
+                            <div>{{ $t('pricerange') }}</div>
                         </button>
                         <span v-if="showPriceSection">
                             <i class="pi pi-chevron-down"></i>
@@ -70,7 +70,7 @@
 
                     <div class="mb-4 flex justify-between" @click="toggleSection('size')">
                         <button class="text-xl font-bold">
-                            <div>Size</div>
+                            <div>{{ $t('size') }}</div>
                         </button>
                         <span v-if="showSizeSection">
                             <i class="pi pi-chevron-down"></i>
@@ -136,6 +136,11 @@ import { ref, computed } from 'vue';
 import Card from 'primevue/card';
 import Button from 'primevue/button';
 import Paginator from 'primevue/paginator';
+import { useLanguageStore } from '@/store/language';
+import { translate } from '@/i18n';
+
+const $t = translate;
+const languageStore = useLanguageStore();
 
 interface Product {
     id: number;

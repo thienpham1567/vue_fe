@@ -41,6 +41,17 @@ const vi = {
     manageaccount: 'Quản lý tài khoản',
     manageemail: 'Quản lý Email',
     //End account
+
+    //ProductList
+    brand: 'Thương hiệu',
+    pricerange: 'Khoảng giá',
+
+    //ProductDetail
+    pname: 'Tên sản phẩm',
+    pid: 'Mã sản phẩm',
+    sku: 'Mã SKU',
+    add: 'Thêm vào giỏ hàng',
+
 };
 
 export default vi;
