@@ -43,6 +43,11 @@ export const admin = {
       name: "ReportAdmin",
       component: () => import("@/views/Admin/Report.vue"),
     },
+    {
+      path: "review",
+      name: "ReviewAdmin",
+      component: () => import("@/views/Admin/Review.vue"),
+    },
   ],
   // beforeEnter: (
   //   _to: RouteLocationNormalized,

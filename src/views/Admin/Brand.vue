@@ -1,7 +1,7 @@
 <template>
   <div class="brand-list">
     <h1 class="brand-list__title">Danh sách thương hiệu</h1>
-    
+
     <div class="brand-list__table">
       <Dropdown v-model="selectedBrand" :options="brandNames" placeholder="Select a Brand" class="w-full md:w-14rem" />
 
@@ -12,8 +12,10 @@
         <Column header="Thao tác">
           <template #body="rowData">
             <div class="brand-list__actions">
-              <Button icon="pi pi-pencil" class="p-button-rounded p-button-success" @click="editBrand(rowData.data)"></Button>
-              <Button icon="pi pi-trash" class="p-button-rounded p-button-danger" @click="deleteBrand(rowData.data)"></Button>
+              <Button icon="pi pi-pencil" class="p-button-rounded p-button-success"
+                @click="editBrand(rowData.data)"></Button>
+              <Button icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                @click="deleteBrand(rowData.data)"></Button>
             </div>
           </template>
         </Column>
@@ -44,7 +46,8 @@
       </template>
     </Dialog>
 
-    <Dialog v-model="deleteDialogVisible" :visible="deleteDialogVisible" header="Xác nhận xóa" :closable="false" class="brand-list__dialog">
+    <Dialog v-model="deleteDialogVisible" :visible="deleteDialogVisible" header="Xác nhận xóa" :closable="false"
+      class="brand-list__dialog">
       <p>Bạn có chắc chắn muốn xóa thương hiệu này?</p>
 
       <template #footer>
@@ -167,6 +170,7 @@ function cancelDelete() {
 .p-mr-2 {
   margin-right: 0.5rem;
 }
+
 .brand-list {
   padding: 20px;
 }
@@ -199,5 +203,4 @@ function cancelDelete() {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-}
-</style>
+}</style>
