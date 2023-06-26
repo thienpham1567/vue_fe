@@ -16,9 +16,9 @@ const useProductStore = defineStore("product", () => {
   // Actions
   const fetchAllProducts = async (brand?: number, category?: number) => {
     const { data } = await new Product().list({ brand, category });
-    productList.value = data;
-    console.log(data);
-    
+    productList.value = data.filter((product, index, productList) => {
+      return productList.map(product => product.product?.productId).indexOf(product.product?.productId) === index;
+    })
   };
 
   const fetchOneProduct = async (id: number) => {

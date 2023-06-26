@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <div class="flex items-center justify-between px-4">
+    <div class="flex items-center justify-between px-6">
       <div class="flex items-center h-36">
         <Image :src="Logo" alt="Image" width="180" />
         <div class="p-inputgroup">
@@ -23,10 +23,7 @@
     <div class="nav-menu">
       <MegaMenu :model="items">
         <template #end>
-          <Button class="sign-in-register-btn" text @click="goToProductDetail">ProductDetail</Button>
-          <Button class="sign-in-register-btn" text @click="goToProductList">ProductList</Button>
           <Button label="Sign In / Register" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
-          <Button label="Logout" class="sign-in-register-btn" text @click="logout" />
         </template>
       </MegaMenu>
     </div>
@@ -67,7 +64,7 @@ enum MainCategories {
 const router = useRouter();
 const { getUser, logout } = useAccountStore();
 const { getBrands, fetchBrands } = useBrandStore();
-const { getCategories, getMainCategories, fetchCategories } = useCategoryStore();
+const { getCategories, fetchCategories } = useCategoryStore();
 let selectedProduct = ref();
 let filteredProducts = ref([]);
 let dialogCartVisible = ref(false);
@@ -152,12 +149,6 @@ const goToLogin = () => {
 
 const goToRegister = () => {
   router.push('/account/register')
-}
-function goToProductDetail() {
-  router.push('/products/ProductDetail')
-}
-function goToProductList() {
-  router.push('/products/ProductList')
 }
 
 const gotoProductList = (brand?: number, category?: number) => {
