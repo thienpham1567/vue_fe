@@ -4,7 +4,7 @@ import type { ProductType } from "./product";
 import type { ColorType } from "./color";
 
 export interface ProductVariationType {
-  productVariationld?: number;
+  productVariationId?: number;
   product?: ProductType;
   color?: ColorType;
   productVariationSizes?: ProductVariationSizeType[];
