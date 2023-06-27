@@ -1,67 +1,32 @@
 <template>
-    <div class=" flex ">
-        <div class="w-full lg:w-7/12 ml-4 mr-4 mb-4">
-            <!-- Product Detail -->
-            <div class="flex flex-wrap">
-                <!-- Hình ảnh và nội dung sản phẩm -->
-                <div class="img1 my-4">
-                    <img
-                        src="https://assets.adidas.com/images/w_2000,h_840,c_fill/f6dd32dd3f72407084c0af120100820d_9366/Forum_Bonega_Shoes_Beige_IF4829_01_standard.jpg" />
+    <div class="flex">
+        <div class="w-full lg:w-7/12 ml-2 mr-2 mb-4">
+            <div>
+                <div>
+                    <Image :src="primaryImage?.imageUrl" alt="Image" preview/>
                 </div>
-                <div class="flex mb-4">
-                    <div class="img2 mr-4">
-                        <img
-                            src="https://assets.adidas.com/images/c_fill/f6dd32dd3f72407084c0af120100820d_9366/Forum_Bonega_Shoes_Beige_IF4829_01_standard.jpg" />
-                    </div>
-                    <div class="img3">
-                        <img
-                            src="https://assets.adidas.com/images/c_fill/f6dd32dd3f72407084c0af120100820d_9366/Forum_Bonega_Shoes_Beige_IF4829_01_standard.jpg" />
-                    </div>
-                </div>
-                <div class="flex mb-4">
-                    <div class="img2 mr-4">
-                        <img
-                            src="https://assets.adidas.com/images/c_fill/f6dd32dd3f72407084c0af120100820d_9366/Forum_Bonega_Shoes_Beige_IF4829_01_standard.jpg" />
-                    </div>
-                    <div class="img3">
-                        <img
-                            src="https://assets.adidas.com/images/c_fill/f6dd32dd3f72407084c0af120100820d_9366/Forum_Bonega_Shoes_Beige_IF4829_01_standard.jpg" />
-                    </div>
-                </div>
-                <div class="flex ">
-                    <div class="img2 mr-4">
-                        <img
-                            src="https://assets.adidas.com/images/c_fill/f6dd32dd3f72407084c0af120100820d_9366/Forum_Bonega_Shoes_Beige_IF4829_01_standard.jpg" />
-                    </div>
-                    <div class="img3">
-                        <img
-                            src="https://assets.adidas.com/images/c_fill/f6dd32dd3f72407084c0af120100820d_9366/Forum_Bonega_Shoes_Beige_IF4829_01_standard.jpg" />
+                <div class="flex gap-1">
+                    <div v-for="image in orderImages">
+                        <Image :src="image?.imageUrl" alt="Image" preview/>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="h-4/5 lg:w-5/12 mt-4 mr-4 mb-4 sticky top-0">
-            <!-- Aside -->
             <aside class="">
                 <div>
                     <div class="mt-4">
-                        <label class="text-3xl ml-1">Product Name</label>
+                        <label class="text-2xl ml-1">{{ getProduct.product?.brand?.name }}</label>
                     </div>
                     <div class="mt-4">
-                        <label class="text-2xl ml-1">Mã sản phẩm</label>
+                        <label class="text-3xl ml-1">{{ getProduct.product?.name }}</label>
                     </div>
                     <div class="mt-4">
                         <label class="text-xl ml-1">SKU Code</label>
                     </div>
                     <div class="mt-4">
-                        <label class="text-2xl ml-1">Price</label>
-                    </div>
-                    <div class="mt-4">
-                        <label class="text-2xl ml-1">or 4 interest-free payments of $21.24 with </label>
-                    </div>
-                    <div class="mt-4">
-                        <label class="text-2xl ml-1">star ratting</label>
+                        <label class="text-2xl ml-1">${{ getProduct.product?.price }}</label>
                     </div>
                     <div class="mt-4">
                         <label class="text-2xl ml-1">Color: White</label>
@@ -79,17 +44,6 @@
                             <a href=""><img
                                     src="https://assets.adidas.com/images/c_fill/f6dd32dd3f72407084c0af120100820d_9366/Forum_Bonega_Shoes_Beige_IF4829_01_standard.jpg" /></a>
                         </div>
-                        <div class="img-item w-2/12 ml-1">
-                            <a href=""><img
-                                    src="https://assets.adidas.com/images/c_fill/f6dd32dd3f72407084c0af120100820d_9366/Forum_Bonega_Shoes_Beige_IF4829_01_standard.jpg" /></a>
-                        </div>
-                        <div class="img-item w-2/12 ml-1">
-                            <a href=""><img
-                                    src="https://assets.adidas.com/images/c_fill/f6dd32dd3f72407084c0af120100820d_9366/Forum_Bonega_Shoes_Beige_IF4829_01_standard.jpg" /></a>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="text-2xl ml-1">This fits true to size.</label>
                     </div>
                     <div>
                         <label class="text-2xl ml-1">Sizes:</label>
@@ -119,12 +73,17 @@
 
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useProductStore } from "@/store";
+import Image from 'primevue/image';
 
 const route = useRoute();
-const {getProduct, fetchOneProduct} = useProductStore();
+const { getProduct, fetchOneProduct } = useProductStore();
 const { productId } = route.params;
+
+const primaryImage = computed(() => getProduct.value.productImages?.find(productImage => productImage.isPrimary));
+
+const orderImages = computed(() => getProduct.value.productImages?.filter(productImage => !productImage.isPrimary));
 
 const isBorderRed = ref<string | null>(null);
 const sizes = ref<string[]>(Array.from({ length: 15 }, (_, i) => (i + 4).toString()));
