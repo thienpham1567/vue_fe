@@ -51,7 +51,23 @@ const vi = {
     pid: 'Mã sản phẩm',
     sku: 'Mã SKU',
     add: 'Thêm vào giỏ hàng',
+    rate: 'Đánh giá',
+    alsocare: 'Sản phẩm có thể bạn quan tâm',
 
+    //Footer
+    contact: 'Thông tin liên hệ',
+    phonenum: 'Điện thoại: +123 443 4234',
+    shopdetail: 'Sản phẩm chi tiết',
+    Scart: 'Giỏ hàng',
+    home: 'Trang chủ',
+    ourshop: 'Về chúng tôi',
+    contactus: 'Liên hệ với chúng tôi',
+    checkout: 'Thanh toán',
+    checkoutinfo: 'Thông tin thanh toán',
+    follow: 'Theo dõi shop',
+    myacc: 'Tài khoản',
+    shop: 'Cửa hàng',
+    
 };
 
 export default vi;

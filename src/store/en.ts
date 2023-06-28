@@ -47,10 +47,26 @@ const en = {
       pricerange: 'Price range',
 
       //ProductDetail
-      pname: 'Tên sản phẩm',
-      pid: 'Mã sản phẩm',
-      sku: 'Mã SKU',
-      add: 'Thêm vào giỏ hàng',  
+      pname: 'Product name',
+      pid: 'Product ID',
+      sku: 'SKU CODE',
+      add: 'Add to cart',  
+      rate: 'Ratting',
+      alsocare: 'Customers Who Viewed This Item Also Viewed',
+
+      //Footer
+    contact: 'Contact',
+    phonenum: 'Phone: +123 443 4234',
+    shopdetail: 'Shop Detail',
+    Scart: 'Shopping cart',
+    home: 'Home',
+    ourshop: 'About us',
+    contactus: 'Contact us',
+    checkout: 'Checkout',
+    checkoutinfo: 'Checkout infomation',
+    follow: 'Follow us',
+    myacc: 'My account',
+    shop: 'Quick shop',
 };
 
 export default en;

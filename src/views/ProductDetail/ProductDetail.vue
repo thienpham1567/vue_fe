@@ -61,7 +61,7 @@
                         <label class="text-2xl ml-1">or 4 interest-free payments of $21.24 with </label>
                     </div>
                     <div class="mt-4">
-                        <label class="text-2xl ml-1">star ratting</label>
+                        <label class="text-2xl ml-1">{{ $t('rate') }}</label>
                     </div>
                     <div class="mt-4">
                         <label class="text-2xl ml-1">{{ $t('color') }}</label>
@@ -118,7 +118,7 @@
     </div>
     <!-- ----------------------------------------------------------------------------------------------------------------- -->
     <div class="ml-4 mr-4">
-        <label class="text-2xl ml-1 font-semibold">Customers Who Viewed This Item Also Viewed</label>
+        <label class="text-2xl ml-1 font-semibold">{{ $t('alsocare') }}</label>
         <div class="carousel mt-2">
             <div class="carousel-inner" ref="carouselInner">
                 <div class="carousel-item" v-for="product in products" :key="product.id">
