@@ -25,7 +25,8 @@
         <template #end>
           <Button class="sign-in-register-btn" text @click="goToProductDetail">ProductDetail</Button>
           <Button class="sign-in-register-btn" text @click="goToProductList">ProductList</Button>
-          <Button label="Sign In / Register" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
+          <Button v-if="!isLogin" label="Sign In / Register" class="sign-in-register-btn" text
+            @click="dialogSignInVisible = true" />
           <button label="My Account" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
             <div class="mb-3">
               <span v-if="showMyAccountSection">
@@ -45,7 +46,10 @@
                 <Button label="My Account" class="sign-in-register-btn" text @click="goToMyAccount" />
               </div>
               <div class="mb-2 flex justify-start">
-                <Button label="Logout" class="sign-in-register-btn" text @click="logout" />
+                <Button label="Admin" v-if="isAdmin" class="sign-in-register-btn" text />
+              </div>
+              <div class="mb-2 flex justify-start">
+                <Button v-if="isLogin" label="Logout" class="sign-in-register-btn" text @click="logout" />
               </div>
             </div>
           </button>
@@ -118,6 +122,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
 import { onMounted } from 'vue';
+import jwt_decode from "jwt-decode";
 
 enum MainCategories {
   Men = 1,
@@ -218,7 +223,7 @@ const products = ref<Product[]>([
 ]);
 
 const router = useRouter();
-const { getUser, logout } = useAccountStore();
+const { getUser } = useAccountStore();
 const { getBrands, fetchBrands } = useBrandStore();
 const { getCategories, getMainCategories, fetchCategories } = useCategoryStore();
 let selectedProduct = ref();
@@ -343,7 +348,31 @@ const decrement = (products: Product) => {
     products.quantity--;
   }
 };
+const token = localStorage.getItem('token');
+console.log(token);
 
+const isLogin = ref(false);
+let isAdmin = ref(false);
+
+function checkToken() {
+  if (token == null) {
+    isLogin.value = false;
+  } else {
+    isLogin.value = true;
+    const valueToken = jwt_decode(token!);
+    const roles = valueToken.user.roles;
+    console.log(roles);
+    isAdmin.value = roles.some(role => role.authority === 'admin');
+    console.log(isAdmin.value);
+  }
+}
+
+const logout = () => {
+  localStorage.removeItem("token");
+  window.location.reload();
+
+};
+checkToken();
 </script>
 
 <style>
