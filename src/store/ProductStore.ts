@@ -1,23 +1,32 @@
-// import { ref, type Ref } from "vue";
-// import { defineStore } from "pinia";
-// import { computed } from "vue";
+import { ref, type Ref } from "vue";
+import { defineStore } from "pinia";
+import { computed } from "vue";
+import { ProductVariationType } from "@/types/productVariation";
+import Product from "@/models/Product";
 
-// const useProductStore = defineStore("product", () => {
-//   // State
-//   const productItemList: Ref<ProductItemType[]> = ref([]);
-//   const productItem: Ref<ProductItemType> = ref({});
+const useProductStore = defineStore("product", () => {
+  // State
+  const productList: Ref<ProductVariationType[]> = ref([]);
+  const product: Ref<ProductVariationType> = ref({});
 
-//   // Getters
-//   const getProducts = computed(() => productItemList);
-//   const getProduct = computed(() => productItem);
+  // Getters
+  const getProducts = computed(() => productList);
+  const getProduct = computed(() => product);
 
-//   // Actions
-//   const fetchProducts = async (brand?: number, category?: number) => {
-//     const { data } = await new Product().list({ brand, category });
-//     productItemList.value = data;
-//   };
+  // Actions
+  const fetchAllProducts = async (brand?: number, category?: number) => {
+    const { data } = await new Product().list({ brand, category });
+    productList.value = data.filter((product, index, productList) => {
+      return productList.map(product => product.product?.productId).indexOf(product.product?.productId) === index;
+    })
+  };
 
-//   return { getProduct, getProducts, fetchProducts };
-// });
+  const fetchOneProduct = async (id: number) => {
+    const { data } = await new Product().detail(id);
+    product.value = data!;
+  };
 
-// export default useProductStore;
+  return { getProduct, getProducts, fetchAllProducts, fetchOneProduct };
+});
+
+export default useProductStore;
