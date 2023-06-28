@@ -3,19 +3,16 @@
     <h1 class="brand-list__title">Danh sách thương hiệu</h1>
 
     <div class="brand-list__table">
-      <Dropdown v-model="selectedBrand" :options="brandNames" placeholder="Select a Brand" class="w-full md:w-14rem" />
-
-      <DataTable :value="brands" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]">
+      <DataTable :value="brands" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]" :key="tableKey">
         <Column field="brandId" header="ID"></Column>
-        <Column field="name" header="Tên">
-        </Column>
+        <Column field="name" header="Tên"></Column>
         <Column header="Thao tác">
           <template #body="rowData">
             <div class="brand-list__actions">
               <Button icon="pi pi-pencil" class="p-button-rounded p-button-success"
-                @click="editBrand(rowData.data)"></Button>
+                @click="showEditDialog(rowData.data)"></Button>
               <Button icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                @click="deleteBrand(rowData.data)"></Button>
+                @click="showDeleteDialog(rowData.data)"></Button>
             </div>
           </template>
         </Column>
@@ -23,7 +20,7 @@
     </div>
 
     <div class="brand-list__add-button">
-      <Button class="p-button-primary" label="Thêm thương hiệu" @click="addBrand"></Button>
+      <Button class="p-button-primary" label="Thêm thương hiệu" @click="showAddDialog"></Button>
     </div>
 
     <Dialog v-model="dialogVisible" :visible="dialogVisible" :header="dialogHeader" class="brand-list__dialog">
@@ -52,7 +49,7 @@
 
       <template #footer>
         <div class="brand-list__dialog-buttons">
-          <Button class="p-button-danger" label="Xóa" @click="confirmDeleteBrand"></Button>
+          <Button class="p-button-danger" label="Xóa" @click="deleteBrand"></Button>
           <Button class="p-button-secondary" label="Hủy" @click="cancelDelete"></Button>
         </div>
       </template>
@@ -60,110 +57,105 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import { useQuery } from "@tanstack/vue-query";
-import axios from 'axios';
+import { ref, onMounted, watch } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
-import Dropdown from 'primevue/dropdown';
+import useBrandStore from '@/store/BrandStore';
+import { BrandType, CreationParams, UpdateParams } from '@/types/brand';
 
-interface Brand {
-  brandId: number;
-  name: string;
-}
-
-const dialogHeader = ref('');
-
-const { data: brands, refetch: fetchBrands } = useQuery<Brand[]>(["brands"], () => {
-  return axios.get<Brand[]>('http://localhost:8080/api/v1/brands')
-    .then(response => response.data);
-});
-
+const brandStore = useBrandStore();
+const brands = ref<BrandType[]>([]);
+const currentBrand = ref<BrandType>({});
 const dialogVisible = ref(false);
 const deleteDialogVisible = ref(false);
-const currentBrand = ref<Brand>({ brandId: 0, name: '' });
-let isEditing = false;
+const isEditing = ref(false);
+const tableKey = ref(0); // Key to force DataTable re-render
 
-// const brandNames = computed(() => {
-//   return brands.value.map(brand => brand.name);
-// });
-
-
-function addBrand() {
-  isEditing = false;
-  currentBrand.value = { brandId: 0, name: '' };
-  dialogVisible.value = true;
-  dialogHeader.value = 'Thêm thương hiệu';
-}
-
-function editBrand(brand: Brand) {
-  isEditing = true;
-  currentBrand.value = { ...brand };
-  dialogVisible.value = true;
-  dialogHeader.value = 'Sửa thương hiệu';
-}
-
-function saveBrand() {
-  if (isEditing) {
-    // Gọi API để cập nhật thương hiệu
-    axios
-      .put(`http://localhost:8080/api/v1/brands/${currentBrand.value.brandId}`, currentBrand.value) // Thay đổi URL của API tương ứng
-      .then(() => {
-        // Cập nhật lại danh sách thương hiệu sau khi cập nhật thành công
-        fetchBrands();
-        cancelEdit();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  } else {
-    // Gọi API để thêm thương hiệu mới
-    axios
-      .post('http://localhost:8080/api/v1/brands', currentBrand.value) // Thay đổi URL của API tương ứng
-      .then(() => {
-        // Cập nhật lại danh sách thương hiệu sau khi thêm thành công
-        fetchBrands();
-        cancelEdit();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+onMounted(async () => {
+  try {
+    await brandStore.fetchBrands();
+    brands.value = brandStore.getBrands.value;
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    // Xử lý lỗi
   }
-}
+});
 
-function cancelEdit() {
+watch([brandStore.getBrands], () => {
+  brands.value = brandStore.getBrands.value;
+});
+
+const showAddDialog = () => {
+  currentBrand.value = {};
+  isEditing.value = false;
+  dialogVisible.value = true;
+};
+
+const showEditDialog = (brand: BrandType) => {
+  currentBrand.value = { ...brand };
+  isEditing.value = true;
+  dialogVisible.value = true;
+};
+
+const cancelEdit = () => {
+  currentBrand.value = {};
   dialogVisible.value = false;
-  currentBrand.value = { brandId: 0, name: '' };
-}
+};
 
-function deleteBrand(brand: Brand) {
+const saveBrand = async () => {
+  if (isEditing.value) {
+    // Thực hiện cập nhật thương hiệu
+    try {
+      await brandStore.updateBrand(currentBrand.value.brandId, currentBrand.value as UpdateParams);
+      await brandStore.fetchBrands();
+      tableKey.value += 1; // Force DataTable re-render
+    } catch (error) {
+      console.error('Error updating brand:', error);
+      // Xử lý lỗi
+    }
+  } else {
+    // Thực hiện thêm thương hiệu mới
+    try {
+      await brandStore.addBrand(currentBrand.value as CreationParams);
+      await brandStore.fetchBrands();
+      tableKey.value += 1; // Force DataTable re-render
+    } catch (error) {
+      console.error('Error adding brand:', error);
+      // Xử lý lỗi
+    }
+  }
+
+  currentBrand.value = {};
+  dialogVisible.value = false;
+};
+
+const showDeleteDialog = (brand: BrandType) => {
   currentBrand.value = { ...brand };
   deleteDialogVisible.value = true;
-}
+};
 
-function confirmDeleteBrand() {
-  // Gọi API để xóa thương hiệu
-  axios
-    .delete(`http://localhost:8080/api/v1/brands/${currentBrand.value.brandId}`) // Thay đổi URL của API tương ứng
-    .then(() => {
-      // Cập nhật lại danh sách thương hiệu sau khi xóa thành công
-      fetchBrands();
-      cancelDelete();
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
-
-function cancelDelete() {
+const cancelDelete = () => {
+  currentBrand.value = {};
   deleteDialogVisible.value = false;
-  currentBrand.value = { brandId: 0, name: '' };
-}
+};
+
+const deleteBrand = async () => {
+  try {
+    await brandStore.deleteBrand(currentBrand.value.brandId);
+    await brandStore.fetchBrands();
+    tableKey.value += 1; // Force DataTable re-render
+  } catch (error) {
+    console.error('Error deleting brand:', error);
+    // Xử lý lỗi
+  }
+
+  currentBrand.value = {};
+  deleteDialogVisible.value = false;
+};
 </script>
 
 <style scoped>
@@ -203,4 +195,5 @@ function cancelDelete() {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-}</style>
+}
+</style>

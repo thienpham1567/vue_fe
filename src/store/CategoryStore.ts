@@ -4,14 +4,13 @@ import type {
 	CreationParams,
 	UpdateParams,
 } from "@/types/category";
-import { defineStore } from "pinia";
-import { ref, type Ref } from "vue";
+import { ref,} from "vue";
 import { computed } from "vue";
 
-const useCategoryStore = defineStore("category", () => {
+const useCategoryStore =  () => {
 	// State
-	const categories: Ref<CategoryType[]> = ref([]);
-	const category: Ref<CategoryType> = ref({});
+	const categories = ref<CategoryType[]>([]);
+	const category = ref<CategoryType>({});
 
 	// Getters
 	const getCategories = computed(() => categories);
@@ -59,6 +58,6 @@ const useCategoryStore = defineStore("category", () => {
 		deleteCategory,
 		setCategory,
 	};
-});
+};
 
 export default useCategoryStore;
