@@ -3,12 +3,14 @@
         <TabPanel header="Products">
             <div class=" mb-4">
                 <div class="flex justify-between ml-2 mr-4">
-                    <select id="sort-by" class="border rounded p-3 w-1/2 ml-2">
-                        <option value="BrandId">Brand Id</option>
-                    </select>
-                    <select id="sort-by" class="border rounded p-3 w-1/2 ml-2">
-                        <option value="CategoryId">Category Id</option>
-                    </select>
+                    <div class="w-1/2 ml-2 mr-2">
+                        <Dropdown v-model="selectedBrand" :options="brands" placeholder="Select a Brand"
+                            class="w-full md:w-14rem" />
+                    </div>
+                    <div class="w-1/2 ml-2">
+                        <Dropdown v-model="selectedCategory" :options="categories" placeholder="Select a Category"
+                            class="w-full md:w-14rem" />
+                    </div>
                 </div>
                 <div class="mr-4 ml-4 mt-4">
                     <label for="SKU-Code">SKU Code</label>
@@ -31,7 +33,7 @@
                 </div>
                 <div class="flex ml-4 mr-4">
                     <div class="mt-4">
-                        <Button type="submit" label="Save"
+                        <Button @click="handleSave" type="submit" label="Save"
                             class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                     </div>
                     <div class="ml-2 mt-4">
@@ -121,4 +123,83 @@ import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import Dropdown from 'primevue/dropdown';
+import { BrandType } from '@/types/brand';
+import useBrandStore from '@/store/BrandStore';
+import { CategoryType } from '@/types/category';
+import useCategoryStore from '@/store/CategoryStore';
+import { ref, onMounted, watch } from 'vue';
+const brandStore = useBrandStore();
+const brands = ref<BrandType[]>([]);
+const selectedBrand = ref(null);
+
+const categoryStore = useCategoryStore();
+const categories = ref<CategoryType[]>([]);
+const selectedCategory = ref(null);
+
+onMounted(async () => {
+    try {
+        await brandStore.fetchBrands();
+        brands.value = brandStore.getBrands.value.map(brands => brands.brandId + ' - ' + brands.name);
+    } catch (error) {
+        console.error('Error fetching brands', error);
+    }
+    try {
+        await categoryStore.fetchCategories();
+        categories.value = categoryStore.getMainSubCategories.value.map(categories => categories.categoryId + ' - ' + categories.name + ' - ' + categories.parentCategory?.name);
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+    }
+
+});
+
+// Lưu đánh giá
+const saveReview = async () => {
+    try {
+        await reviewStore.createReview(newReview.value);
+        await reviewStore.fetchReviews();
+        reviews.value = reviewStore.getReviews.value;
+        dialogVisible.value = false;
+    } catch (error) {
+        console.error('Error saving review:', error);
+        // Handle error
+    }
+};
+
+const handleSave = async () => {
+    try {
+        await Store.createProduct(newReview.value);
+        // Xử lý phản hồi từ API ở đây (ví dụ: hiển thị thông báo thành công, cập nhật dữ liệu, vv.)
+        console.log(response.data);
+        console.log('Product created successfully!');
+    } catch (error) {
+        // Xử lý lỗi khi gọi API (ví dụ: hiển thị thông báo lỗi, ghi log lỗi, vv.)
+        console.error('Error creating product:', error);
+    }
+};
+watch(selectedCategory, (newCategory) => {
+    // Update the selected category value here
+
+    //console.log(typeof (newCategory));
+    console.log('Selected Category:', Number(newCategory.slice(0, 2)));
+});
+
+watch(selectedBrand, (newBrand) => {
+    // Update the selected category value here
+
+    //console.log(typeof (newCategory));
+    console.log('Selected Brand:', Number(newBrand.slice(0, 2)));
+});
+
+
+
+
+// onMounted(async () => {
+//     try {
+//         await categoryStore.fetchCategories();
+//         categories.value = categoryStore.getCategories.value.map(categories => categories.name);
+//     } catch (error) {
+//         console.error('Error fetching categories', error);
+//     }
+// });
 </script>

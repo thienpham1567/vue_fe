@@ -4,10 +4,10 @@ import type {
 	CreationParams,
 	UpdateParams,
 } from "@/types/category";
-import { ref,} from "vue";
+import { ref, } from "vue";
 import { computed } from "vue";
 
-const useCategoryStore =  () => {
+const useCategoryStore = () => {
 	// State
 	const categories = ref<CategoryType[]>([]);
 	const category = ref<CategoryType>({});
@@ -17,6 +17,9 @@ const useCategoryStore =  () => {
 	const getCategory = computed(() => category);
 	const getMainCategories = computed(() =>
 		categories.value.filter((category) => category.parentCategory?.name === "")
+	);
+	const getMainSubCategories = computed(() =>
+		categories.value.filter((category) => category.categoryId && category.categoryId >= 4)
 	);
 
 	// Action
@@ -52,6 +55,7 @@ const useCategoryStore =  () => {
 		getCategory,
 		getCategories,
 		getMainCategories,
+		getMainSubCategories,
 		fetchCategories,
 		addCategory,
 		updateCategory,
