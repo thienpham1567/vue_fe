@@ -16,7 +16,7 @@
 
       <nav class="mt-10">
         <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[route.name === 'Dashboard' ? activeClass : inactiveClass]" to="">
+          :class="[route.name === 'Dashboard' ? activeClass : inactiveClass]" to="/admin/products">
           <i class="pi pi-box" style="font-size: 2rem"></i>
           <span class="mx-4">Product</span>
         </router-link>
