@@ -6,27 +6,8 @@
 .p-dialog-header {
   display: unset;
   padding: 0 !important;
-
+  
   .p-dialog-header-icons {
     display: none !important;
-  }
-
-
-}
-
-.p-sidebar-header {
-  justify-content: space-between;
-}
-
-.p-sidebar {
-  &-content {
-    padding: 0 !important;
-  }
-
-  &-right {
-    .p-sidebar {
-      width: 34rem;
-      height: 100%;
-    }
   }
 }
