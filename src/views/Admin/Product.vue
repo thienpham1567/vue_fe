@@ -54,20 +54,34 @@
             <div class=" mb-4 mt-12">
                 <div class="account-management__user-accounts">
                     <div class="flex justify-center">
-                        <h2 class="text-3xl font-semibold">Danh sách các đánh giá</h2>
+                        <h2 class="text-3xl font-semibold">Product list</h2>
                     </div>
-                    <DataTable :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
-                        <Column field="reviewId" header="Product Id"></Column>
-                        <Column field="reviewId" header="Brand Id"></Column>
-                        <Column field="reviewId" header="Category Id"></Column>
-                        <Column field="userId" header="Created At"></Column>
-                        <Column field="userId" header="Update At"></Column>
-                        <Column field="productVariationId" header="Description"></Column>
-                        <Column field="content" header="Product Name"></Column>
-                        <!-- ngày tháng năm chưa format -->
-                        <Column field="createdAt" header="Price"></Column>
+                    <DataTable :value="products" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
+                        <Column field="productId" header="Product Id"></Column>
+                        <Column field="brand.brandId" header="Brand Id"></Column>
+                        <Column field="category.categoryId" header="Category Id"></Column>
+                        <Column field="createdAt" header="Created At"></Column>
+                        <Column field="updatedAt" header="Update At"></Column>
 
-                        <Column field="rateStar" header="SKU Code"></Column>
+                        <Column class="" field="description" header="Description">
+                            <template #body="rowData">
+                                <div class="description-cell">
+                                    {{ rowData.data.description.length > 150 ? rowData.data.description.slice(0, 150) +
+                                        '...' :
+                                        rowData.data.description }}
+                                </div>
+                            </template>
+                        </Column>
+
+                        <Column field="name" header="Product Name"></Column>
+                        <!-- ngày tháng năm chưa format -->
+                        <Column field="price" header="Price">
+                            <template #body="rowData">
+                                ${{ rowData.data.price }}
+                            </template>
+                        </Column>
+
+                        <Column field="sku" header="SKU Code"></Column>
                         <!-- Add more columns as needed -->
                         <Column header="Tools">
                             <template #body="rowData">
@@ -124,10 +138,13 @@ import InputText from 'primevue/inputtext';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import Dropdown from 'primevue/dropdown';
+import useProductStore from '@/store/ProductStore';
+import { ProductType, CreationParams, UpdateParams } from '@/types/product';
 import { BrandType } from '@/types/brand';
 import useBrandStore from '@/store/BrandStore';
 import { CategoryType } from '@/types/category';
 import useCategoryStore from '@/store/CategoryStore';
+import useProductAdminStore from '@/store/ProductAdminStore';
 import { ref, onMounted, watch } from 'vue';
 const brandStore = useBrandStore();
 const brands = ref<BrandType[]>([]);
@@ -137,7 +154,17 @@ const categoryStore = useCategoryStore();
 const categories = ref<CategoryType[]>([]);
 const selectedCategory = ref(null);
 
+const productStore = useProductAdminStore();
+const products = ref<ProductType[]>([]);
+
 onMounted(async () => {
+    try {
+        await productStore.fetchAllProductsAdmin();
+        products.value = productStore.getProducts.value;
+        console.log(products);
+    } catch (error) {
+        console.error('Error fetching products', error);
+    }
     try {
         await brandStore.fetchBrands();
         brands.value = brandStore.getBrands.value.map(brands => brands.brandId + ' - ' + brands.name);
@@ -154,9 +181,9 @@ onMounted(async () => {
 });
 
 // Lưu đánh giá
-const saveReview = async () => {
+const saveProduct = async () => {
     try {
-        await reviewStore.createReview(newReview.value);
+        await productStore
         await reviewStore.fetchReviews();
         reviews.value = reviewStore.getReviews.value;
         dialogVisible.value = false;
@@ -178,9 +205,7 @@ const handleSave = async () => {
     }
 };
 watch(selectedCategory, (newCategory) => {
-    // Update the selected category value here
-
-    //console.log(typeof (newCategory));
+    selectedCategory
     console.log('Selected Category:', Number(newCategory.slice(0, 2)));
 });
 
@@ -203,3 +228,12 @@ watch(selectedBrand, (newBrand) => {
 //     }
 // });
 </script>
+
+<style>
+.description-cell {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+</style>

@@ -39,3 +39,8 @@ export interface ListResponse {
   data: ProductType[];
   message?: string;
 }
+
+export interface QueryProductParams {
+  brand?: number;
+  category?: number;
+}

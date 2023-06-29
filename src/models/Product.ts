@@ -8,9 +8,18 @@ import type {
   UpdateParams,
 } from "@/types/productVariation";
 
+import type {
+  ProductResponse,
+  QueryProductParams,
+} from "@/types/product";
+
 class Product extends HTTPBaseService {
   public constructor() {
     super();
+  }
+
+  async productsAdmin(params: QueryProductParams): Promise<ListResponse> {
+    return await this.instance.get("/admin/products", { params });
   }
 
   async list(params: QueryProductVariationParams): Promise<ListResponse> {

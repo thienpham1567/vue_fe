@@ -34,3 +34,4 @@ export interface ListResponse {
     data: ReviewType[];
     message?: string;
 }
+
