@@ -312,5 +312,4 @@ onMounted(() => {
     carouselInner.value = document.querySelector('.carousel-inner');
 });
 </script>
-  
 
