@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <div class="flex items-center justify-between px-6">
+    <div class="flex items-center justify-between px-4">
       <div class="flex items-center h-36">
         <Image :src="Logo" alt="Image" width="180" />
         <div class="p-inputgroup">
@@ -23,13 +23,81 @@
     <div class="nav-menu">
       <MegaMenu :model="items">
         <template #end>
-          <Button label="Sign In / Register" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
+          <Button class="sign-in-register-btn" text @click="goToProductDetail">ProductDetail</Button>
+          <Button class="sign-in-register-btn" text @click="goToProductList">ProductList</Button>
+          <Button v-if="!isLogin" label="Sign In / Register" class="sign-in-register-btn" text
+            @click="dialogSignInVisible = true" />
+          <button label="My Account" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
+            <div class="mb-3">
+              <span v-if="showMyAccountSection">
+                <span class="font-bold">My Account</span>
+                <i class="pi pi-chevron-down ml-2"></i>
+              </span>
+              <span v-else>
+                <span class="font-bold">My Account</span>
+                <i class="pi pi-chevron-up ml-2"></i>
+              </span>
+            </div>
+            <div :class="['my-account-section', { 'hidden': !showMyAccountSection }]">
+              <div class="mb-2 flex justify-start">
+                <Button label="View order" class="sign-in-register-btn" text @click="goToViewOrders" />
+              </div>
+              <div class="mb-2 flex justify-start">
+                <Button label="My Account" class="sign-in-register-btn" text @click="goToMyAccount" />
+              </div>
+              <div class="mb-2 flex justify-start">
+                <Button label="Admin" v-if="isAdmin" class="sign-in-register-btn" text />
+              </div>
+              <div class="mb-2 flex justify-start">
+                <Button v-if="isLogin" label="Logout" class="sign-in-register-btn" text @click="logout" />
+              </div>
+            </div>
+          </button>
         </template>
       </MegaMenu>
     </div>
   </nav>
   <Sidebar v-model:visible="dialogCartVisible" position="right">
-    <p>My Cart</p>
+    <template #header>
+      <div class="text-2xl">Added To Cart</div>
+    </template>
+    <div class="overflow-y-auto w-full h-5/6">
+      <div class="mb-1 flex flex-wrap">
+        <div class="rounded-lg flex w-full ml-4 mr-4">
+          <div class="w-1/4 ">
+            <img src="https://m.media-amazon.com/images/I/71qvDARKU3L._AC_SR1840,1472_.jpg"
+              class="h-full w-full object-contain" />
+          </div>
+          <div class="w-2/4 ml-4">
+            <div class="text-base font-light">Rebok Work</div>
+            <div class="text-xl font-bold">Adidas</div>
+            <div class="text-base font-light">Color: black</div>
+            <div class="text-base font-light">Size: Men 12</div>
+          </div>
+          <div class="w-1/4">
+            <div class="text-xl font-bold">$114</div>
+            <div class="flex justify-center mt-2">
+              <Button icon="pi pi-minus" class="p-button-secondary p-button-text mr-2"
+                @click="decrement(products)"></Button>
+              <div class="bg-white w-12 flex justify-center items-center">{{ products[0].quantity }}</div>
+              <Button icon="pi pi-plus" class="p-button-secondary p-button-text ml-2"
+                @click="increment(products)"></Button>
+
+            </div>
+            <div class="mt-2">Remove</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bg-gray-200 w-full h-1/6">
+      <div class="flex justify-end mr-4">Cart Subtotal (10 Items)$1,099.90</div>
+      <div class="flex justify-between m-4 pb-4">
+        <Button type="submit" label="VIEW CART" @click="goToCart"
+          class="px-4 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
+        <Button type="submit" label="PROCEED TO CHECKOUT" @click="goToCheckout"
+          class="px-4 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
+      </div>
+    </div>
   </Sidebar>
 
   <CoreDialog :visible="dialogSignInVisible" header="Sign In" widthSize='500px' position="center"
@@ -54,6 +122,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
 import { onMounted } from 'vue';
+import jwt_decode from "jwt-decode";
 
 enum MainCategories {
   Men = 1,
@@ -61,29 +130,113 @@ enum MainCategories {
   Kids = 3
 }
 
+interface Product {
+  id: number;
+  name: string;
+  image: string;
+  category: string;
+  price: number;
+  quantity: number;
+}
+
+const products = ref<Product[]>([
+  {
+    id: 1,
+    name: 'Product 1',
+    image: 'https://assets.adidas.com/images/f_auto,q_auto,fl_lossy,c_fill,g_auto/52449ae7f1fe43efb178af4901514646_9366/Barricade_Tennis_Shoes_Blue_HP7417_01_standard.jpg',
+    category: 'Category 1',
+    price: 10,
+    quantity: 0
+  },
+  {
+    id: 2,
+    name: 'Product 2',
+    image: 'https://assets.adidas.com/images/f_auto,q_auto,fl_lossy,c_fill,g_auto/2a6cf9b6bec34ddeb72aaf4901515810_9366/Barricade_Tennis_Shoes_Blue_HP7417_02_standard.jpg',
+    category: 'Category 2',
+    price: 20,
+    quantity: 0
+  },
+  {
+    id: 3,
+    name: 'Product 3',
+    image: 'https://assets.adidas.com/images/f_auto,q_auto,fl_lossy,c_fill,g_auto/4eaecbe6bb0f45a59e28af4901517324_9366/Barricade_Tennis_Shoes_Blue_HP7417_05_standard.jpg',
+    category: 'Category 1',
+    price: 15,
+    quantity: 0
+  },
+  {
+    id: 4,
+    name: 'Product 4',
+    image: 'https://assets.adidas.com/images/f_auto,q_auto,fl_lossy,c_fill,g_auto/21b9bbfa944540309c67af4901516187_9366/Barricade_Tennis_Shoes_Blue_HP7417_03_standard.jpg',
+    category: 'Category 2',
+    price: 25,
+    quantity: 0
+  },
+  {
+    id: 5,
+    name: 'Product 5',
+    image: 'https://assets.adidas.com/images/f_auto,q_auto,fl_lossy,c_fill,g_auto/2204e27345dc4701bf06af49015169c0_9366/Barricade_Tennis_Shoes_Blue_HP7417_04_standard.jpg',
+    category: 'Category 1',
+    price: 12,
+    quantity: 0
+  },
+  {
+    id: 6,
+    name: 'Product 6',
+    image: 'https://assets.adidas.com/images/f_auto,q_auto,fl_lossy,c_fill,g_auto/7778b41b65f746dcae6dae9700cb08ce_9366/Barricade_Tennis_Shoes_Orange_GW3816_01_standard.jpg',
+    category: 'Category 2',
+    price: 18,
+    quantity: 0
+  },
+  {
+    id: 7,
+    name: 'Product 7',
+    image: 'https://assets.adidas.com/images/f_auto,q_auto,fl_lossy,c_fill,g_auto/5f83dc084f7d4fd386f2ae9700cb223a_9366/Barricade_Tennis_Shoes_Orange_GW3816_02_standard.jpg',
+    category: 'Category 1',
+    price: 14,
+    quantity: 0
+  },
+  {
+    id: 8,
+    name: 'Product 8',
+    image: 'https://assets.adidas.com/images/f_auto,q_auto,fl_lossy,c_fill,g_auto/680b6b9f97ae479da701ae9700cb31bb_9366/Barricade_Tennis_Shoes_Orange_GW3816_03_standard.jpg',
+    category: 'Category 2',
+    price: 22,
+    quantity: 0
+  },
+  {
+    id: 8,
+    name: 'Product 8',
+    image: 'https://assets.adidas.com/images/f_auto,q_auto,fl_lossy,c_fill,g_auto/680b6b9f97ae479da701ae9700cb31bb_9366/Barricade_Tennis_Shoes_Orange_GW3816_03_standard.jpg',
+    category: 'Category 2',
+    price: 22,
+    quantity: 0
+  },
+  {
+    id: 8,
+    name: 'Product 8',
+    image: 'https://assets.adidas.com/images/f_auto,q_auto,fl_lossy,c_fill,g_auto/680b6b9f97ae479da701ae9700cb31bb_9366/Barricade_Tennis_Shoes_Orange_GW3816_03_standard.jpg',
+    category: 'Category 2',
+    price: 22,
+    quantity: 0
+  },
+]);
+
 const router = useRouter();
-const { getUser, logout } = useAccountStore();
+const { getUser } = useAccountStore();
 const { getBrands, fetchBrands } = useBrandStore();
-const { getCategories, fetchCategories } = useCategoryStore();
+const { getCategories, getMainCategories, fetchCategories } = useCategoryStore();
 let selectedProduct = ref();
 let filteredProducts = ref([]);
 let dialogCartVisible = ref(false);
 let dialogSignInVisible = ref(false);
 
-function brands() {
+const getAllBrands = () => {
   return getBrands.value.map(brand => {
     return {
       label: brand.name,
-      command: () => gotoProductList(brand.brandId, undefined)
     }
   });
-}
-
-const getAllBrands = () => {
-  return [{
-    label: "Our brands",
-    items: brands(),
-  }]
 };
 
 const getSubCategories = (parentCategoryId: number, categoryCode: string) => {
@@ -93,7 +246,6 @@ const getSubCategories = (parentCategoryId: number, categoryCode: string) => {
     if (localParentCategoryId === parentCategoryId && localCategoryCode === categoryCode) {
       return {
         label: category.name,
-        command: () => gotoProductList(undefined, category.categoryId)
       }
     }
   });
@@ -115,6 +267,13 @@ const getCategoriesByParent = (parentCategoryId: number) => {
 }
 
 const items = ref([]);
+
+const showMyAccountSection = ref(false);
+const toggleSection = (section: string) => {
+  if (section === 'myAccount') {
+    showMyAccountSection.value = !showMyAccountSection.value;
+  }
+};
 
 const setDataHeader = () => {
   items.value = [
@@ -147,16 +306,89 @@ const goToLogin = () => {
   router.push('/account/login');
 }
 
+function goToCart() {
+  dialogCartVisible.value = false;
+  router.push('/products/cart');
+}
+
 const goToRegister = () => {
   router.push('/account/register')
 }
+function goToProductDetail() {
+  dialogCartVisible.value = false;
+  router.push('/products/ProductDetail')
+}
+function goToProductList() {
+  dialogCartVisible.value = false;
+  router.push('/products/ProductList')
+}
 
-const gotoProductList = (brand?: number, category?: number) => {
-  router.push({
-    name: "Products",
-    query: { category: category, brand: brand },
-  });
-};
+function goToCheckout() {
+  dialogCartVisible.value = false;
+  router.push('/checkout/Checkout');
+}
+
+function goToMyAccount() {
+  dialogCartVisible.value = false;
+  router.push('/myaccount/myaccount');
+}
+
+function goToViewOrders() {
+  dialogCartVisible.value = false;
+  router.push('/myaccount/view-order');
+}
 
 onMounted(fetchData);
+const increment = (products: Product) => {
+  products.quantity++;
+};
+
+const decrement = (products: Product) => {
+  if (products.quantity > 0) {
+    products.quantity--;
+  }
+};
+const token = localStorage.getItem('token');
+console.log(token);
+
+const isLogin = ref(false);
+let isAdmin = ref(false);
+
+function checkToken() {
+  if (token == null) {
+    isLogin.value = false;
+  } else {
+    isLogin.value = true;
+    const valueToken = jwt_decode(token!);
+    const roles = valueToken.user.roles;
+    console.log(roles);
+    isAdmin.value = roles.some(role => role.authority === 'admin');
+    console.log(isAdmin.value);
+  }
+}
+
+const logout = () => {
+  localStorage.removeItem("token");
+  window.location.reload();
+
+};
+checkToken();
 </script>
+
+<style>
+.hidden {
+  display: none;
+}
+
+.my-account-section {
+  position: absolute;
+  right: 1%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  z-index: 999;
+}
+</style>
+
+
