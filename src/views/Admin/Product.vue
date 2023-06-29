@@ -4,12 +4,12 @@
             <div class=" mb-4">
                 <div class="flex justify-between ml-2 mr-4">
                     <div class="w-1/2 ml-2 mr-2">
-                        <Dropdown v-model="selectedBrand" :options="brands" placeholder="Select a Brand"
+                        <Dropdown v-model="selectedBrand" :options="brands" optionLabel="name" placeholder="Select a Brand"
                             class="w-full md:w-14rem" />
                     </div>
                     <div class="w-1/2 ml-2">
-                        <Dropdown v-model="selectedCategory" :options="categories" placeholder="Select a Category"
-                            class="w-full md:w-14rem" />
+                        <Dropdown v-model="selectedCategory" :options="categoriesWithLabel" optionLabel="label"
+                            placeholder="Select a Category" class="w-full md:w-14rem" />
                     </div>
                 </div>
                 <div class="mr-4 ml-4 mt-4">
@@ -38,10 +38,6 @@
                     </div>
                     <div class="ml-2 mt-4">
                         <Button type="submit" label="Update"
-                            class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
-                    </div>
-                    <div class="ml-2 mt-4">
-                        <Button type="submit" label="Delete"
                             class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                     </div>
                     <div class="ml-2 mt-4">
@@ -86,7 +82,8 @@
                         <Column header="Tools">
                             <template #body="rowData">
                                 <div class="brand-list__actions">
-                                    <Button icon="pi pi-pencil" class=" p-button-rounded p-button-success"></Button>
+                                    <Button @click="editData" icon="pi pi-pencil"
+                                        class=" p-button-rounded p-button-success"></Button>
                                     <Button icon="pi pi-trash" class="p-button-rounded p-button-danger"></Button>
                                 </div>
                             </template>
@@ -144,7 +141,7 @@ import useBrandStore from '@/store/BrandStore';
 import { CategoryType } from '@/types/category';
 import useCategoryStore from '@/store/CategoryStore';
 import useProductAdminStore from '@/store/ProductAdminStore';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 const brandStore = useBrandStore();
 const brands = ref<BrandType[]>([]);
 const selectedBrand = ref(null);
@@ -159,6 +156,13 @@ const product = ref<ProductType>({});
 
 const price = ref<number | null>(null);
 const tableKey = ref(0); // Key to force DataTable re-render
+
+const categoriesWithLabel = computed(() =>
+    categories.value.map((category) => ({
+        ...category,
+        label: `${category.name} - ${category.parentCategory?.name}`
+    }))
+);
 
 onMounted(async () => {
     try {
@@ -185,6 +189,7 @@ onMounted(async () => {
 
 });
 
+
 const handleSave = async () => {
     try {
         // Lấy giá trị từ các select box
@@ -198,7 +203,6 @@ const handleSave = async () => {
 
         // Gán giá trị vào product.value
         product.value.brand = selectedBrandValue;
-        alert(product.value.brand);
         product.value.category = selectedCategoryValue;
         await productStore.addProduct(product.value as CreationParams);
         console.log(product.value)
