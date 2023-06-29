@@ -4,16 +4,16 @@
     <div class="category-list__add-button">
       <span class="p-input-icon-left">
         <i class="pi pi-search" />
-        <InputText v-model="searchText" placeholder="Search" @input="searchData" />
+        <InputText v-model="searchText" placeholder="Search" @input="searchData"></InputText>
       </span>
       <Button class="p-button-primary" label="Thêm danh mục" @click="showAddDialog"></Button>
     </div>
     <div class="category-list__table">
-      <DataTable :value="categories" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]"
+      <DataTable :value="filteredCategories" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]"
         :key="tableKey">
         <Column field="categoryId" header="ID"></Column>
         <Column field="name" header="Tên"></Column>
-        <Column field="parentCategory.name" header="Danh mục cha"></Column>
+        <Column field="parentCategory.categoryId" header="Danh mục cha"></Column>
         <Column header="Thao tác">
           <template #body="rowData">
             <div class="category-list__actions">
@@ -36,7 +36,7 @@
         </div>
         <div class="p-field">
           <label for="parentCategoryId">Danh mục cha</label>
-          <Dropdown id="parentCategoryId" v-model="currentCategory.parentCategoryId" :options="categoriess"
+          <Dropdown id="parentCategoryId" v-model="currentCategory.name" :options="categoriess"
             option-label="name" option-value="categoryId" :disabled="isEditing"></Dropdown>
         </div>
       </div>
@@ -101,29 +101,26 @@ onMounted(async () => {
   try {
     await categoryStore.fetchCategories();
     categories.value = categoryStore.getMainSubCategories.value;
-    watch(searchText, (newValue) => {
-      if (newValue.trim() === '') {
-        filteredCategories.value = categoryStore.getMainSubCategories.value;
-      } else {
-        searchData();
-      }
-    });
+    parentCategoryOptions.value = categoryStore.getCategories.value.filter(category => !category.parentCategoryId);
   } catch (error) {
     console.error('Error fetching categories:', error);
+    // Handle error
   }
 });
 
-
-watch(categoryStore.getCategories, () => {
-  categories.value = categoryStore.getCategories.value;
+const filteredCategories = computed(() => {
+  if (searchText.value.trim() !== '') {
+    const searchValue = searchText.value.toLowerCase().trim();
+    return categories.value.filter(category =>
+      category.name.toLowerCase().includes(searchValue)
+    );
+  }
+  return categories.value;
 });
 
-watch(categories, () => {
-  parentCategoryOptions.value = categories.value.filter(category => !category.parentCategoryId);
-});
-const filteredCategories = categories;
-
-
+const searchData = () => {
+  searchKey.value += 1;
+};
 
 const showAddDialog = () => {
   clearCurrentCategory();
@@ -133,11 +130,12 @@ const showAddDialog = () => {
 
 const showEditDialog = (category: CategoryType) => {
   currentCategory.categoryId = category.categoryId;
-  currentCategory.parentCategoryId = category.parentCategoryId;
+  currentCategory.parentCategoryId = category.parentCategory?.categoryId;
   currentCategory.name = category.name;
   isEditing.value = true;
   dialogVisible.value = true;
 };
+
 
 const cancelEdit = () => {
   clearCurrentCategory();
@@ -150,6 +148,7 @@ const saveCategory = async () => {
       await categoryStore.updateCategory(currentCategory.categoryId!, currentCategory as UpdateParams);
       await categoryStore.fetchCategories();
       tableKey.value += 1; // Force DataTable re-render
+      cancelEdit();
     } catch (error) {
       console.error('Error updating category:', error);
       // Xử lý lỗi
@@ -164,19 +163,18 @@ const saveCategory = async () => {
       await categoryStore.fetchCategories();
       categories.value = categoryStore.getMainSubCategories.value;
       tableKey.value += 1; // Force DataTable re-render
+      cancelEdit();
     } catch (error) {
       console.error('Error adding category:', error);
       // Xử lý lỗi
     }
   }
-
-  clearCurrentCategory();
-  dialogVisible.value = false;
 };
+
 
 const showDeleteDialog = (category: CategoryType) => {
   currentCategory.categoryId = category.categoryId;
-  currentCategory.parentCategoryId = category.parentCategoryId;
+  // currentCategory.parentCategoryId = category.parentCategoryId;
   currentCategory.name = category.name;
   deleteDialogVisible.value = true;
 };
@@ -203,21 +201,9 @@ const deleteCategory = async () => {
 
 const clearCurrentCategory = () => {
   currentCategory.categoryId = undefined;
-  currentCategory.parentCategoryId = undefined;
+  // currentCategory.parentCategoryId = undefined;
   currentCategory.name = '';
 };
-const searchData = () => {
-
-  if (searchText.value.trim() !== '') {
-    filteredCategories.value = categories.value.filter(category => {
-      const name = category.name.toLowerCase();
-      return name.includes(searchText.value.toLowerCase());
-    });
-  } else {
-    filteredCategories.value = categories.value;
-  }
-};
-
 
 
 </script>

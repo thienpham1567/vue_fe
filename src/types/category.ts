@@ -1,16 +1,16 @@
 export interface CategoryType {
   categoryId?: number;
-  parentCategory?: CategoryType;
+  parentCategory?: CategoryType | null;
   name?: string;
   code?: string;
 }
 
 export interface CreationParams {
   name?: string;
-  parentCategoryId?: number;
+  parentCategoryId?: number | null;
 }
 
-export type UpdateParams = Omit<CategoryType, "id">;
+export type UpdateParams = Omit<CategoryType, "categoryId">;
 
 export interface CreationResponse {
   status: boolean;

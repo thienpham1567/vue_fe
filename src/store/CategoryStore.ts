@@ -19,7 +19,7 @@ const useCategoryStore = () => {
 	);
 	const getSubCategories = computed(() =>
 	categories.value.filter((category) => category.categoryId && category.categoryId < 4)
-);
+  );
 
   // Actions
   const fetchCategories = async () => {
