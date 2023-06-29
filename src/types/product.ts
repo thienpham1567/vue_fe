@@ -4,7 +4,7 @@ import type { CategoryType } from "./category";
 export interface ProductType {
   productId?: number;
   brand?: BrandType;
-  category: CategoryType;
+  category?: CategoryType;
   name?: string;
   price?: number;
   sku?: string;
@@ -15,16 +15,19 @@ export interface ProductType {
 
 export interface CreationParams {
   name?: string;
+  sku?: string;
+  price?: number;
   description?: string;
-  brandId?: number;
-  categoryId?: number;
+  brand?: BrandType;
+  category?: CategoryType;
 }
 
 export type UpdateParams = Omit<ProductType, "id">;
 
 export interface CreationResponse {
   status: boolean;
-  data: { id: number };
+  //data: { id: number };
+  data: ProductType;
   message?: string;
 }
 
@@ -41,6 +44,6 @@ export interface ListResponse {
 }
 
 export interface QueryProductParams {
-  brand?: number;
-  category?: number;
+  brand?: BrandType;
+  category?: CategoryType;
 }

@@ -9,7 +9,7 @@ import type {
 } from "@/types/productVariation";
 
 import type {
-  ProductResponse,
+  //ProductResponse,
   QueryProductParams,
 } from "@/types/product";
 
@@ -31,7 +31,7 @@ class Product extends HTTPBaseService {
   }
 
   async create(params: CreationParams): Promise<CreationResponse> {
-    return await this.instance.post("/products", params);
+    return await this.instance.post("/admin/products", params);
   }
 
   async update(id: number, params: UpdateParams): Promise<ProductVariationResponse> {

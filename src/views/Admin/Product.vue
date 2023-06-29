@@ -14,22 +14,22 @@
                 </div>
                 <div class="mr-4 ml-4 mt-4">
                     <label for="SKU-Code">SKU Code</label>
-                    <InputText class="w-full" placeholder="93AB3S" />
+                    <InputText v-model="product.sku" class="w-full" placeholder="93AB3S" />
                 </div>
                 <div class="flex">
                     <div class="mr-4 ml-4 mt-4 w-1/2">
                         <label for="ProductName">Product Name</label>
-                        <InputText class="w-full" placeholder="Product Name" />
+                        <InputText v-model="product.name" class="w-full" placeholder="Product Name" />
                     </div>
                     <div class="mr-4 ml-4 mt-4 w-1/2">
                         <label for="ProductPrice">Product Price</label>
-                        <InputNumber class="w-full" inputId="currency-us" placeholder="$00.00" mode="currency"
-                            currency="USD" locale="en-US" />
+                        <InputNumber v-model="product.price" class="w-full" inputId="currency-us" placeholder="$00.00"
+                            mode="currency" currency="USD" locale="en-US" />
                     </div>
                 </div>
                 <div class="mr-4 ml-4 mt-4">
-                    <label for="lastname">Description</label>
-                    <Textarea class="w-full" rows="5" cols="30" />
+                    <label for="description">Description</label>
+                    <Textarea v-model="product.description" class="w-full" rows="5" cols="30" />
                 </div>
                 <div class="flex ml-4 mr-4">
                     <div class="mt-4">
@@ -86,8 +86,7 @@
                         <Column header="Tools">
                             <template #body="rowData">
                                 <div class="brand-list__actions">
-                                    <Button icon="pi pi-pencil" class=" p-button-rounded p-button-success">Chỉnh
-                                        sửa</Button>
+                                    <Button icon="pi pi-pencil" class=" p-button-rounded p-button-success"></Button>
                                     <Button icon="pi pi-trash" class="p-button-rounded p-button-danger"></Button>
                                 </div>
                             </template>
@@ -138,14 +137,14 @@ import InputText from 'primevue/inputtext';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import Dropdown from 'primevue/dropdown';
-import useProductStore from '@/store/ProductStore';
-import { ProductType, CreationParams, UpdateParams } from '@/types/product';
+//import useProductStore from '@/store/ProductStore';
+import { ProductType, CreationParams } from '@/types/product';
 import { BrandType } from '@/types/brand';
 import useBrandStore from '@/store/BrandStore';
 import { CategoryType } from '@/types/category';
 import useCategoryStore from '@/store/CategoryStore';
 import useProductAdminStore from '@/store/ProductAdminStore';
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 const brandStore = useBrandStore();
 const brands = ref<BrandType[]>([]);
 const selectedBrand = ref(null);
@@ -156,6 +155,10 @@ const selectedCategory = ref(null);
 
 const productStore = useProductAdminStore();
 const products = ref<ProductType[]>([]);
+const product = ref<ProductType>({});
+
+const price = ref<number | null>(null);
+const tableKey = ref(0); // Key to force DataTable re-render
 
 onMounted(async () => {
     try {
@@ -167,54 +170,84 @@ onMounted(async () => {
     }
     try {
         await brandStore.fetchBrands();
-        brands.value = brandStore.getBrands.value.map(brands => brands.brandId + ' - ' + brands.name);
+        //brands.value = brandStore.getBrands.value.map(brands => brands.brandId + ' - ' + brands.name);
+        brands.value = brandStore.getBrands.value;
     } catch (error) {
         console.error('Error fetching brands', error);
     }
     try {
         await categoryStore.fetchCategories();
-        categories.value = categoryStore.getMainSubCategories.value.map(categories => categories.categoryId + ' - ' + categories.name + ' - ' + categories.parentCategory?.name);
+        //categories.value = categoryStore.getMainSubCategories.value.map(categories => categories.categoryId + ' - ' + categories.name + ' - ' + categories.parentCategory?.name);
+        categories.value = categoryStore.getMainSubCategories.value;
     } catch (error) {
         console.error('Error fetching categories:', error);
     }
 
 });
 
-// Lưu đánh giá
-const saveProduct = async () => {
-    try {
-        await productStore
-        await reviewStore.fetchReviews();
-        reviews.value = reviewStore.getReviews.value;
-        dialogVisible.value = false;
-    } catch (error) {
-        console.error('Error saving review:', error);
-        // Handle error
-    }
-};
-
 const handleSave = async () => {
     try {
-        await Store.createProduct(newReview.value);
+        // Lấy giá trị từ các select box
+        const selectedBrandValue = selectedBrand.value;
+        const selectedCategoryValue = selectedCategory.value;
+
+        // Kiểm tra xem giá trị đã được chọn hay chưa
+        if (!selectedBrandValue || !selectedCategoryValue) {
+            throw new Error("Brand and category must be selected.");
+        }
+
+        // Gán giá trị vào product.value
+        product.value.brand = selectedBrandValue;
+        alert(product.value.brand);
+        product.value.category = selectedCategoryValue;
+        await productStore.addProduct(product.value as CreationParams);
+        console.log(product.value)
         // Xử lý phản hồi từ API ở đây (ví dụ: hiển thị thông báo thành công, cập nhật dữ liệu, vv.)
-        console.log(response.data);
+        await productStore.fetchAllProductsAdmin();
+        tableKey.value += 1; // Force DataTable re-render
         console.log('Product created successfully!');
     } catch (error) {
         // Xử lý lỗi khi gọi API (ví dụ: hiển thị thông báo lỗi, ghi log lỗi, vv.)
         console.error('Error creating product:', error);
     }
 };
-watch(selectedCategory, (newCategory) => {
-    selectedCategory
-    console.log('Selected Category:', Number(newCategory.slice(0, 2)));
-});
 
-watch(selectedBrand, (newBrand) => {
-    // Update the selected category value here
+// const handleSave = async () => {
+//     try {
+//         await productStore.addProduct(product.value as CreationParams);
+//         // Xử lý phản hồi từ API ở đây (ví dụ: hiển thị thông báo thành công, cập nhật dữ liệu, vv.)
+//         await productStore.fetchAllProductsAdmin();
+//         tableKey.value += 1; // Force DataTable re-render
+//         console.log('Product created successfully!');
+//     } catch (error) {
+//         // Xử lý lỗi khi gọi API (ví dụ: hiển thị thông báo lỗi, ghi log lỗi, vv.)
+//         console.error('Error creating product:', error);
+//     }
+// };
 
-    //console.log(typeof (newCategory));
-    console.log('Selected Brand:', Number(newBrand.slice(0, 2)));
-});
+// const handleSave = async () => {
+//     try {
+//         await addProduct(product.value as CreationParams);
+//         // Xử lý phản hồi từ API ở đây (ví dụ: hiển thị thông báo thành công, cập nhật dữ liệu, vv.)
+//         await fetchAllProductsAdmin();
+//         tableKey.value += 1; // Force DataTable re-render
+//         console.log('Product created successfully!');
+//     } catch (error) {
+//         // Xử lý lỗi khi gọi API (ví dụ: hiển thị thông báo lỗi, ghi log lỗi, vv.)
+//         console.error('Error creating product:', error);
+//     }
+// };
+// watch(selectedCategory, (newCategory) => {
+//     selectedCategory
+//     console.log('Selected Category:', Number(newCategory.slice(0, 2)));
+// });
+
+// watch(selectedBrand, (newBrand) => {
+//     // Update the selected category value here
+
+//     //console.log(typeof (newCategory));
+//     console.log('Selected Brand:', Number(newBrand.slice(0, 2)));
+// });
 
 
 
