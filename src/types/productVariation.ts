@@ -11,7 +11,9 @@ export interface ProductVariationType {
   productImages?: ProductImagesType[];
 }
 
-export interface CreationParams {
+export interface CreationProductVariationParams {
+  color?: ColorType;
+  product?: ProductType;
 }
 
 export type UpdateParams = Omit<ProductVariationType, "id">;
@@ -35,6 +37,6 @@ export interface ListResponse {
 }
 
 export interface QueryProductVariationParams {
-  brand?: number;
-  category?: number;
+  color?: ColorType;
+  product?: ProductType;
 }
