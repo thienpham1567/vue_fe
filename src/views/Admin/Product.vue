@@ -119,13 +119,87 @@
             </div>
         </TabPanel>
         <TabPanel header="Products Variations">
-            <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam
-                rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt
-                explicabo. Nemo enim
-                ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores
-                eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-            </p>
+            <div class=" mb-4">
+                <div class="flex justify-between ml-2 mr-4">
+                    <div class="w-1/2 ml-2 mr-2">
+                        <Dropdown v-model="selectedBrand" :options="brands" optionLabel="name" placeholder="Select a Brand"
+                            class="w-full md:w-14rem" />
+                    </div>
+                    <div class="w-1/2 ml-2">
+                        <Dropdown v-model="selectedCategory" :options="categoriesWithLabel" optionLabel="label"
+                            placeholder="Select a Category" class="w-full md:w-14rem">
+                            <template #value="slotProps">
+                                <div v-if="slotProps.value" class="flex align-items-center">
+                                    <div>{{ slotProps.value.name }}</div>
+                                    <div class="mx-1"> - </div>
+                                    <div>{{
+                                        slotProps.value.parentCategory.name }}</div>
+                                </div>
+                                <span v-else>
+                                    {{ slotProps.placeholder }}
+                                </span>
+                            </template>
+                        </Dropdown>
+                    </div>
+                </div>
+                <div class="flex ml-4 mr-4">
+                    <div class="mt-4">
+                        <Button @click="handleSave" type="submit" label="Save"
+                            class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
+                    </div>
+                    <div class="ml-2 mt-4">
+                        <Button type="submit" label="Update"
+                            class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
+                    </div>
+                    <div class="ml-2 mt-4">
+                        <Button type="submit" label="Reset"
+                            class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
+                    </div>
+                </div>
+            </div>
+            <div class="border-b border-gray-400"></div>
+            <div class=" mb-4 mt-12">
+                <div class="account-management__user-accounts">
+                    <div class="flex justify-center">
+                        <h2 class="text-3xl font-semibold">Product list</h2>
+                    </div>
+                    <DataTable :value="products" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
+                        <Column field="productId" header="Product Id"></Column>
+                        <Column field="brand.brandId" header="Brand Id"></Column>
+                        <Column field="category.categoryId" header="Category Id"></Column>
+
+                        <Column class="" field="description" header="Description">
+                            <template #body="rowData">
+                                <div class="description-cell">
+                                    {{ rowData.data.description.length > 150 ? rowData.data.description.slice(0, 150) +
+                                        '...' :
+                                        rowData.data.description }}
+                                </div>
+                            </template>
+                        </Column>
+
+                        <Column field="name" header="Product Name"></Column>
+                        <!-- ngày tháng năm chưa format -->
+                        <Column field="price" header="Price">
+                            <template #body="rowData">
+                                ${{ rowData.data.price }}
+                            </template>
+                        </Column>
+
+                        <Column field="sku" header="SKU Code"></Column>
+                        <!-- Add more columns as needed -->
+                        <Column header="Tools">
+                            <template #body="rowData">
+                                <div class="brand-list__actions">
+                                    <Button @click="editData(rowData)" icon="pi pi-pencil"
+                                        class="p-button-rounded p-button-success"></Button>
+                                    <Button icon="pi pi-trash" class="p-button-rounded p-button-danger"></Button>
+                                </div>
+                            </template>
+                        </Column>
+                    </DataTable>
+                </div>
+            </div>
         </TabPanel>
         <TabPanel header="Products Variations Sizes">
             <p>
