@@ -131,8 +131,8 @@ const showAddDialog = () => {
 
 const showEditDialog = (category: CategoryType) => {
   currentCategory.categoryId = category.categoryId;
-  currentCategory.parentCategory = category.parentCategoryId;
-  currentCategory.name = category.parentCategory?.name;
+  currentCategory.parentCategory = category.parentCategory;
+  currentCategory.name = category.name;
   isEditing.value = true;
   dialogVisible.value = true;
 };
@@ -148,6 +148,7 @@ const saveCategory = async () => {
     try {
       await categoryStore.updateCategory(currentCategory.categoryId!, currentCategory as UpdateParams);
       await categoryStore.fetchCategories();
+      // categories.value = categoryStore.getMainSubCategories.value;
       loadDatatable();
       // tableKey.value += 1; // Force DataTable re-render
       cancelEdit();
