@@ -13,7 +13,7 @@
         :key="tableKey">
         <Column field="categoryId" header="ID"></Column>
         <Column field="name" header="Tên"></Column>
-        <Column field="parentCategory.categoryId" header="Danh mục cha"></Column>
+        <Column field="parentCategory.name" header="Danh mục cha"></Column>
         <Column header="Thao tác">
           <template #body="rowData">
             <div class="category-list__actions">
@@ -36,7 +36,7 @@
         </div>
         <div class="p-field">
           <label for="parentCategoryId">Danh mục cha</label>
-          <Dropdown id="parentCategoryId" v-model="currentCategory.name" :options="categoriess"
+          <Dropdown id="parentCategoryId" v-model="currentCategory.parentCategory" :options="categoriess"
             option-label="name" option-value="categoryId" :disabled="isEditing"></Dropdown>
         </div>
       </div>
@@ -100,7 +100,8 @@ onMounted(async () => {
 onMounted(async () => {
   try {
     await categoryStore.fetchCategories();
-    categories.value = categoryStore.getMainSubCategories.value;
+    // categories.value = categoryStore.getMainSubCategories.value;
+    loadDatatable();
     parentCategoryOptions.value = categoryStore.getCategories.value.filter(category => !category.parentCategoryId);
   } catch (error) {
     console.error('Error fetching categories:', error);
@@ -130,7 +131,7 @@ const showAddDialog = () => {
 
 const showEditDialog = (category: CategoryType) => {
   currentCategory.categoryId = category.categoryId;
-  currentCategory.parentCategoryId = category.parentCategory?.categoryId;
+  currentCategory.parentCategory = category.parentCategory;
   currentCategory.name = category.name;
   isEditing.value = true;
   dialogVisible.value = true;
@@ -147,7 +148,9 @@ const saveCategory = async () => {
     try {
       await categoryStore.updateCategory(currentCategory.categoryId!, currentCategory as UpdateParams);
       await categoryStore.fetchCategories();
-      tableKey.value += 1; // Force DataTable re-render
+      // categories.value = categoryStore.getMainSubCategories.value;
+      loadDatatable();
+      // tableKey.value += 1; // Force DataTable re-render
       cancelEdit();
     } catch (error) {
       console.error('Error updating category:', error);
@@ -157,12 +160,13 @@ const saveCategory = async () => {
     try {
       const creationParams: CreationParams = {
         name: currentCategory.name,
-        parentCategoryId: currentCategory.parentCategoryId
+        parentCategoryId: currentCategory.parentCategory
       };
       await categoryStore.addCategory(creationParams);
       await categoryStore.fetchCategories();
-      categories.value = categoryStore.getMainSubCategories.value;
-      tableKey.value += 1; // Force DataTable re-render
+      // categories.value = categoryStore.getMainSubCategories.value;
+      loadDatatable();
+      // tableKey.value += 1; // Force DataTable re-render
       cancelEdit();
     } catch (error) {
       console.error('Error adding category:', error);
@@ -171,6 +175,9 @@ const saveCategory = async () => {
   }
 };
 
+const loadDatatable = () => {
+  categories.value = categoryStore.getMainSubCategories.value;
+}
 
 const showDeleteDialog = (category: CategoryType) => {
   currentCategory.categoryId = category.categoryId;
@@ -188,7 +195,8 @@ const deleteCategory = async () => {
   try {
     await categoryStore.deleteCategory(currentCategory.categoryId!);
     await categoryStore.fetchCategories();
-    categories.value = categoryStore.getMainSubCategories.value;
+    // categories.value = categoryStore.getMainSubCategories.value;
+    loadDatatable();
     tableKey.value += 1; // Force DataTable re-render
   } catch (error) {
     console.error('Error deleting category:', error);
