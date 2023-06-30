@@ -39,7 +39,7 @@ class Product extends HTTPBaseService {
   }
 
   async delete(id: number): Promise<void> {
-    this.instance.delete(`/products/${id}`);
+    await this.instance.delete(`/admin/products/${id}`);
   }
 
   deleteAll(ids: number[]): void {
