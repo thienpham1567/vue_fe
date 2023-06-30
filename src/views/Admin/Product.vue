@@ -9,7 +9,19 @@
                     </div>
                     <div class="w-1/2 ml-2">
                         <Dropdown v-model="selectedCategory" :options="categoriesWithLabel" optionLabel="label"
-                            placeholder="Select a Category" class="w-full md:w-14rem" />
+                            placeholder="Select a Category" class="w-full md:w-14rem">
+                            <template #value="slotProps">
+                                <div v-if="slotProps.value" class="flex align-items-center">
+                                    <div>{{ slotProps.value.name }}</div>
+                                    <div class="mx-1"> - </div>
+                                    <div>{{
+                                        slotProps.value.parentCategory.name }}</div>
+                                </div>
+                                <span v-else>
+                                    {{ slotProps.placeholder }}
+                                </span>
+                            </template>
+                        </Dropdown>
                     </div>
                 </div>
                 <div class="mr-4 ml-4 mt-4">
@@ -82,7 +94,8 @@
                         <Column header="Tools">
                             <template #body="rowData">
                                 <div class="product-list__actions">
-                                    <Button icon="pi pi-pencil" class=" p-button-rounded p-button-success"></Button>
+                                    <Button @click="editData(rowData)" icon="pi pi-pencil"
+                                        class=" p-button-rounded p-button-success"></Button>
                                     <Button @click="showDeleteDialog(rowData.data)" icon="pi pi-trash"
                                         class="p-button-rounded p-button-danger"></Button>
                                 </div>
@@ -172,6 +185,8 @@ const currentProduct = ref<ProductType>({});
 
 const price = ref<number | null>(null);
 
+const selectedProduct = ref<ProductType | null>(null);
+
 const categoriesWithLabel = computed(() =>
     categories.value.map((category) => ({
         ...category,
@@ -255,6 +270,22 @@ const handleDelete = async () => {
     currentProduct.value = {};
     deleteDialogVisible.value = false;
 }
+
+const editData = (rowData: { data: ProductType }) => {
+    selectedProduct.value = { ...rowData.data };
+
+    // Find the selected brand based on brandId
+    selectedBrand.value = brands.value.find(
+        brand => brand.brandId === selectedProduct.value.brand.brandId
+    );
+
+    // Find the selected category based on categoryId
+    selectedCategory.value = categories.value.find(
+        category => category.categoryId === selectedProduct.value.category.categoryId
+    );
+
+    currentProduct.value = { ...selectedProduct.value };
+};
 
 </script>
 
