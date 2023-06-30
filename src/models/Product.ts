@@ -9,7 +9,8 @@ import type {
 } from "@/types/productVariation";
 
 import type {
-  //ProductResponse,
+  ProductResponse,
+  UpdateAdminParams,
   QueryProductParams,
 } from "@/types/product";
 
@@ -34,8 +35,8 @@ class Product extends HTTPBaseService {
     return await this.instance.post("/admin/products", params);
   }
 
-  async update(id: number, params: UpdateParams): Promise<ProductVariationResponse> {
-    return await this.instance.put(`/products/${id}`, params);
+  async update(id: number, params: UpdateAdminParams): Promise<ProductResponse> {
+    return await this.instance.put(`/admin/products/${id}`, params);
   }
 
   async delete(id: number): Promise<void> {

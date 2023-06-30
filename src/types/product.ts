@@ -22,7 +22,7 @@ export interface CreationParams {
   category?: CategoryType;
 }
 
-export type UpdateParams = Omit<ProductType, "id">;
+export type UpdateAdminParams = Omit<ProductType, "id">;
 
 export interface CreationResponse {
   status: boolean;

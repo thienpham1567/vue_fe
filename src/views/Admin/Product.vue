@@ -49,7 +49,7 @@
                             class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                     </div>
                     <div class="ml-2 mt-4">
-                        <Button type="submit" label="Update"
+                        <Button @click="handleUpdate" type="submit" label="Update"
                             class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                     </div>
                     <div class="ml-2 mt-4">
@@ -162,7 +162,7 @@ import TabPanel from 'primevue/tabpanel';
 import Dropdown from 'primevue/dropdown';
 import Dialog from 'primevue/dialog';
 //import useProductStore from '@/store/ProductStore';
-import { ProductType, CreationParams } from '@/types/product';
+import { ProductType, CreationParams, UpdateAdminParams } from '@/types/product';
 import { BrandType } from '@/types/brand';
 import useBrandStore from '@/store/BrandStore';
 import { CategoryType } from '@/types/category';
@@ -220,6 +220,24 @@ onMounted(async () => {
 });
 
 
+const handleUpdate = async () => {
+    try {
+        const selectedBrandValue = selectedBrand.value;
+        const selectedCategoryValue = selectedCategory.value;
+        // Kiểm tra xem giá trị đã được chọn hay chưa
+        if (!selectedBrandValue || !selectedCategoryValue) {
+            throw new Error("Brand and category must be selected.");
+        }
+        // Gán giá trị vào product.value
+        currentProduct.value.brand = selectedBrandValue;
+        currentProduct.value.category = selectedCategoryValue;
+        await productStore.updateProduct(currentProduct.value.productId, currentProduct.value as UpdateAdminParams);
+        await productStore.fetchAllProductsAdmin();
+        products.value = productStore.getProducts.value;
+    } catch (error) {
+        console.error('Error updating product:', error);
+    }
+}
 const handleSave = async () => {
     try {
         // Lấy giá trị từ các select box
@@ -258,7 +276,6 @@ const showDeleteDialog = (product: ProductType) => {
     currentProduct.value = { ...product };
     deleteDialogVisible.value = true;
 };
-
 const handleDelete = async () => {
     try {
         await productStore.deleteProduct(currentProduct.value.productId);

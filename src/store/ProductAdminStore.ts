@@ -1,6 +1,5 @@
 import Product from "@/models/Product";
-// import type { UpdateParams } from "@/types/product";
-import type { ProductType, CreationParams } from "@/types/product";
+import type { ProductType, CreationParams, UpdateAdminParams } from "@/types/product";
 import { ref, computed } from "vue";
 import type { BrandType } from "@/types/brand";
 import type { CategoryType } from "@/types/category";
@@ -44,6 +43,12 @@ const useProductAdminStore = () => {
     fetchAllProductsAdmin();
   }
 
+  const updateProduct = async (id: number, product: UpdateAdminParams) => {
+    await new Product().update(id, product);
+    setProduct({});
+    fetchAllProductsAdmin();
+  };
+
 
   // const fetchAllProducts = async (brand?: number, category?: number) => {
   //   const { data } = await new Product().list({ brand, category });
@@ -57,7 +62,7 @@ const useProductAdminStore = () => {
   //   product.value = data!;
   // };
 
-  return { getProduct, getProducts, setProducts, setProduct, fetchAllProductsAdmin, addProduct, deleteProduct };
+  return { getProduct, getProducts, fetchAllProductsAdmin, addProduct, deleteProduct, updateProduct };
 };
 
 export default useProductAdminStore;
