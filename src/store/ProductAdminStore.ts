@@ -38,6 +38,12 @@ const useProductAdminStore = () => {
     products.value.push(data);
   };
 
+  const deleteProduct = async (id: number) => {
+    await new Product().delete(id);
+    setProduct({});
+    fetchAllProductsAdmin();
+  }
+
 
   // const fetchAllProducts = async (brand?: number, category?: number) => {
   //   const { data } = await new Product().list({ brand, category });
@@ -51,7 +57,7 @@ const useProductAdminStore = () => {
   //   product.value = data!;
   // };
 
-  return { getProduct, getProducts, setProducts, setProduct, fetchAllProductsAdmin, addProduct };
+  return { getProduct, getProducts, setProducts, setProduct, fetchAllProductsAdmin, addProduct, deleteProduct };
 };
 
 export default useProductAdminStore;

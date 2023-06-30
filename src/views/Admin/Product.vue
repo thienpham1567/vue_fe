@@ -14,22 +14,22 @@
                 </div>
                 <div class="mr-4 ml-4 mt-4">
                     <label for="SKU-Code">SKU Code</label>
-                    <InputText v-model="product.sku" class="w-full" placeholder="93AB3S" />
+                    <InputText v-model="currentProduct.sku" class="w-full" placeholder="93AB3S" />
                 </div>
                 <div class="flex">
                     <div class="mr-4 ml-4 mt-4 w-1/2">
                         <label for="ProductName">Product Name</label>
-                        <InputText v-model="product.name" class="w-full" placeholder="Product Name" />
+                        <InputText v-model="currentProduct.name" class="w-full" placeholder="Product Name" />
                     </div>
                     <div class="mr-4 ml-4 mt-4 w-1/2">
                         <label for="ProductPrice">Product Price</label>
-                        <InputNumber v-model="product.price" class="w-full" inputId="currency-us" placeholder="$00.00"
-                            mode="currency" currency="USD" locale="en-US" />
+                        <InputNumber v-model="currentProduct.price" class="w-full" inputId="currency-us"
+                            placeholder="$00.00" mode="currency" currency="USD" locale="en-US" />
                     </div>
                 </div>
                 <div class="mr-4 ml-4 mt-4">
                     <label for="description">Description</label>
-                    <Textarea v-model="product.description" class="w-full" rows="5" cols="30" />
+                    <Textarea v-model="currentProduct.description" class="w-full" rows="5" cols="30" />
                 </div>
                 <div class="flex ml-4 mr-4">
                     <div class="mt-4">
@@ -48,7 +48,7 @@
             </div>
             <div class="border-b border-gray-400"></div>
             <div class=" mb-4 mt-12">
-                <div class="account-management__user-accounts">
+                <div class="product-list__table">
                     <div class="flex justify-center">
                         <h2 class="text-3xl font-semibold">Product list</h2>
                     </div>
@@ -81,15 +81,28 @@
                         <!-- Add more columns as needed -->
                         <Column header="Tools">
                             <template #body="rowData">
-                                <div class="brand-list__actions">
-                                    <Button @click="editData" icon="pi pi-pencil"
-                                        class=" p-button-rounded p-button-success"></Button>
-                                    <Button icon="pi pi-trash" class="p-button-rounded p-button-danger"></Button>
+                                <div class="product-list__actions">
+                                    <Button icon="pi pi-pencil" class=" p-button-rounded p-button-success"></Button>
+                                    <Button @click="showDeleteDialog(rowData.data)" icon="pi pi-trash"
+                                        class="p-button-rounded p-button-danger"></Button>
                                 </div>
                             </template>
                         </Column>
                     </DataTable>
                 </div>
+
+                <Dialog v-model="deleteDialogVisible" :visible="deleteDialogVisible" header="Xác nhận xóa" :closable="false"
+                    class="product-list__dialog">
+                    <p>Bạn có chắc chắn muốn xóa sản phẩm này?</p>
+
+                    <template #footer>
+                        <div class="product-list__dialog-buttons">
+                            <Button class="p-button-danger" label="Xóa" @click="handleDelete"></Button>
+                            <Button class="p-button-secondary" label="Hủy" @click="cancelDelete"></Button>
+                        </div>
+                    </template>
+                </Dialog>
+
             </div>
         </TabPanel>
         <TabPanel header="Products Variations">
@@ -134,6 +147,7 @@ import InputText from 'primevue/inputtext';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import Dropdown from 'primevue/dropdown';
+import Dialog from 'primevue/dialog';
 //import useProductStore from '@/store/ProductStore';
 import { ProductType, CreationParams } from '@/types/product';
 import { BrandType } from '@/types/brand';
@@ -142,6 +156,8 @@ import { CategoryType } from '@/types/category';
 import useCategoryStore from '@/store/CategoryStore';
 import useProductAdminStore from '@/store/ProductAdminStore';
 import { ref, onMounted, computed } from 'vue';
+const dialogVisible = ref(false);
+const deleteDialogVisible = ref(false);
 const brandStore = useBrandStore();
 const brands = ref<BrandType[]>([]);
 const selectedBrand = ref(null);
@@ -152,10 +168,9 @@ const selectedCategory = ref(null);
 
 const productStore = useProductAdminStore();
 const products = ref<ProductType[]>([]);
-const product = ref<ProductType>({});
+const currentProduct = ref<ProductType>({});
 
 const price = ref<number | null>(null);
-const tableKey = ref(0); // Key to force DataTable re-render
 
 const categoriesWithLabel = computed(() =>
     categories.value.map((category) => ({
@@ -202,68 +217,45 @@ const handleSave = async () => {
         }
 
         // Gán giá trị vào product.value
-        product.value.brand = selectedBrandValue;
-        product.value.category = selectedCategoryValue;
-        await productStore.addProduct(product.value as CreationParams);
-        console.log(product.value)
+        currentProduct.value.brand = selectedBrandValue;
+        currentProduct.value.category = selectedCategoryValue;
+        await productStore.addProduct(currentProduct.value as CreationParams);
+        console.log(currentProduct.value)
         // Xử lý phản hồi từ API ở đây (ví dụ: hiển thị thông báo thành công, cập nhật dữ liệu, vv.)
         await productStore.fetchAllProductsAdmin();
-        tableKey.value += 1; // Force DataTable re-render
         console.log('Product created successfully!');
     } catch (error) {
         // Xử lý lỗi khi gọi API (ví dụ: hiển thị thông báo lỗi, ghi log lỗi, vv.)
         console.error('Error creating product:', error);
     }
+
+    currentProduct.value = {};
+    selectedBrand.value = null;
+    selectedCategory.value = null;
+    dialogVisible.value = false;
+};
+const cancelDelete = () => {
+    currentProduct.value = {};
+    deleteDialogVisible.value = false;
 };
 
-// const handleSave = async () => {
-//     try {
-//         await productStore.addProduct(product.value as CreationParams);
-//         // Xử lý phản hồi từ API ở đây (ví dụ: hiển thị thông báo thành công, cập nhật dữ liệu, vv.)
-//         await productStore.fetchAllProductsAdmin();
-//         tableKey.value += 1; // Force DataTable re-render
-//         console.log('Product created successfully!');
-//     } catch (error) {
-//         // Xử lý lỗi khi gọi API (ví dụ: hiển thị thông báo lỗi, ghi log lỗi, vv.)
-//         console.error('Error creating product:', error);
-//     }
-// };
+const showDeleteDialog = (product: ProductType) => {
+    currentProduct.value = { ...product };
+    deleteDialogVisible.value = true;
+};
 
-// const handleSave = async () => {
-//     try {
-//         await addProduct(product.value as CreationParams);
-//         // Xử lý phản hồi từ API ở đây (ví dụ: hiển thị thông báo thành công, cập nhật dữ liệu, vv.)
-//         await fetchAllProductsAdmin();
-//         tableKey.value += 1; // Force DataTable re-render
-//         console.log('Product created successfully!');
-//     } catch (error) {
-//         // Xử lý lỗi khi gọi API (ví dụ: hiển thị thông báo lỗi, ghi log lỗi, vv.)
-//         console.error('Error creating product:', error);
-//     }
-// };
-// watch(selectedCategory, (newCategory) => {
-//     selectedCategory
-//     console.log('Selected Category:', Number(newCategory.slice(0, 2)));
-// });
+const handleDelete = async () => {
+    try {
+        await productStore.deleteProduct(currentProduct.value.productId);
+        await productStore.fetchAllProductsAdmin();
+        products.value = productStore.getProducts.value;
+    } catch (error) {
+        console.error('Error deleting product:', error);
+    }
+    currentProduct.value = {};
+    deleteDialogVisible.value = false;
+}
 
-// watch(selectedBrand, (newBrand) => {
-//     // Update the selected category value here
-
-//     //console.log(typeof (newCategory));
-//     console.log('Selected Brand:', Number(newBrand.slice(0, 2)));
-// });
-
-
-
-
-// onMounted(async () => {
-//     try {
-//         await categoryStore.fetchCategories();
-//         categories.value = categoryStore.getCategories.value.map(categories => categories.name);
-//     } catch (error) {
-//         console.error('Error fetching categories', error);
-//     }
-// });
 </script>
 
 <style>
@@ -272,5 +264,23 @@ const handleSave = async () => {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.product-list__table {
+    margin-bottom: 2rem;
+}
+
+.product-list__actions {
+    display: flex;
+    gap: 10px;
+}
+
+.product-list__dialog {
+    width: 30rem;
+}
+
+.product-list__dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
 }
 </style>
