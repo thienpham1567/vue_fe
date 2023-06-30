@@ -9,5 +9,6 @@ import useProductStore from './ProductStore';
 import useAccountStore from './AccountStore';
 import useBrandStore from './BrandStore';
 import useCategoryStore from './CategoryStore';
+import useSizeStore from './SizeStore';
 
-export { useBrandStore, useAccountStore, useCategoryStore, useProductStore };
+export { useBrandStore, useAccountStore, useCategoryStore, useProductStore, useSizeStore };

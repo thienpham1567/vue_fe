@@ -1,0 +1,20 @@
+.size {
+    position: relative;
+    width: 53px;
+    height: 55px;
+
+    .p-radiobutton {
+        .p-radiobutton-box {
+            padding: 25px;
+            border-radius: 5px;
+        }
+
+    }
+    label {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+        
+    }
+}

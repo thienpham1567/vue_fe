@@ -3,11 +3,11 @@
         <div class="w-full lg:w-7/12 ml-2 mr-2 mb-4">
             <div>
                 <div>
-                    <Image :src="primaryImage?.imageUrl" alt="Image" preview/>
+                    <Image :src="primaryImage?.imageUrl" alt="Image" preview />
                 </div>
                 <div class="flex gap-1">
                     <div v-for="image in orderImages">
-                        <Image :src="image?.imageUrl" alt="Image" preview/>
+                        <Image :src="image?.imageUrl" alt="Image" preview />
                     </div>
                 </div>
             </div>
@@ -23,39 +23,31 @@
                         <label class="text-3xl ml-1">{{ getProduct.product?.name }}</label>
                     </div>
                     <div class="mt-4">
-                        <label class="text-xl ml-1">SKU Code</label>
-                    </div>
-                    <div class="mt-4">
                         <label class="text-2xl ml-1">${{ getProduct.product?.price }}</label>
                     </div>
                     <div class="mt-4">
                         <label class="text-2xl ml-1">Color: White</label>
                     </div>
-                    <div class="flex flex-wrap">
-                        <div class="img-item w-2/12 ml-1">
-                            <a href=""><img
-                                    src="https://assets.adidas.com/images/c_fill/f6dd32dd3f72407084c0af120100820d_9366/Forum_Bonega_Shoes_Beige_IF4829_01_standard.jpg" /></a>
-                        </div>
-                        <div class="img-item w-2/12 ml-1">
-                            <a href=""><img
-                                    src="https://assets.adidas.com/images/c_fill/f6dd32dd3f72407084c0af120100820d_9366/Forum_Bonega_Shoes_Beige_IF4829_01_standard.jpg" /></a>
-                        </div>
-                        <div class="img-item w-2/12 ml-1">
-                            <a href=""><img
-                                    src="https://assets.adidas.com/images/c_fill/f6dd32dd3f72407084c0af120100820d_9366/Forum_Bonega_Shoes_Beige_IF4829_01_standard.jpg" /></a>
-                        </div>
-                    </div>
                     <div>
                         <label class="text-2xl ml-1">Sizes:</label>
-                        <div class="text-2xl ml-1 flex flex-wrap">
-                            <div v-for="size in sizes" :key="size" class="flex items-center mt-1">
-                                <input :type="radioType" :id="'radio-' + size" :aria-label="'Size ' + size" name="d3"
-                                    :value="size" :data-label="size" data-track-label="size" class="hidden">
-                                <label :for="'radio-' + size" class="flex items-center cursor-pointer">
-                                    <div :class="getRadioButtonClass(size)" @click="toggleBorderRed(size)">
-                                        <span class="">{{ size }}</span>
-                                    </div>
-                                </label>
+                        <div class="">
+                            <div v-if="showAdultShoesSize" class="flex flex-row flex-wrap gap-3">
+                                <div v-for="(size, index) in adultSizes" :key="index" class="size">
+                                    <RadioButton v-model="selectedSize" :inputId="size" :value="size" class="w-full"/>
+                                    <label :for="size">{{ size }}</label>
+                                </div>
+                            </div>
+                            <div v-else-if="showKidShoesSizes" class="flex flex-row flex-wrap gap-2">
+                                <div v-for="(size, index) in kidSizes" :key="index" class="size">
+                                    <RadioButton v-model="selectedSize" :inputId="size" :value="size" />
+                                    <label :for="size">{{ size }}</label>
+                                </div>
+                            </div>
+                            <div v-else class="flex flex-row flex-wrap gap-2">
+                                <div v-for="(size, index) in clothingSizes" :key="index" class="size">
+                                    <RadioButton v-model="selectedSize" :inputId="size" :value="size" />
+                                    <label :for="size">{{ size }}</label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -74,40 +66,31 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { ref, onMounted, computed } from "vue";
-import { useProductStore } from "@/store";
+import { useProductStore, useSizeStore } from "@/store";
 import Image from 'primevue/image';
+import RadioButton from 'primevue/radiobutton';
 
 const route = useRoute();
 const { getProduct, fetchOneProduct } = useProductStore();
+const { kidSizes, adultSizes, clothingSizes } = useSizeStore();
 const { productId } = route.params;
+let selectedSize = ref();
 
+// computed
 const primaryImage = computed(() => getProduct.value.productImages?.find(productImage => productImage.isPrimary));
-
 const orderImages = computed(() => getProduct.value.productImages?.filter(productImage => !productImage.isPrimary));
-
-const isBorderRed = ref<string | null>(null);
-const sizes = ref<string[]>(Array.from({ length: 15 }, (_, i) => (i + 4).toString()));
-const radioType = ref('radio');
-
-function toggleBorderRed(size: string) {
-    isBorderRed.value = size;
-}
-
-function getRadioButtonClass(size: string) {
-    return [
-        'w-16',
-        'h-16',
-        'rounded-full',
-        'border-4',
-        'mr-2',
-        'transition-colors',
-        'duration-300',
-        'flex',
-        'justify-center',
-        'items-center',
-        { 'border-blue-500': isBorderRed.value === size }
-    ];
-}
+const showKidShoesSizes = computed(() => {
+    let category = getProduct.value.product?.category;
+    return category?.code === "Shoes" && category.parentCategory?.name === "Kid";
+});
+const showAdultShoesSize = computed(() => {
+    let category = getProduct.value.product?.category;
+    return category?.code === "Shoes" && (category.parentCategory?.name === "Men" || category.parentCategory?.name === "Women");
+});
+const showClothingSize = computed(() => {
+    let category = getProduct.value.product?.category;
+    return category?.code === "Clothing";
+});
 
 onMounted(() => fetchOneProduct(+productId));
 </script>

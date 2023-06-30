@@ -5,3 +5,9 @@ export interface SizeType {
     category?: CategoryType;
     value?: string;
 }
+
+export interface ListResponse {
+    status: boolean;
+    data: SizeType[];
+    message?: string;
+}
