@@ -105,8 +105,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-center mt-6 mb-6">
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-11/12 h-10"
+                    <div class="flex justify-center mt-6 ">
+                        <button
+                            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold text-xl py-2 px-4 rounded w-full h-12"
                             type="submit">
                             Add to Cart
                         </button>
@@ -116,9 +117,9 @@
         </div>
     </div>
     <!-- ----------------------------------------------------------------------------------------------------------------- -->
-    <div>
-        <label class="text-3xl ml-1">Customers Who Viewed This Item Also Viewed</label>
-        <div class="carousel">
+    <div class="ml-4 mr-4">
+        <label class="text-2xl ml-1 font-semibold">Customers Who Viewed This Item Also Viewed</label>
+        <div class="carousel mt-2">
             <div class="carousel-inner" ref="carouselInner">
                 <div class="carousel-item" v-for="product in products" :key="product.id">
                     <div class="card">
@@ -131,18 +132,12 @@
                     </div>
                 </div>
             </div>
-            <button class="carousel-control prev" @click="prevSlide">
-                <span class="arrow">&lt;</span>
-            </button>
-            <button class="carousel-control next" @click="nextSlide">
-                <span class="arrow">&gt;</span>
-            </button>
         </div>
     </div>
     <!-- ------------------------------------------------------------------------------------------------- -->
-    <div>
-        <label class="text-3xl ml-1">Wear It With</label>
-        <div class="carousel">
+    <div class="ml-4 mt-4 mr-4">
+        <div class="text-2xl font-semibold">Wear It With</div>
+        <div class="carousel mt-2">
             <div class="carousel-inner" ref="carouselInner">
                 <div class="carousel-item" v-for="product in products" :key="product.id">
                     <div class="card">
@@ -155,18 +150,12 @@
                     </div>
                 </div>
             </div>
-            <button class="carousel-control prev" @click="prevSlide">
-                <span class="arrow">&lt;</span>
-            </button>
-            <button class="carousel-control next" @click="nextSlide">
-                <span class="arrow">&gt;</span>
-            </button>
         </div>
     </div>
     <!-- ------------------------------------------------------------------------------------------------- -->
-    <div>
-        <label class="text-3xl ml-1">Customers Who Bought This Item Also Bought</label>
-        <div class="carousel">
+    <div class="ml-4 mt-4 mr-4">
+        <label class="text-2xl ml-1 font-semibold">Customers Who Bought This Item Also Bought</label>
+        <div class="carousel mt-2">
             <div class="carousel-inner" ref="carouselInner">
                 <div class="carousel-item" v-for="product in products" :key="product.id">
                     <div class="card">
@@ -179,26 +168,61 @@
                     </div>
                 </div>
             </div>
-            <button class="carousel-control prev" @click="prevSlide">
-                <span class="arrow">&lt;</span>
-            </button>
-            <button class="carousel-control next" @click="nextSlide">
-                <span class="arrow">&gt;</span>
-            </button>
         </div>
     </div>
     <!-- ------------------------------------------------------------------------------------------------- -->
-    <div>
-        <label class="text-3xl ml-1">Customer Questions</label>
-
+    <div class="ml-4 mt-4 ">
+        <label class="text-2xl ml-1 font-semibold">Customer Reviews</label>
+        <div class="flex mt-4 ml-4">
+            <div class="w-fit"><i class="pi pi-user p-3 bg-gray-300 cicel" style="font-size: 2rem"></i></div>
+            <div class="w-4/5 ml-4">
+                <div>NguyenDuyAn153</div>
+                <div class="my-2">
+                    <Rating v-model="starValue" :cancel="false" />
+                </div>
+                <!-- <p>value: {{ starValue }}</p> -->
+                <div>2023-04-21</div>
+                <div class="mt-4">Hàng đúng mô tả, giao hàng nhanh, size hơi rộng, chất lượng chưa biết có OK không, tóm lại
+                    OK trong tầm
+                    giá !</div>
+            </div>
+        </div>
+        <div class="border-b-2 border-gray-400 mt-4 mr-4"></div>
+        <div class="flex">
+            <div class="mt-4 text-lg w-2/12 font-semibold">
+                Overall rating *
+            </div>
+            <div class=" flex w-full justify-content-center mt-4 mr-4">
+                <Rating v-model="userStarValue" :cancel="false" />
+            </div>
+        </div>
+        <div class="flex">
+            <div class="mt-4 text-lg w-2/12 font-semibold">
+                Review *
+            </div>
+            <div class=" flex w-full justify-content-center mt-4  mr-4">
+                <Textarea v-model="contentValue" rows="4" cols="20" class="w-full" />
+            </div>
+        </div>
+        <div class="mr-4 mt-4 ">
+            <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold text-xl w-full rounded h-10"
+                type="submit">
+                Submit
+            </button>
+        </div>
     </div>
 </template>
   
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import Textarea from 'primevue/textarea';
+import Rating from 'primevue/rating';
 const isBorderRed = ref<string | null>(null);
 const sizes = ref<string[]>(Array.from({ length: 15 }, (_, i) => (i + 4).toString()));
 const radioType = ref('radio');
+const starValue = ref(0);
+const contentValue = ref('');
+const userStarValue = ref(0);
 
 function toggleBorderRed(size: string) {
     isBorderRed.value = size;
@@ -312,4 +336,11 @@ onMounted(() => {
     carouselInner.value = document.querySelector('.carousel-inner');
 });
 </script>
+
+<style>
+.cicel {
+    border-radius: 100%;
+}
+</style>
+  
 

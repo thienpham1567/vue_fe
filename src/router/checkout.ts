@@ -6,8 +6,8 @@ export const checkout = {
   path: "/checkout",
   component: Layout,
   children: [
-    { 
-      path: "",
+    {
+      path: "Checkout",
       name: "Checkout",
       component: () => import("@/views/Checkout/Checkout.vue"),
       meta: {
