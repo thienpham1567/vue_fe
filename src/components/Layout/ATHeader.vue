@@ -355,7 +355,6 @@ const decrement = (products: Product) => {
   }
 };
 const token = localStorage.getItem('token');
-console.log(token);
 
 const isLogin = ref(false);
 let isAdmin = ref(false);

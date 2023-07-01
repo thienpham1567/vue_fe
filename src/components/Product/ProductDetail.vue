@@ -23,30 +23,30 @@
                     <label class="text-l">Color: White</label>
                 </div>
                 <div class="mt-3">
-                    <div v-if="showAdultShoesSize">
-                        <label class="text-l ml-1">Men's Sizes:</label>
-                        <div class="flex flex-row flex-wrap gap-2">
-                            <div v-for="(size, index) in adultSizes" :key="index" class="size">
-                                <RadioButton v-model="selectedSize" :inputId="size" :value="size" class="w-full" />
-                                <label :for="size">{{ size }}</label>
+                    <div v-if="getProduct.product?.category.parentCategory?.name === 'Men'">
+                        <label class="text-l">Men's Sizes:</label>
+                        <div class="flex flex-row flex-wrap gap-2 mt-1">
+                            <div v-for="size in adultShoesSizes" :key="size.sizeId" class="size">
+                                <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size" :disabled="size.isOutOfStock" />
+                                <label :for="size.sizeId?.toString()">{{ size.value }}</label>
                             </div>
                         </div>
                     </div>
-                    <div v-else-if="showKidShoesSizes">
-                        <label class="text-l ml-1">Kid's Sizes:</label>
-                        <div class="flex flex-row flex-wrap gap-2">
-                            <div v-for="(size, index) in kidSizes" :key="index" class="size">
-                                <RadioButton v-model="selectedSize" :inputId="size" :value="size" />
-                                <label :for="size">{{ size }}</label>
+                    <div v-else-if="getProduct.product?.category.parentCategory?.name === 'Kid'">
+                        <label class="text-l">Kid's Sizes:</label>
+                        <div class="flex flex-row flex-wrap gap-2 mt-1">
+                            <div v-for="size in kidShoesSizes" :key="size.sizeId" class="size">
+                                <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size" :disabled="size.isOutOfStock" @update:modelValue="selectSize"/>
+                                <label :for="size.sizeId?.toString()">{{ size.value }}</label>
                             </div>
                         </div>
                     </div>
-                    <div v-else-if="showClothingSize">
-                        <label class="text-l ml-1">Clothing's Sizes:</label>
-                        <div class="flex flex-row flex-wrap gap-2">
-                            <div v-for="(size, index) in clothingSizes" :key="index" class="size">
-                                <RadioButton v-model="selectedSize" :inputId="size" :value="size" />
-                                <label :for="size">{{ size }}</label>
+                    <div v-else-if="getProduct.product?.category.code === 'Clothing'">
+                        <label class="text-l">Clothing's Sizes:</label>
+                        <div class="flex flex-row flex-wrap gap-2 mt-1">
+                            <div v-for="size in clothingSizes" :key="size.sizeId" class="size">
+                                <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size" :disabled="size.isOutOfStock" />
+                                <label :for="size.sizeId?.toString()">{{ size.value }}</label>
                             </div>
                         </div>
                     </div>
@@ -77,22 +77,68 @@ let selectedSize = ref();
 // computed
 const primaryImage = computed(() => getProduct.value.productImages?.find(productImage => productImage.isPrimary));
 const orderImages = computed(() => getProduct.value.productImages?.filter(productImage => !productImage.isPrimary));
-const showKidShoesSizes = computed(() => {
-    let category = getProduct.value.product?.category;
-    return getSizes.value.map(size => {
-        let categoryCode = category?.code;
-        let parentCategoryName = category?.parentCategory?.name;
-        
-    })
+const kidShoesSizes = computed(() => {
+    let category = getProduct.value.product?.category.parentCategory;
+    let sizes = getSizes.value.filter(size => {
+        let categoryName = category?.name;
+        return size.code === "Shoes" && size.category?.name === categoryName;
+    });
+    return sizes.map(size => {
+        let productSizes = getProduct.value.productVariationSizes;
+        if (productSizes?.find(sizeProduct => size.sizeId === sizeProduct.size?.sizeId && sizeProduct.quantity! > 0)) {
+            return {
+                ...size, isOutOfStock: false,
+            }
+        } else {
+            return {
+                ...size, isOutOfStock: true,
+            }
+        }
+    });
 });
-const showAdultShoesSize = computed(() => {
-    let category = getProduct.value.product?.category;
-    return category?.code === "Shoes" && (category.parentCategory?.name === "Men" || category.parentCategory?.name === "Women");
+const adultShoesSizes = computed(() => {
+    let category = getProduct.value.product?.category.parentCategory;
+    let sizes = getSizes.value.filter(size => {
+        let categoryName = category?.name;
+        return size.code === "Shoes" && size.category?.name === categoryName;
+    });
+    return sizes.map(size => {
+        let productSizes = getProduct.value.productVariationSizes;
+        if (productSizes?.find(sizeProduct => size.sizeId === sizeProduct.size?.sizeId && sizeProduct.quantity! > 0)) {
+            return {
+                ...size, isOutOfStock: false,
+            }
+        } else {
+            return {
+                ...size, isOutOfStock: true,
+            }
+        }
+    });
 });
-const showClothingSize = computed(() => {
-    let category = getProduct.value.product?.category;
-    return category?.code === "Clothing";
+const clothingSizes = computed(() => {
+    let category = getProduct.value.product?.category.parentCategory;
+    let sizes = getSizes.value.filter(size => {
+        let categoryName = category?.name;
+        return size.code === "Clothing" && size.category?.name === categoryName;
+    });
+    return sizes.map(size => {
+        let productSizes = getProduct.value.productVariationSizes;
+        if (productSizes?.find(sizeProduct => size.sizeId === sizeProduct.size?.sizeId && sizeProduct.quantity! > 0)) {
+            return {
+                ...size, isOutOfStock: false,
+            }
+        } else {
+            return {
+                ...size, isOutOfStock: true,
+            }
+        }
+    });
 });
+
+// functions
+const selectSize = () => {
+    console.log(selectedSize);
+}
 
 const fetchData = async () => {
     await fetchSizes();

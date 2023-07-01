@@ -11,7 +11,7 @@ export const product = {
     },
     {
       path: ":productId(\\d+)",
-      name: "ProductDetail",
+      name: "Product",
       component: () => import("@/components/Product/ProductDetail.vue"),
     },
   ],
