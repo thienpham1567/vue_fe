@@ -63,10 +63,6 @@
   
 <script setup lang="ts">
 import { ref } from 'vue';
-import RadioButton from 'primevue/radiobutton';
-import InputSwitch from 'primevue/inputswitch';
-import InputText from 'primevue/inputtext';
-import Calendar from 'primevue/calendar';
 import Button from 'primevue/button';
 import { useRouter } from 'vue-router';
 // import InputNumber from 'primevue/inputnumber';
@@ -178,8 +174,8 @@ const decrement = (product: Product) => {
 };
 
 function goToCheckout() {
-    router.push('/checkout/Checkout');
+    router.push('/checkout');
 }
 </script>
-  
+
 

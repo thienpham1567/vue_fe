@@ -23,7 +23,6 @@
     <div class="nav-menu">
       <MegaMenu :model="items">
         <template #end>
-          <Button label="Sign In / Register" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
           <Button v-if="!isLogin" label="Sign In / Register" class="sign-in-register-btn" text
             @click="dialogSignInVisible = true" />
           <button label="My Account" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
@@ -44,11 +43,11 @@
               <div class="mb-2 flex justify-start">
                 <Button label="My Account" class="sign-in-register-btn" text @click="goToMyAccount" />
               </div>
-              <div class="mb-2 flex justify-start">
-                <Button label="Admin" v-if="isAdmin" class="sign-in-register-btn" text />
+              <div v-if="isAdmin" class="mb-2 flex justify-start">
+                <Button label="Admin" class="sign-in-register-btn" text />
               </div>
-              <div class="mb-2 flex justify-start">
-                <Button v-if="isLogin" label="Logout" class="sign-in-register-btn" text @click="logout" />
+              <div v-if="isLogin" class="mb-2 flex justify-start">
+                <Button label="Logout" class="sign-in-register-btn" text @click="logout" />
               </div>
             </div>
           </button>
@@ -316,7 +315,7 @@ const goToLogin = () => {
 
 function goToCart() {
   dialogCartVisible.value = false;
-  router.push('/products/cart');
+  router.push('/cart');
 }
 
 const goToRegister = () => {
@@ -332,12 +331,12 @@ const gotoProductList = (brand?: number, category?: number) => {
 
 function goToCheckout() {
   dialogCartVisible.value = false;
-  router.push('/checkout/Checkout');
+  router.push('/checkout');
 }
 
 function goToMyAccount() {
   dialogCartVisible.value = false;
-  router.push('/myaccount/myaccount');
+  router.push('/myaccount');
 }
 
 function goToViewOrders() {
@@ -377,7 +376,6 @@ function checkToken() {
 const logout = () => {
   localStorage.removeItem("token");
   window.location.reload();
-
 };
 checkToken();
 </script>

@@ -1,7 +1,7 @@
 import Layout from '@/layout/CustomerLayout.vue';
 
 export const cart = {
-  path: "/products",
+  path: "/",
   component: Layout,
   children: [
     {
