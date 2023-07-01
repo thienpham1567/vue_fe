@@ -29,6 +29,26 @@ export const admin = {
       component: () => import("@/views/Admin/Product.vue"),
     },
     {
+      path: "/products",
+      name: "Products",
+      component: () => import("@/views/Admin/Product.vue"),
+    },
+    {
+      path: "/products/variation",
+      name: "ProductsVariation",
+      component: () => import("@/views/Admin/ProductVariation.vue"),
+    },
+    {
+      path: "/products/variation-size",
+      name: "ProductsVariationSize",
+      component: () => import("@/views/Admin/ProductsVariationSizes.vue"),
+    },
+    {
+      path: "/products/image",
+      name: "ProductsImage",
+      component: () => import("@/views/Admin/ProductsImages.vue"),
+    },
+    {
       path: "accounts",
       name: "AccountManagement",
       component: () => import("@/views/Admin/Account.vue"),

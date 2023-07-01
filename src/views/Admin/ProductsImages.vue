@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex font-bold text-4xl justify-center mb-4">Product</div>
+        <div class="flex font-bold text-4xl justify-center mb-4">Product Image</div>
         <div class=" mb-4">
             <div class="flex justify-between ml-2 mr-4">
                 <div class="w-1/2 ml-2 mr-2">

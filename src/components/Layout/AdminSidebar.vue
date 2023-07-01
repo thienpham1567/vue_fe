@@ -15,11 +15,34 @@
       </div>
 
       <nav class="mt-10">
-        <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[route.name === 'Dashboard' ? activeClass : inactiveClass]" to="/admin/products">
+        <button @click="toggleDropdown" class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4 w-full"
+          :class="[route.name === 'Dashboard' ? activeClass : inactiveClass]">
           <i class="pi pi-box" style="font-size: 2rem"></i>
-          <span class="mx-4">Product</span>
-        </router-link>
+          <span class="mx-4">Sản phẩm</span>
+          <i class="pi pi-chevron-down ml-auto"></i>
+        </button>
+        <div v-if="open" @click.away="closeDropdown"
+          class="right-0 mt-2 py-2 bg-gray-900 rounded-md shadow-xl w-full transition-opacity ease-out duration-300"
+          :class="{ 'opacity-100': open, 'opacity-0': !open }">
+          <router-link class="block px-4 py-2 text-gray-500 "
+            :class="[route.name === 'Products' ? activeClass : inactiveClass]" :to="{ name: 'Products' }">
+            <span class="mx-4">Products</span>
+          </router-link>
+          <router-link class="block px-4 py-2 text-gray-500 "
+            :class="[route.name === 'ProductsVariation' ? activeClass : inactiveClass]"
+            :to="{ name: 'ProductsVariation' }">
+            <span class="mx-4">Products Variation</span>
+          </router-link>
+          <router-link class="block px-4 py-2 text-gray-500 "
+            :class="[route.name === 'ProductsVariationSize' ? activeClass : inactiveClass]"
+            :to="{ name: 'ProductsVariationSize' }">
+            <span class="mx-4">Products Variation Size</span>
+          </router-link>
+          <router-link class="block px-4 py-2 text-gray-500 "
+            :class="[route.name === 'ProductsImage' ? activeClass : inactiveClass]" :to="{ name: 'ProductsImage' }">
+            <span class="mx-4">Products Image</span>
+          </router-link>
+        </div>
 
         <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
           :class="[route.name === 'CategoryAdmin' ? activeClass : inactiveClass]" to="/admin/categories">
@@ -69,10 +92,19 @@ import Logo from "@/assets/images/logo.png";
 
 const route = useRoute();
 const { isOpen } = useSidebar();
+const open = ref(false);
 const activeClass = ref(
   'bg-gray-600 bg-opacity-25 text-gray-100 border-gray-100'
 );
 const inactiveClass = ref(
   'border-gray-900 text-gray-500 hover:bg-gray-600 hover:bg-opacity-25 hover:text-gray-100'
 );
+
+const toggleDropdown = () => {
+  open.value = !open.value;
+};
+
+const closeDropdown = () => {
+  open.value = false;
+};
 </script>
