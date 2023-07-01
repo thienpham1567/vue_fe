@@ -30,3 +30,11 @@
         transform: translate(-50%,-50%);
     }
 }
+
+.color-product {
+    cursor: pointer;
+}
+
+.selected-color {
+    border: 1px solid $dark-blue;
+}

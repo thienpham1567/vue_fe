@@ -11,26 +11,26 @@
         <div class="lg:w-5/12 mr-4 mb-4 sticky top-0">
             <div>
                 <div>
-                    <label class="text-2xl">{{ getProduct.product?.brand?.name }}</label>
+                    <label class="text-2xl">{{ selectedProduct.product?.brand?.name }}</label>
                 </div>
-                <div class="mt-3">
-                    <label class="text-xl">{{ getProduct.product?.name }}</label>
+                <div class="mt-2">
+                    <label class="text-xl">{{ selectedProduct.product?.name }}</label>
                 </div>
-                <div class="mt-3">
-                    <label class="text-4xl">${{ getProduct.product?.price }}</label>
+                <div class="mt-2">
+                    <label class="text-4xl">${{ selectedProduct.product?.price }}</label>
                 </div>
-                <div class="mt-3">
-                    <label class="text-l">Color: <strong>{{ selectedProduct.color?.value }}</strong></label>
-                    <div class="flex flex-wrap gap-2 items-center">
-                        <div v-for="product in getAllProducts" :key="product.productVariationId">
-                            <Image :src="product.productImages?.find(image => image.isPrimary === true)?.imageUrl" alt="Image" width="100" />
+                <div class="mt-4">
+                    <label class="text-l font-semibold">Color: <span class="inline font-normal">{{ selectedProduct.color?.value }}</span> </label>
+                    <div class="flex flex-wrap gap-2 items-center mt-1">
+                        <div class="color-product" v-for="product in getAllProducts" :key="product.productVariationId">
+                            <Image :src="product.productImages?.find(image => image.isPrimary === true)?.imageUrl"
+                                alt="Image" width="80" />
                         </div>
                     </div>
                 </div>
-                <div class="mt-3">
-                    <div
-                        v-if="getProduct.product?.category.parentCategory?.name === 'Men' || getProduct.product?.category.parentCategory?.name === 'Women'">
-                        <label class="text-l">Men's Sizes:</label>
+                <div class="mt-4">
+                    <div v-if="selectedProduct.product?.category.parentCategory?.name === 'Men' || selectedProduct.product?.category.parentCategory?.name === 'Women'">
+                        <label class="text-l font-semibold">Men's Sizes:</label>
                         <div class="flex flex-row flex-wrap gap-2 mt-1">
                             <div v-for="size in adultShoesSizes" :key="size.sizeId" class="size">
                                 <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
@@ -39,8 +39,8 @@
                             </div>
                         </div>
                     </div>
-                    <div v-else-if="getProduct.product?.category.parentCategory?.name === 'Kid'">
-                        <label class="text-l">Kid's Sizes:</label>
+                    <div v-else-if="selectedProduct.product?.category.parentCategory?.name === 'Kid'">
+                        <label class="text-l font-semibold">Kid's Sizes:</label>
                         <div class="flex flex-row flex-wrap gap-2 mt-1">
                             <div v-for="size in kidShoesSizes" :key="size.sizeId" class="size">
                                 <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
@@ -49,8 +49,8 @@
                             </div>
                         </div>
                     </div>
-                    <div v-else-if="getProduct.product?.category.code === 'Clothing'">
-                        <label class="text-l">Clothing's Sizes:</label>
+                    <div v-else-if="selectedProduct.product?.category.code === 'Clothing'">
+                        <label class="text-l font-semibold">Clothing's Sizes:</label>
                         <div class="flex flex-row flex-wrap gap-2 mt-1">
                             <div v-for="size in clothingSizes" :key="size.sizeId" class="size">
                                 <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
@@ -91,13 +91,13 @@ const productColors = computed(() => getAllProducts);
 
 // computed
 const kidShoesSizes = computed(() => {
-    let category = getProduct.value.product?.category.parentCategory;
+    let category = selectedProduct.value.product?.category.parentCategory;
     let sizes = getSizes.value.filter(size => {
         let categoryName = category?.name;
         return size.code === "Shoes" && size.category?.name === categoryName;
     });
     return sizes.map(size => {
-        let productSizes = getProduct.value.productVariationSizes;
+        let productSizes = selectedProduct.value.productVariationSizes;
         if (productSizes?.find(sizeProduct => size.sizeId === sizeProduct.size?.sizeId && sizeProduct.quantity! > 0)) {
             return {
                 ...size, isOutOfStock: false,
@@ -110,13 +110,13 @@ const kidShoesSizes = computed(() => {
     });
 });
 const adultShoesSizes = computed(() => {
-    let category = getProduct.value.product?.category.parentCategory;
+    let category = selectedProduct.value.product?.category.parentCategory;
     let sizes = getSizes.value.filter(size => {
         let categoryName = category?.name;
         return size.code === "Shoes" && size.category?.name === categoryName;
     });
     return sizes.map(size => {
-        let productSizes = getProduct.value.productVariationSizes;
+        let productSizes = selectedProduct.value.productVariationSizes;
         if (productSizes?.find(sizeProduct => size.sizeId === sizeProduct.size?.sizeId && sizeProduct.quantity! > 0)) {
             return {
                 ...size, isOutOfStock: false,
@@ -129,13 +129,13 @@ const adultShoesSizes = computed(() => {
     });
 });
 const clothingSizes = computed(() => {
-    let category = getProduct.value.product?.category.parentCategory;
+    let category = selectedProduct.value.product?.category.parentCategory;
     let sizes = getSizes.value.filter(size => {
         let categoryName = category?.name;
         return size.code === "Clothing" && size.category?.name === categoryName;
     });
     return sizes.map(size => {
-        let productSizes = getProduct.value.productVariationSizes;
+        let productSizes = selectedProduct.value.productVariationSizes;
         if (productSizes?.find(sizeProduct => size.sizeId === sizeProduct.size?.sizeId && sizeProduct.quantity! > 0)) {
             return {
                 ...size, isOutOfStock: false,
@@ -148,8 +148,8 @@ const clothingSizes = computed(() => {
     });
 });
 
-const primaryImage = computed(() => getProduct.value.productImages?.find(productImage => productImage.isPrimary));
-const orderImages = computed(() => getProduct.value.productImages?.filter(productImage => !productImage.isPrimary));
+const primaryImage = computed(() => selectedProduct.value.productImages?.find(productImage => productImage.isPrimary));
+const orderImages = computed(() => selectedProduct.value.productImages?.filter(productImage => !productImage.isPrimary));
 
 // functions
 const onSelectSize = () => {
@@ -161,7 +161,7 @@ const onSelectProduct = () => {
 }
 
 const fetchData = () => {
-    Promise.all([fetchSizes, fetchOneProduct(+productId)]).then(() => {
+    Promise.all([fetchSizes(), fetchOneProduct(+productId)]).then(() => {
         selectedProduct.value = getProduct.value;
     });
 }
