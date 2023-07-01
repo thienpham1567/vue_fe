@@ -119,7 +119,7 @@ import Sidebar from 'primevue/sidebar';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
-import { onMounted } from 'vue';
+import { onMounted, onUpdated } from 'vue';
 import jwt_decode from "jwt-decode";
 
 enum MainCategories {
@@ -303,10 +303,10 @@ const setDataHeader = () => {
   ];
 }
 
-const fetchData = async () => {
-  await fetchBrands();
-  await fetchCategories();
-  setDataHeader();
+const fetchData = () => {
+  Promise.all([fetchBrands(), fetchCategories()]).then(() => {
+    setDataHeader();
+  });
 }
 
 const goToLogin = () => {

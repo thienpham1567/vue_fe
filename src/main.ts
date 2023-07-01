@@ -2,7 +2,7 @@ import { createApp } from "vue";
 import router from "@/router";
 import App from "@/App.vue";
 import PrimeVue from "primevue/config";
-import { VueQueryPlugin } from "@tanstack/vue-query";
+import { VueQueryPlugin } from "vue-query";
 import pinia from "@/store";
 import "@/styles/global.scss";
 import "primevue/resources/themes/lara-light-indigo/theme.css";

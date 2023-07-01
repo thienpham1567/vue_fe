@@ -7,8 +7,8 @@ import { computed } from "vue";
 
 const useBrandStore = defineStore("brand", () => {
   // State
-  const brands: Ref<BrandType[]> = ref([]);
-  const brand: Ref<BrandType> = ref({});
+  let brands: Ref<BrandType[]> = ref([]);
+  let brand: Ref<BrandType> = ref({});
 
   // Getters
   const getBrands = computed(() => brands);
@@ -17,7 +17,7 @@ const useBrandStore = defineStore("brand", () => {
   // Action
   const fetchBrands = async () => {
     const { data } = await new Brand().list();
-    setBrands(data);
+    brands.value = data;
   };
 
   const addBrand = async (brand: CreationParams) => {
@@ -25,21 +25,17 @@ const useBrandStore = defineStore("brand", () => {
     brands.value.push(data);
   };
 
-  const updateBrand = async (id: number, brand: UpdateParams) => {
-    await new Brand().update(id, brand);
-    setBrand({});
+  const updateBrand = async (id: number, updatedBrand: UpdateParams) => {
+    await new Brand().update(id, updatedBrand);
+    brand.value = {};
     fetchBrands();
   };
 
   const deleteBrand = async (id: number) => {
     await new Brand().delete(id);
-    setBrand({});
+    brand.value = {};
     fetchBrands();
   };
-
-  const setBrands = (newBrands: BrandType[]) => (brands.value = newBrands);
-
-  const setBrand = (newBrand: BrandType) => (brand.value = newBrand);
 
   return {
     getBrand,
@@ -48,7 +44,6 @@ const useBrandStore = defineStore("brand", () => {
     addBrand,
     updateBrand,
     deleteBrand,
-    setBrand,
   };
 });
 

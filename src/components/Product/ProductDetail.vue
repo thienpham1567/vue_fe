@@ -20,14 +20,21 @@
                     <label class="text-4xl">${{ getProduct.product?.price }}</label>
                 </div>
                 <div class="mt-3">
-                    <label class="text-l">Color: White</label>
+                    <label class="text-l">Color: <strong>{{ selectedProduct.color?.value }}</strong></label>
+                    <div class="flex flex-wrap gap-2 items-center">
+                        <div v-for="product in getAllProducts" :key="product.productVariationId">
+                            <Image :src="product.productImages?.find(image => image.isPrimary === true)?.imageUrl" alt="Image" width="100" />
+                        </div>
+                    </div>
                 </div>
                 <div class="mt-3">
-                    <div v-if="getProduct.product?.category.parentCategory?.name === 'Men'">
+                    <div
+                        v-if="getProduct.product?.category.parentCategory?.name === 'Men' || getProduct.product?.category.parentCategory?.name === 'Women'">
                         <label class="text-l">Men's Sizes:</label>
                         <div class="flex flex-row flex-wrap gap-2 mt-1">
                             <div v-for="size in adultShoesSizes" :key="size.sizeId" class="size">
-                                <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size" :disabled="size.isOutOfStock" />
+                                <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
+                                    :disabled="size.isOutOfStock" @update:modelValue="onSelectSize" />
                                 <label :for="size.sizeId?.toString()">{{ size.value }}</label>
                             </div>
                         </div>
@@ -36,7 +43,8 @@
                         <label class="text-l">Kid's Sizes:</label>
                         <div class="flex flex-row flex-wrap gap-2 mt-1">
                             <div v-for="size in kidShoesSizes" :key="size.sizeId" class="size">
-                                <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size" :disabled="size.isOutOfStock" @update:modelValue="selectSize"/>
+                                <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
+                                    :disabled="size.isOutOfStock" @update:modelValue="onSelectSize" />
                                 <label :for="size.sizeId?.toString()">{{ size.value }}</label>
                             </div>
                         </div>
@@ -45,7 +53,8 @@
                         <label class="text-l">Clothing's Sizes:</label>
                         <div class="flex flex-row flex-wrap gap-2 mt-1">
                             <div v-for="size in clothingSizes" :key="size.sizeId" class="size">
-                                <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size" :disabled="size.isOutOfStock" />
+                                <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
+                                    :disabled="size.isOutOfStock" @update:modelValue="onSelectSize" />
                                 <label :for="size.sizeId?.toString()">{{ size.value }}</label>
                             </div>
                         </div>
@@ -54,29 +63,33 @@
                 <div class="mt-5">
                     <Button label="Add to cart" class="btn w-full" size="small" />
                 </div>
-
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
-import { ref, onMounted, computed } from "vue";
-import { useProductStore, useSizeStore } from "@/store";
 import Image from 'primevue/image';
 import RadioButton from 'primevue/radiobutton';
 import Button from 'primevue/button';
+import { useRoute } from "vue-router";
+import { ProductVariationType } from "@/types/productVariation";
+import { useProductStore, useSizeStore } from "@/store";
+import { ref, onMounted, computed, Ref } from "vue";
 
 const route = useRoute();
-const { getProduct, fetchOneProduct } = useProductStore();
-const { fetchSizes, getSizes } = useSizeStore();
 const { productId } = route.params;
+const { getProduct, getAllProducts, fetchOneProduct } = useProductStore();
+const { fetchSizes, getSizes } = useSizeStore();
+
+let selectedProduct: Ref<ProductVariationType> = ref({});
 let selectedSize = ref();
 
+
+// show colors
+const productColors = computed(() => getAllProducts);
+
 // computed
-const primaryImage = computed(() => getProduct.value.productImages?.find(productImage => productImage.isPrimary));
-const orderImages = computed(() => getProduct.value.productImages?.filter(productImage => !productImage.isPrimary));
 const kidShoesSizes = computed(() => {
     let category = getProduct.value.product?.category.parentCategory;
     let sizes = getSizes.value.filter(size => {
@@ -135,14 +148,22 @@ const clothingSizes = computed(() => {
     });
 });
 
+const primaryImage = computed(() => getProduct.value.productImages?.find(productImage => productImage.isPrimary));
+const orderImages = computed(() => getProduct.value.productImages?.filter(productImage => !productImage.isPrimary));
+
 // functions
-const selectSize = () => {
+const onSelectSize = () => {
     console.log(selectedSize);
 }
 
-const fetchData = async () => {
-    await fetchSizes();
-    await fetchOneProduct(+productId)
+const onSelectProduct = () => {
+
+}
+
+const fetchData = () => {
+    Promise.all([fetchSizes, fetchOneProduct(+productId)]).then(() => {
+        selectedProduct.value = getProduct.value;
+    });
 }
 
 onMounted(fetchData);

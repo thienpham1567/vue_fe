@@ -155,15 +155,15 @@ const { fetchAllProducts, getProducts } = useProductStore();
 
 watch(
     () => route.query,
-    async toParams => {
+    toParams => {
         if (toParams.brand || toParams.category) {
-            await fetchAllProducts(toParams.brand, toParams.category);
+            fetchAllProducts(toParams.brand, toParams.category);
         }
     }
 );
 
-onMounted(async () => {
-    await fetchAllProducts(route.query.brand, route.query.category);
+onMounted(() => {
+    fetchAllProducts(route.query.brand, route.query.category);
 });
 
 // Xử lý khi chuyển trang

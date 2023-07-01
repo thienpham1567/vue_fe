@@ -16,14 +16,11 @@ const useCategoryStore = defineStore("category", () => {
 	// Getters
 	const getCategories = computed(() => categories);
 	const getCategory = computed(() => category);
-	const getMainCategories = computed(() =>
-		categories.value.filter((category) => category.parentCategory?.name === "")
-	);
 
 	// Action
 	const fetchCategories = async () => {
 		const { data } = await new Category().list();
-		setCategories(data);
+		categories.value = data;
 	};
 
 	const addCategory = async (category: CreationParams) => {
@@ -33,7 +30,7 @@ const useCategoryStore = defineStore("category", () => {
 
 	const updateCategory = async (id: number, category: UpdateParams) => {
 		await new Category().update(id, category);
-		setCategory({});
+		category = {};
 		fetchCategories();
 	};
 
@@ -43,21 +40,13 @@ const useCategoryStore = defineStore("category", () => {
 		fetchCategories();
 	};
 
-	const setCategory = (newCategory: CategoryType) =>
-		(category.value = newCategory);
-
-	const setCategories = (newCategories: CategoryType[]) =>
-		(categories.value = newCategories);
-
 	return {
 		getCategory,
 		getCategories,
-		getMainCategories,
 		fetchCategories,
 		addCategory,
 		updateCategory,
 		deleteCategory,
-		setCategory,
 	};
 });
 
