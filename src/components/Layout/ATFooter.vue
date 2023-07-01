@@ -69,7 +69,6 @@
                     <p class="mb-0 text-center md:text-left text-footer-hover">
                         &copy; <a class="text-primary" href="#">Domain</a>. All Rights Reserved
                     </p>
-                    <img class="mx-auto md:mx-0" src="/assets/web/img/payments.png" alt="">
                 </div>
             </div>
         </div>

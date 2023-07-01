@@ -17,16 +17,17 @@ const useSizeStore = defineStore("size", () => {
     // Getters
     const getSizes = computed(() => sizes);
 
+    // Setters
+    const setSizes = (newSizes: SizeType[]) => (sizes.value = newSizes);
+
     // Action
-    const fetchBrands = async () => {
+    const fetchSizes = async () => {
         const { data } = await new Size().list();
         setSizes(data);
     };
 
-    const setSizes = (newSizes: SizeType[]) => (sizes.value = newSizes);
-
     return {
-        fetchBrands,
+        fetchSizes,
         getSizes,
         kidSizes,
         adultSizes,
