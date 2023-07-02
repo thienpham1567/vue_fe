@@ -80,7 +80,7 @@ import Sidebar from 'primevue/sidebar';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
-import { onMounted, onUpdated } from 'vue';
+import { onMounted } from 'vue';
 import jwt_decode from "jwt-decode";
 
 enum MainCategories {
@@ -90,7 +90,7 @@ enum MainCategories {
 }
 
 const router = useRouter();
-const { getUser, logout } = useAccountStore();
+const { getUser } = useAccountStore();
 const { getBrands, fetchBrands } = useBrandStore();
 const { getCategories, fetchCategories } = useCategoryStore();
 let selectedProduct = ref();

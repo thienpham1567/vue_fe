@@ -3,9 +3,9 @@ import Category from '@/models/Category';
 import type { CategoryType, CreationParams, UpdateParams } from '@/types/category';
 
 const useCategoryStore = () => {
-  // State
-  const categories = ref<CategoryType[]>([]);
-  const category = ref<CategoryType>({});
+	// State
+	const categories = ref<CategoryType[]>([]);
+	const category = ref<CategoryType>({});
 
 	// Getters
 	const getCategories = computed(() => categories);
@@ -17,10 +17,10 @@ const useCategoryStore = () => {
 		categories.value = data;
 	};
 
-  const addCategory = async (category: CreationParams) => {
-    const { data } = await new Category().create(category);
-    categories.value.push(data);
-  };
+	const addCategory = async (category: CreationParams) => {
+		const { data } = await new Category().create(category);
+		categories.value.push(data);
+	};
 
 	const updateCategory = async (id: number, updatedCategory: UpdateParams) => {
 		await new Category().update(id, updatedCategory);
@@ -28,11 +28,11 @@ const useCategoryStore = () => {
 		fetchCategories();
 	};
 
-  const deleteCategory = async (id: number) => {
-    await new Category().delete(id);
-    category.value = {};
-    fetchCategories();
-  };
+	const deleteCategory = async (id: number) => {
+		await new Category().delete(id);
+		category.value = {};
+		fetchCategories();
+	};
 
 	return {
 		getCategory,
@@ -42,6 +42,6 @@ const useCategoryStore = () => {
 		updateCategory,
 		deleteCategory,
 	};
-});
+};
 
 export default useCategoryStore;
