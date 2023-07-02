@@ -1,12 +1,13 @@
 <template>
     <div class="flex flex-col lg:flex-row">
         <!-- Left column start -->
-        <div class="w-full lg:w-8/12 mx-4 mb-4 mt-4">
+        <div class="w-full lg:w-8/12 mx-4 mb-4 mt-4 border-2 drop-shadow-lg">
             <div class=" mb-4">
                 <div class=" py-2">
-                    <div class="text-2xl mt-4">Delivery Information</div>
+                    <div class="text-2xl mt-4 ml-4">Delivery Information</div>
                 </div>
-                <div class=" px-4 pb-4">
+                <div class="border-b-2 mx-4"></div>
+                <div class=" px-4 pb-4 rounded-md">
                     <div class="flex flex-wrap -mx-2">
                         <div class="w-full lg:w-1/2 px-2 mt-4">
                             <div class="mb-2">
@@ -109,9 +110,12 @@
         <!-- Left column End -->
 
         <!-- Right column start -->
-        <div class="lg:w-4/12 mx-4 mt-8 ">
-            <div class=" mb-4">
-                <div class="px-4 py-2 justify-items-center mt-2 mb-6">
+        <div class="lg:w-4/12 mx-4 mt-4 border-2 drop-shadow-md h-full">
+            <div class="mt-4">
+                <div class="text-2xl ml-4 mb-2 ">Order Summary</div>
+            </div>
+            <div class=" mb-0">
+                <div class="px-4 py-2 justify-items-center mt-2 mb-2">
                     <div class="flex justify-between">
                         <div class="font-light text-lg">Subtotal</div>
                         <div class="font-bold">$1250.32</div>
@@ -136,11 +140,8 @@
                         Confirm Order
                     </button>
                 </div>
-                <div class="">
-                    <div class="text-2xl ml-4 mb-2 ">Order Summary</div>
-                </div>
-                <div class="px-4 pb-4 overflow-y-auto max-h-[679px]">
-                    <div v-for="product in products" :key="product.id" class="mb-1 flex flex-wrap">
+                <div class="px-4 overflow-y-auto max-h-[645px] mb-4">
+                    <div v-for="product in products" :key="product.id" class="mb-4 flex flex-wrap">
                         <div class=" flex w-full">
                             <div class="w-1/3">
                                 <img :src="product.image" class="w-full object-contain" />
@@ -153,7 +154,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
