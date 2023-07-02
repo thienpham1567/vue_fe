@@ -1,16 +1,17 @@
 import Brand from "@/models/Brand";
 import type { UpdateParams } from "@/types/brand";
 import type { BrandType, CreationParams } from "@/types/brand";
+import { defineStore } from "pinia";
 import { ref, computed, Ref } from "vue";
 
-const useBrandStore = () => {
+const useBrandStore = defineStore("brand", () => {
   // State
-  let brands: Ref<BrandType[]> = ref([]);
-  let brand: Ref<BrandType> = ref({});
+  const brands: Ref<BrandType[]> = ref([]);
+  const brand: Ref<BrandType> = ref({});
 
   // Getters
-  const getBrands = computed(() => brands.value);
-  const getBrand = computed(() => brand.value);
+  const getBrands = computed(() => brands);
+  const getBrand = computed(() => brand);
 
   // Action
   const fetchBrands = async () => {
@@ -43,6 +44,6 @@ const useBrandStore = () => {
     updateBrand,
     deleteBrand,
   };
-};
+});
 
 export default useBrandStore;

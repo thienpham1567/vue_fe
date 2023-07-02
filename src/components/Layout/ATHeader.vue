@@ -92,7 +92,7 @@ import Sidebar from 'primevue/sidebar';
 import CartItem from "@/components/CartItems/CartItem.vue";
 import { useRouter } from 'vue-router';
 import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
-import { onMounted, onUpdated, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import jwt_decode from "jwt-decode";
 
 enum MainCategories {
@@ -220,16 +220,6 @@ function goToViewOrders() {
   router.push('/myaccount/view-order');
 }
 
-onMounted(fetchData);
-const increment = (products: Product) => {
-  products.quantity++;
-};
-
-const decrement = (products: Product) => {
-  if (products.quantity > 0) {
-    products.quantity--;
-  }
-};
 const token = localStorage.getItem('token');
 
 const isLogin = ref(false);

@@ -1,8 +1,9 @@
 import { ref, computed } from 'vue';
 import Category from '@/models/Category';
 import type { CategoryType, CreationParams, UpdateParams } from '@/types/category';
+import { defineStore } from 'pinia';
 
-const useCategoryStore = () => {
+const useCategoryStore = defineStore("category", () => {
 	// State
 	const categories = ref<CategoryType[]>([]);
 	const category = ref<CategoryType>({});
@@ -42,6 +43,6 @@ const useCategoryStore = () => {
 		updateCategory,
 		deleteCategory,
 	};
-};
+});
 
 export default useCategoryStore;
