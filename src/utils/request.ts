@@ -14,22 +14,31 @@ export abstract class HTTPBaseService {
       baseURL,
     });
 
-    // this.instance.interceptors.request.use((config) => {
-    //   config.headers.Authorization = `Bearer ${getToken?.value}`;
-    //   return config;
-    // });
+    this.instance.interceptors.request.use((config) => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+        console.log(config.headers.Authorization)
+      }
+      console.log(config);
+      return config;
 
-    // this.instance.interceptors.response.use(
-    //   (response) => {
-    //     return response;
-    //   },
-    //   (error) => {
-    //     if (error.response?.status === 401) {
-    //       setToken(undefined);
-    //     }
-    //     throw error;
-    //   }
-    // );
+    });
+
+
+
+    this.instance.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      (error) => {
+        if (error.response?.status === 401) {
+          const token = localStorage.getItem('token');
+
+        }
+        throw error;
+      }
+    );
   }
 }
 

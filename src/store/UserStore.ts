@@ -1,5 +1,5 @@
 import User from "@/models/User";
-import type { UserType, CreationParams } from "@/types/UserType";
+import type { UserType, CreationParams, UserParams } from "@/types/UserType";
 import { ref, type Ref } from "vue";
 import { defineStore } from "pinia"
 import { computed } from "vue";
@@ -11,13 +11,58 @@ const useUserStore = defineStore("user", () => {
     // getters
     const getUsers = computed(() => users);
     const getUser = computed(() => user);
+
+    //Get User
+    const fetchUsers = async () => {
+        const { data } = await new User().list();
+        setUsers(data);
+    };
+    const fetchWithUsers = async () => {
+        const { data } = await new User().listUser();
+        setUsers(data);
+    };
     //add
     const addUser = async (user: CreationParams) => {
         const { data } = await new User().create(user);
         users.value.push(data);
     }
+    //Find by key
+    const fetchByKey = async (key: String) => {
+        const { data } = await new User().findByKey(key);
+        setUsers(data);
+    }
+    //update
+    const updateUser = async (id: number, user: UserParams) => {
+        await new User().update(id, user);
+        setUser({});
+        fetchUsers();
+    };
+    //Delete
+    const deleteUser = async (id: number) => {
+        await new User().delete(id);
+        setUser({});
+        fetchUsers();
+    };
+    //Search Users
 
-    return { getUsers, getUser, addUser }
+
+
+    const setUser = (newUser: UserType) =>
+        (user.value = newUser);
+
+    const setUsers = (newUsers: UserType[]) =>
+        (users.value = newUsers);
+
+    return {
+        getUsers,
+        getUser,
+        addUser,
+        fetchUsers,
+        updateUser,
+        deleteUser,
+        fetchWithUsers,
+        fetchByKey
+    }
 });
 
 export default useUserStore;
