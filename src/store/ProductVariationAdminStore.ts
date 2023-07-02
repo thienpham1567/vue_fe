@@ -38,11 +38,11 @@ const useProductVariationAdminStore = () => {
     productVariations.value.push(data);
   };
 
-  // const deleteProduct = async (id: number) => {
-  //   await new Product().delete(id);
-  //   setProduct({});
-  //   fetchAllProductsAdmin();
-  // }
+  const deleteProductVariation = async (id: number) => {
+    await new ProductVariation().delete(id);
+    setProductVariation({});
+    fetchAllProductVariationsAdmin();
+  }
 
   // const updateProduct = async (id: number, product: UpdateAdminParams) => {
   //   await new Product().update(id, product);
@@ -50,7 +50,7 @@ const useProductVariationAdminStore = () => {
   //   fetchAllProductsAdmin();
   // };
 
-  return { getproductVariation, getproductVariations, setProductVariation, fetchAllProductVariationsAdmin, addProductVariation };
+  return { getproductVariation, getproductVariations, setProductVariation, fetchAllProductVariationsAdmin, addProductVariation, deleteProductVariation };
 };
 
 export default useProductVariationAdminStore;

@@ -25,7 +25,7 @@
           class="right-0 mt-2 py-2 bg-gray-900 rounded-md shadow-xl w-full transition-opacity ease-out duration-300"
           :class="{ 'opacity-100': open, 'opacity-0': !open }">
           <router-link class="block px-4 py-2 text-gray-500 "
-            :class="[route.name === 'Products' ? activeClass : inactiveClass]" :to="{ name: 'Products' }">
+            :class="[route.name === 'Products' ? activeClass : inactiveClass]" :to="{ name: 'ProductsAdmin' }">
             <span class="mx-4">Products</span>
           </router-link>
           <router-link class="block px-4 py-2 text-gray-500 "

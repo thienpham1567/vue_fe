@@ -4,12 +4,12 @@
         <div class=" mb-4">
             <div class="flex justify-between ml-2 mr-4">
                 <div class="w-1/2 ml-2 mr-2">
-                    <Dropdown v-model="selectedBrand" :options="brands" optionLabel="name" placeholder="Select a Brand"
-                        class="w-full md:w-14rem" />
+                    <Dropdown v-model="selectedBrand" :options="brands" optionLabel="name"
+                        placeholder="Select a product variation" class="w-full md:w-14rem" />
                 </div>
                 <div class="w-1/2 ml-2">
                     <Dropdown v-model="selectedCategory" :options="categoriesWithLabel" optionLabel="label"
-                        placeholder="Select a Category" class="w-full md:w-14rem">
+                        placeholder="Select a size" class="w-full md:w-14rem">
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="flex align-items-center">
                                 <div>{{ slotProps.value.name }}</div>
@@ -25,23 +25,8 @@
                 </div>
             </div>
             <div class="mr-4 ml-4 mt-4">
-                <label for="SKU-Code">SKU Code</label>
+                <label for="SKU-Code">Quantity</label>
                 <InputText v-model="currentProduct.sku" class="w-full" placeholder="93AB3S" />
-            </div>
-            <div class="flex">
-                <div class="mr-4 ml-4 mt-4 w-1/2">
-                    <label for="ProductName">Product Name</label>
-                    <InputText v-model="currentProduct.name" class="w-full" placeholder="Product Name" />
-                </div>
-                <div class="mr-4 ml-4 mt-4 w-1/2">
-                    <label for="ProductPrice">Product Price</label>
-                    <InputNumber v-model="currentProduct.price" class="w-full" inputId="currency-us" placeholder="$00.00"
-                        mode="currency" currency="USD" locale="en-US" />
-                </div>
-            </div>
-            <div class="mr-4 ml-4 mt-4">
-                <label for="description">Description</label>
-                <Textarea v-model="currentProduct.description" class="w-full" rows="5" cols="30" />
             </div>
             <div class="flex ml-4 mr-4">
                 <div class="mt-4">

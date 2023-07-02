@@ -30,7 +30,7 @@ export const admin = {
     },
     {
       path: "/products",
-      name: "Products",
+      name: "ProductsAdmin",
       component: () => import("@/views/Admin/Product.vue"),
     },
     {

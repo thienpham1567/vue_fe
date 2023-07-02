@@ -53,7 +53,7 @@
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
                 <div class="ml-2 mt-4">
-                    <Button type="submit" label="Reset"
+                    <Button @click="handleRefresh" type="submit" label="Reset"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
             </div>
@@ -68,8 +68,8 @@
                     <Column field="productId" header="Product Id"></Column>
                     <Column field="brand.brandId" header="Brand Id"></Column>
                     <Column field="category.categoryId" header="Category Id"></Column>
-                    <Column field="createdAt" header="Created At"></Column>
-                    <Column field="updatedAt" header="Update At"></Column>
+                    <!-- <Column field="createdAt" header="Created At"></Column>
+                    <Column field="updatedAt" header="Update At"></Column> -->
 
                     <Column class="" field="description" header="Description">
                         <template #body="rowData">
@@ -126,21 +126,14 @@ import Textarea from 'primevue/textarea';
 import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
-// import TabView from 'primevue/tabview';
-// import TabPanel from 'primevue/tabpanel';
 import Dropdown from 'primevue/dropdown';
 import Dialog from 'primevue/dialog';
-//import useProductStore from '@/store/ProductStore';
 import { ProductType, CreationParams, UpdateAdminParams } from '@/types/product';
 import { BrandType } from '@/types/brand';
 import { CategoryType } from '@/types/category';
-import { ColorType } from '@/types/color';
-import { ProductVariationType, CreationProductVariationParams } from '@/types/productVariation';
 import useBrandStore from '@/store/BrandStore';
 import useCategoryStore from '@/store/CategoryStore';
-import useColorStore from '@/store/ColorStore';
 import useProductAdminStore from '@/store/ProductAdminStore';
-import useProductVariationAdminStore from '@/store/ProductVariationAdminStore';
 import { ref, onMounted, computed } from 'vue';
 
 const dialogVisible = ref(false);
@@ -158,10 +151,6 @@ const products = ref<ProductType[]>([]);
 const currentProduct = ref<ProductType>({});
 const selectedProduct = ref<ProductType | null>(null);
 
-
-// const price = ref<number | null>(null);
-
-
 const categoriesWithLabel = computed(() =>
     categories.value.map((category) => ({
         ...category,
@@ -169,64 +158,8 @@ const categoriesWithLabel = computed(() =>
     }))
 );
 
-/*--ProductVariation: select color--*/
-// const colorStore = useColorStore();
-// const colors = ref<ColorType[]>([]);
-// const selectedColor = ref(null);
-
-// const productVariationStore = useProductVariationAdminStore();
-// const productVariations = ref<ProductVariationType[]>([]);
-// const currentProductVariation = ref<ProductVariationType>({});
-
-// const handleSaveProductVariation = async () => {
-//     try {
-//         // Lấy giá trị từ các select box
-//         const selectedColorValue = selectedColor.value;
-//         const selectedProductValue = selectedProduct.value;
-
-//         // Kiểm tra xem giá trị đã được chọn hay chưa
-//         if (!selectedColorValue || !selectedProductValue) {
-//             throw new Error("Brand and category must be selected.");
-//         }
-
-//         // Gán giá trị vào product.value
-//         currentProductVariation.value.color = selectedColorValue;
-//         currentProductVariation.value.product = selectedProductValue;
-//         console.log(currentProductVariation.value.color);
-//         console.log(currentProductVariation.value.product);
-//         await productVariationStore.addProductVariation(currentProductVariation.value as CreationProductVariationParams);
-//         // Xử lý phản hồi từ API ở đây (ví dụ: hiển thị thông báo thành công, cập nhật dữ liệu, vv.)
-//         await productVariationStore.fetchAllProductVariationsAdmin();
-//         console.log('ProductVariation created successfully!');
-//     } catch (error) {
-//         // Xử lý lỗi khi gọi API (ví dụ: hiển thị thông báo lỗi, ghi log lỗi, vv.)
-//         console.error('Error creating ProductVariation:', error);
-//     }
-
-//     currentProduct.value = {};
-//     selectedBrand.value = null;
-//     selectedCategory.value = null;
-//     dialogVisible.value = false;
-// };
-
-
 onMounted(async () => {
-    /*--ProductVariation--*/
-    // try {
-    //     await productVariationStore.fetchAllProductVariationsAdmin();
-    //     productVariations.value = productVariationStore.getproductVariations.value;
-    // } catch (error) {
-    //     console.log("Error fetching productVariation", error);
-    // }
-    // /*--ProductVariation color--*/
-    // try {
-    //     await colorStore.fetchAllColor();
-    //     colors.value = colorStore.getColors.value;
-    //     console.log(colors);
-    // } catch (error) {
-    //     console.log("Error fetching color", error);
-    // }
-    /*--Product--*/
+    /*--Load products into table--*/
     try {
         await productStore.fetchAllProductsAdmin();
         products.value = productStore.getProducts.value;
@@ -234,6 +167,7 @@ onMounted(async () => {
     } catch (error) {
         console.error('Error fetching products', error);
     }
+    /*--Load brands into select box--*/
     try {
         await brandStore.fetchBrands();
         //brands.value = brandStore.getBrands.value.map(brands => brands.brandId + ' - ' + brands.name);
@@ -241,6 +175,7 @@ onMounted(async () => {
     } catch (error) {
         console.error('Error fetching brands', error);
     }
+    /*--Load categories into select box--*/
     try {
         await categoryStore.fetchCategories();
         //categories.value = categoryStore.getMainSubCategories.value.map(categories => categories.categoryId + ' - ' + categories.name + ' - ' + categories.parentCategory?.name);
@@ -251,7 +186,14 @@ onMounted(async () => {
 
 });
 
+/*--Refresh form & select box--*/
+const handleRefresh = async () => {
+    selectedBrand.value = null;
+    selectedCategory.value = null;
+    currentProduct.value = {};
+}
 
+/*--Update product in admin page--*/
 const handleUpdate = async () => {
     try {
         const selectedBrandValue = selectedBrand.value;
@@ -270,6 +212,7 @@ const handleUpdate = async () => {
         console.error('Error updating product:', error);
     }
 }
+/*--Insert product in admin page--*/
 const handleSave = async () => {
     try {
         // Lấy giá trị từ các select box
@@ -299,15 +242,19 @@ const handleSave = async () => {
     selectedCategory.value = null;
     dialogVisible.value = false;
 };
+/*--Cancel layout modal delete confirm--*/
 const cancelDelete = () => {
     currentProduct.value = {};
     deleteDialogVisible.value = false;
 };
 
+/*--Show modal confirm--*/
 const showDeleteDialog = (product: ProductType) => {
     currentProduct.value = { ...product };
     deleteDialogVisible.value = true;
 };
+
+/*--Delete product in admin page--*/
 const handleDelete = async () => {
     try {
         await productStore.deleteProduct(currentProduct.value.productId);
@@ -320,6 +267,7 @@ const handleDelete = async () => {
     deleteDialogVisible.value = false;
 }
 
+/*--Edit product by id fill up form in admin page--*/
 const editData = (rowData: { data: ProductType }) => {
     selectedProduct.value = { ...rowData.data };
 
