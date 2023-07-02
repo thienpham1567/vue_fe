@@ -285,19 +285,19 @@ const toggleSection = (section: string) => {
 const setDataHeader = () => {
   items.value = [
     {
-      label: "Women",
+      label: "Nữ",
       items: [getCategoriesByParent(MainCategories.Women)],
     },
     {
-      label: "Men",
+      label: "Nam",
       items: [getCategoriesByParent(MainCategories.Men)],
     },
     {
-      label: "Kids",
+      label: "Trẻ Em",
       items: [getCategoriesByParent(MainCategories.Kids)],
     },
     {
-      label: "Brands",
+      label: "Thường Hiệu",
       items: [getAllBrands()],
     },
   ];

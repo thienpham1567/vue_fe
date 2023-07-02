@@ -22,7 +22,7 @@
                 <div class="mt-4">
                     <label class="text-l font-semibold">Color: <span class="inline font-normal">{{ selectedProduct.color?.value }}</span> </label>
                     <div class="flex flex-wrap gap-2 items-center mt-1">
-                        <div class="color-product" v-for="product in getAllProducts" :key="product.productVariationId">
+                        <div v-for="product in getAllProducts" :key="product.productVariationId" class="color-product" :class="{'selected-color': selectedProduct.color?.colorId === product.color?.colorId}" @click="onSelectProduct(product)">
                             <Image :src="product.productImages?.find(image => image.isPrimary === true)?.imageUrl"
                                 alt="Image" width="80" />
                         </div>
@@ -76,6 +76,7 @@ import { useRoute } from "vue-router";
 import { ProductVariationType } from "@/types/productVariation";
 import { useProductStore, useSizeStore } from "@/store";
 import { ref, onMounted, computed, Ref } from "vue";
+import { on } from 'events';
 
 const route = useRoute();
 const { productId } = route.params;
@@ -156,8 +157,8 @@ const onSelectSize = () => {
     console.log(selectedSize);
 }
 
-const onSelectProduct = () => {
-
+const onSelectProduct = (product: ProductVariationType) => {
+    selectedProduct.value = product;
 }
 
 const fetchData = () => {
