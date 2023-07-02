@@ -19,3 +19,27 @@ export interface LoginParams {
     email: String;
     password: String;
 }
+
+export type UpdateParams = Omit<UserType, "id">;
+
+export interface CreationResponse {
+    status: boolean;
+    data: UserType;
+    message?: string;
+}
+  
+export interface UserResponse {
+    status: boolean;
+    data?: UserType;
+    message?: string;
+}
+  
+export interface ListResponse {
+    status: boolean;
+    data: UserType[];
+    message?: string;
+}
+
+export interface QueryUserParams{
+    user?: UserType;
+}
