@@ -313,3 +313,10 @@ onMounted(() => {
 });
 </script>
 
+<style>
+.cicel {
+    border-radius: 100%;
+}
+</style>
+  
+

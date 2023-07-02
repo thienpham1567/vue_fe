@@ -8,10 +8,12 @@ const useProductStore = defineStore("product", () => {
   // State
   const productList: Ref<ProductVariationType[]> = ref([]);
   const product: Ref<ProductVariationType> = ref({});
+  const products: Ref<ProductVariationType[]> = ref([]);
 
   // Getters
   const getProducts = computed(() => productList);
   const getProduct = computed(() => product);
+  const getAllProducts = computed(() => products);
 
   // Actions
   const fetchAllProducts = async (brand?: number, category?: number) => {
@@ -24,9 +26,15 @@ const useProductStore = defineStore("product", () => {
   const fetchOneProduct = async (id: number) => {
     const { data } = await new Product().detail(id);
     product.value = data!;
+    await fetchProducts();
   };
 
-  return { getProduct, getProducts, fetchAllProducts, fetchOneProduct };
+  const fetchProducts = async () => {
+    const { data } = await new Product().list({ productId: product.value.product?.productId!});
+    products.value = data;
+  }
+
+  return { getProduct, getProducts, getAllProducts, fetchAllProducts, fetchOneProduct };
 });
 
 export default useProductStore;

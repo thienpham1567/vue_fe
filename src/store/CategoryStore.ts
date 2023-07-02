@@ -7,63 +7,41 @@ const useCategoryStore = () => {
   const categories = ref<CategoryType[]>([]);
   const category = ref<CategoryType>({});
 
-  // Getters
-  const getCategories = computed(() => categories.value);
-  const getCategory = computed(() => category.value);
+	// Getters
+	const getCategories = computed(() => categories);
+	const getCategory = computed(() => category);
 
-  const getMainCategories = computed(() =>
-    categories.value.filter((category) => !category.parentCategory)
-  );
-  const getMainSubCategories = computed(() =>
-		categories.value.filter((category) => category.categoryId && category.categoryId >= 4)
-	);
-	const getSubCategories = computed(() =>
-	categories.value.filter((category) => category.categoryId && category.categoryId < 4)
-  );
-
-  // Actions
-  const fetchCategories = async () => {
-    const { data } = await new Category().list();
-    setCategories(data);
-  };
+	// Action
+	const fetchCategories = async () => {
+		const { data } = await new Category().list();
+		categories.value = data;
+	};
 
   const addCategory = async (category: CreationParams) => {
     const { data } = await new Category().create(category);
     categories.value.push(data);
   };
 
-  const updateCategory = async (id: number, category: UpdateParams) => {
-    await new Category().update(id, category);
-    setCategory({});
-    fetchCategories();
-  };
+	const updateCategory = async (id: number, updatedCategory: UpdateParams) => {
+		await new Category().update(id, updatedCategory);
+		category.value = {};
+		fetchCategories();
+	};
 
   const deleteCategory = async (id: number) => {
     await new Category().delete(id);
-    setCategory({});
+    category.value = {};
     fetchCategories();
   };
 
-  const setCategory = (newCategory: CategoryType) => {
-    category.value = newCategory;
-  };
-
-  const setCategories = (newCategories: CategoryType[]) => {
-    categories.value = newCategories;
-  };
-
-  return {
-    getCategory,
-    getCategories,
-    getMainCategories,
-	getMainSubCategories,
-	getSubCategories,
-    fetchCategories,
-    addCategory,
-    updateCategory,
-    deleteCategory,
-    setCategory,
-  };
-};
+	return {
+		getCategory,
+		getCategories,
+		fetchCategories,
+		addCategory,
+		updateCategory,
+		deleteCategory,
+	};
+});
 
 export default useCategoryStore;

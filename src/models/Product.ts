@@ -30,7 +30,7 @@ class Product extends HTTPBaseService {
   async detail(id: number): Promise<ProductVariationResponse> {
     return await this.instance.get(`/products/${id}`);
   }
-
+  
   async create(params: CreationParams): Promise<CreationResponse> {
     return await this.instance.post("/admin/products", params);
   }

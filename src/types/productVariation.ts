@@ -37,6 +37,7 @@ export interface ListResponse {
 }
 
 export interface QueryProductVariationParams {
-  color?: ColorType;
-  product?: ProductType;
+  brand?: number;
+  category?: number;
+  productId?: number;
 }

@@ -36,17 +36,7 @@ const props = defineProps<ProductProps>();
 const primaryImage = computed(() => props.product?.productImages?.find(productImage => productImage.isPrimary));
 
 const gotoProductDetail = () => {
-    router.push({name: "ProductDetail", params: {productId: props.product?.productVariationId}});
+    router.push({name: "Product", params: {productId: props.product?.productVariationId}});
 }
 
 </script>
-
-<style>
-.zoom-image {
-    transition: transform 0.3s;
-}
-
-.zoom-image:hover {
-    transform: scale(1.1);
-}
-</style>

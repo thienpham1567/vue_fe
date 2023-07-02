@@ -23,7 +23,34 @@
     <div class="nav-menu">
       <MegaMenu :model="items">
         <template #end>
-          <Button label="Sign In / Register" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
+          <Button v-if="!isLogin" label="Sign In / Register" class="sign-in-register-btn" text
+            @click="dialogSignInVisible = true" />
+          <button label="My Account" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
+            <div class="mb-3">
+              <span v-if="showMyAccountSection">
+                <span class="font-bold">My Account</span>
+                <i class="pi pi-chevron-down ml-2"></i>
+              </span>
+              <span v-else>
+                <span class="font-bold">My Account</span>
+                <i class="pi pi-chevron-up ml-2"></i>
+              </span>
+            </div>
+            <div :class="['my-account-section', { 'hidden': !showMyAccountSection }]">
+              <div class="mb-2 flex justify-start">
+                <Button label="View order" class="sign-in-register-btn" text @click="goToViewOrders" />
+              </div>
+              <div class="mb-2 flex justify-start">
+                <Button label="My Account" class="sign-in-register-btn" text @click="goToMyAccount" />
+              </div>
+              <div v-if="isAdmin" class="mb-2 flex justify-start">
+                <Button label="Admin" class="sign-in-register-btn" text />
+              </div>
+              <div v-if="isLogin" class="mb-2 flex justify-start">
+                <Button label="Logout" class="sign-in-register-btn" text @click="logout" />
+              </div>
+            </div>
+          </button>
         </template>
       </MegaMenu>
     </div>
@@ -53,7 +80,8 @@ import Sidebar from 'primevue/sidebar';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
-import { onMounted } from 'vue';
+import { onMounted, onUpdated } from 'vue';
+import jwt_decode from "jwt-decode";
 
 enum MainCategories {
   Men = 1,
@@ -119,32 +147,37 @@ const items = ref([]);
 const setDataHeader = () => {
   items.value = [
     {
-      label: "Women",
+      label: "Nữ",
       items: [getCategoriesByParent(MainCategories.Women)],
     },
     {
-      label: "Men",
+      label: "Nam",
       items: [getCategoriesByParent(MainCategories.Men)],
     },
     {
-      label: "Kids",
+      label: "Trẻ Em",
       items: [getCategoriesByParent(MainCategories.Kids)],
     },
     {
-      label: "Brands",
+      label: "Thường Hiệu",
       items: [getAllBrands()],
     },
   ];
 }
 
-const fetchData = async () => {
-  await fetchBrands();
-  await fetchCategories();
-  setDataHeader();
+const fetchData = () => {
+  Promise.all([fetchBrands(), fetchCategories()]).then(() => {
+    setDataHeader();
+  });
 }
 
 const goToLogin = () => {
   router.push('/account/login');
+}
+
+function goToCart() {
+  dialogCartVisible.value = false;
+  router.push('/cart');
 }
 
 const goToRegister = () => {
@@ -159,4 +192,53 @@ const gotoProductList = (brand?: number, category?: number) => {
 };
 
 onMounted(fetchData);
+
+function goToCheckout() {
+  dialogCartVisible.value = false;
+  router.push('/checkout');
+}
+
+function goToMyAccount() {
+  dialogCartVisible.value = false;
+  router.push('/myaccount');
+}
+
+function goToViewOrders() {
+  dialogCartVisible.value = false;
+  router.push('/myaccount/view-order');
+}
+
+onMounted(fetchData);
+const increment = (products: Product) => {
+  products.quantity++;
+};
+
+const decrement = (products: Product) => {
+  if (products.quantity > 0) {
+    products.quantity--;
+  }
+};
+const token = localStorage.getItem('token');
+
+const isLogin = ref(false);
+let isAdmin = ref(false);
+
+function checkToken() {
+  if (token == null) {
+    isLogin.value = false;
+  } else {
+    isLogin.value = true;
+    const valueToken = jwt_decode(token!);
+    const roles = valueToken.user.roles;
+    console.log(roles);
+    isAdmin.value = roles.some(role => role.authority === 'admin');
+    console.log(isAdmin.value);
+  }
+}
+
+const logout = () => {
+  localStorage.removeItem("token");
+  window.location.reload();
+};
+checkToken();
 </script>

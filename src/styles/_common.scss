@@ -11,3 +11,36 @@
     display: none !important;
   }
 }
+
+.btn {
+  min-width: 100%;
+  color: white !important;
+  transition: color 0.3s ease;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 16px;
+  border: 1px solid $medium-blue !important;
+  background-color: $medium-blue !important;
+
+  &:hover {
+    background: $light-blue !important;
+    color: white !important;
+    border: 1px solid $light-blue !important;
+  } 
+}
+.p-sidebar-header {
+  justify-content: space-between;
+}
+
+.p-sidebar {
+  &-content {
+    padding: 0 !important;
+  }
+
+  &-right {
+    .p-sidebar {
+      width: 34rem;
+      height: 100%;
+    }
+  }
+}

@@ -1,12 +1,12 @@
 import Brand from "@/models/Brand";
 import type { UpdateParams } from "@/types/brand";
 import type { BrandType, CreationParams } from "@/types/brand";
-import { ref, computed } from "vue";
+import { ref, computed, Ref } from "vue";
 
 const useBrandStore = () => {
   // State
-  const brands = ref<BrandType[]>([]);
-  const brand = ref<BrandType>({});
+  let brands: Ref<BrandType[]> = ref([]);
+  let brand: Ref<BrandType> = ref({});
 
   // Getters
   const getBrands = computed(() => brands.value);
@@ -15,7 +15,7 @@ const useBrandStore = () => {
   // Action
   const fetchBrands = async () => {
     const { data } = await new Brand().list();
-    setBrands(data);
+    brands.value = data;
   };
 
   const addBrand = async (brand: CreationParams) => {
@@ -23,21 +23,17 @@ const useBrandStore = () => {
     brands.value.push(data);
   };
 
-  const updateBrand = async (id: number, brand: UpdateParams) => {
-    await new Brand().update(id, brand);
-    setBrand({});
+  const updateBrand = async (id: number, updatedBrand: UpdateParams) => {
+    await new Brand().update(id, updatedBrand);
+    brand.value = {};
     fetchBrands();
   };
 
   const deleteBrand = async (id: number) => {
     await new Brand().delete(id);
-    setBrand({});
+    brand.value = {};
     fetchBrands();
   };
-
-  const setBrands = (newBrands: BrandType[]) => (brands.value = newBrands);
-
-  const setBrand = (newBrand: BrandType) => (brand.value = newBrand);
 
   return {
     getBrand,
@@ -46,7 +42,6 @@ const useBrandStore = () => {
     addBrand,
     updateBrand,
     deleteBrand,
-    setBrand,
   };
 };
 
