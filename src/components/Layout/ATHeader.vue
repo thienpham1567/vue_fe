@@ -109,6 +109,7 @@ let selectedProduct = ref();
 let filteredProducts = ref([]);
 let dialogCartVisible = ref(false);
 let dialogSignInVisible = ref(false);
+const items = ref([]);
 
 function brands() {
   return getBrands.value.map(brand => {
@@ -153,8 +154,6 @@ const getCategoriesByParent = (parentCategoryId: number) => {
 
   return data.filter((value, index, categories) => categories.map(category => category?.label)?.indexOf(value?.label) === index && value !== undefined);
 }
-
-const items = ref([]);
 
 const setDataHeader = () => {
   items.value = [
