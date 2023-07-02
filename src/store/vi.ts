@@ -1,0 +1,69 @@
+const vi = {
+    //Cart-View
+    hello: 'Xin chào!',
+    item: 'Sản phẩm',
+    price: 'Giá',
+    quantity: 'Số lượng',
+    'Proceed-to-checkout': 'Thanh toán',
+    'cart-summary': 'Giỏ hàng',
+    subtotal: 'Tổng cộng',
+    remove: 'Xóa',
+    color: 'Màu',
+    size: 'Kích cỡ',
+    //Cart-View-End
+
+    //Header
+    'sign-in/register': 'Đăng nhập / Đăng ký',
+    'sign-in': 'Đăng nhập',
+    'register': 'Đăng ký',
+    'product-list': 'Danh sách sản phẩm',
+    'product-detail': 'Chi tiết sản phẩm',
+    'my-cart': 'Giỏ hàng',
+    'search-placehoder': 'Tìm kiếm giày, áo, phụ kiện...',
+    'my-account': 'Tài khoản',
+    'view-order': 'Hiển thị đơn hàng',
+    'logout': 'Đăng xuất',
+    //Heder-End
+    //OrderHistory
+    odh: 'Lịch sử mua hàng',
+    des: 'Tìm kiếm đơn hàng',
+    text: 'Lịch sử mua hàng của bạn chưa có gì !',
+    //End OrderHistory
+
+    //Account
+    info: 'Thông tin tài khoản',
+    address: 'Địa chỉ giao hàng',
+    paymentinfo: 'Thông tin thanh toán',
+    accountinfo: 'Tên, Email và mật khẩu',
+    newadd: 'Thêm địa chỉ giao hàng',
+    newcard: 'Thêm thẻ ngân hàng',
+    manageaccount: 'Quản lý tài khoản',
+    manageemail: 'Quản lý Email',
+    //End account
+    //ProductList
+    brand: 'Thương hiệu',
+    pricerange: 'Khoảng giá',
+
+    //ProductDetail
+    pname: 'Tên sản phẩm',
+    pid: 'Mã sản phẩm',
+    sku: 'Mã SKU',
+    add: 'Thêm vào giỏ hàng',
+    //Footer
+    contact: 'Thông tin liên hệ',
+    phonenum: 'Điện thoại: +123 443 4234',
+    shopdetail: 'Sản phẩm chi tiết',
+    Scart: 'Giỏ hàng',
+    home: 'Trang chủ',
+    ourshop: 'Về chúng tôi',
+    contactus: 'Liên hệ với chúng tôi',
+    checkout: 'Thanh toán',
+    checkoutinfo: 'Thông tin thanh toán',
+    follow: 'Theo dõi shop',
+    myacc: 'Tài khoản',
+    shop: 'Cửa hàng',
+
+
+};
+
+export default vi;
