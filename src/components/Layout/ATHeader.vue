@@ -56,7 +56,19 @@
     </div>
   </nav>
   <Sidebar v-model:visible="dialogCartVisible" position="right">
-    <p>My Cart</p>
+    <template #header>
+      <div class="text-2xl">Added To Cart</div>
+    </template>
+    <CartItem />
+    <div class="bg-gray-200 w-full h-1/6">
+      <div class="flex justify-end mr-4">Cart Subtotal (10 Items)$1,099.90</div>
+      <div class="flex justify-between m-4 pb-4">
+        <Button type="submit" label="VIEW CART" @click="goToCart"
+          class="px-4 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
+        <Button type="submit" label="PROCEED TO CHECKOUT" @click="goToCheckout"
+          class="px-4 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
+      </div>
+    </div>
   </Sidebar>
 
   <CoreDialog :visible="dialogSignInVisible" header="Sign In" widthSize='500px' position="center"
@@ -77,10 +89,10 @@ import MegaMenu from 'primevue/megamenu';
 import Logo from "@/assets/images/logo.png";
 import CoreDialog from '@/components/Core/CoreDialog.vue';
 import Sidebar from 'primevue/sidebar';
-import { ref } from 'vue';
+import CartItem from "@/components/CartItems/CartItem.vue";
 import { useRouter } from 'vue-router';
 import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
-import { onMounted } from 'vue';
+import { onMounted, onUpdated, ref } from 'vue';
 import jwt_decode from "jwt-decode";
 
 enum MainCategories {

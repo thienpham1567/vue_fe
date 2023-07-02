@@ -2,7 +2,7 @@
     <Card class="product">
         <template #header>
             <div @click="gotoProductDetail">
-                <Image :src="primaryImage?.imageUrl" alt="Image" />
+                <Image :src="primaryImage?.imageUrl" alt="Image" class="fixed-size-image" />
             </div>
         </template>
         <template #title>{{ product?.product?.brand?.name }}</template>
@@ -18,6 +18,17 @@
         </template>
     </Card>
 </template>
+
+<style>
+.fixed-size-image {
+    width: 200px !important;
+    /* Đặt chiều rộng tùy ý */
+    height: 200px !important;
+    /* Đặt chiều cao tùy ý */
+    object-fit: cover !important;
+    /* Cân chỉnh kích thước hình ảnh để phù hợp với kích thước cố định */
+}
+</style>
 
 <script setup lang="ts">
 import Image from 'primevue/image';
@@ -36,7 +47,7 @@ const props = defineProps<ProductProps>();
 const primaryImage = computed(() => props.product?.productImages?.find(productImage => productImage.isPrimary));
 
 const gotoProductDetail = () => {
-    router.push({name: "Product", params: {productId: props.product?.productVariationId}});
+    router.push({ name: "Product", params: { productId: props.product?.productVariationId } });
 }
 
 </script>

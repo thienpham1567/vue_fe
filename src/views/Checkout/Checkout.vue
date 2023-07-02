@@ -1,12 +1,13 @@
 <template>
     <div class="flex flex-col lg:flex-row">
         <!-- Left column start -->
-        <div class="w-full lg:w-8/12 mx-4 mb-4 mt-4">
+        <div class="w-full lg:w-8/12 mx-4 mb-4 mt-4 border-2 drop-shadow-lg">
             <div class=" mb-4">
                 <div class=" py-2">
-                    <div class="text-2xl mt-4">Delivery Information</div>
+                    <div class="text-2xl mt-4 ml-4">Delivery Information</div>
                 </div>
-                <div class=" bg-gray-200 px-4 pb-4">
+                <div class="border-b-2 mx-4"></div>
+                <div class=" px-4 pb-4 rounded-md">
                     <div class="flex flex-wrap -mx-2">
                         <div class="w-full lg:w-1/2 px-2 mt-4">
                             <div class="mb-2">
@@ -62,7 +63,7 @@
                 </div>
             </div>
 
-            <div class="bg-gray-200 mb-4">
+            <div class=" mb-4">
                 <div class="flex items-center justify-between px-4 py-2">
                     <div class="text-2xl mt-4">Schedule Delivery</div>
                     <div class="card">
@@ -84,7 +85,7 @@
                 </div>
             </div>
 
-            <div class="bg-gray-200">
+            <div class="">
                 <div class="flex items-center justify-between px-4 py-2">
                     <div class="text-2xl mt-4 mb-2">Payment Method</div>
                 </div>
@@ -109,47 +110,24 @@
         <!-- Left column End -->
 
         <!-- Right column start -->
-        <div class="lg:w-4/12 mx-4 mt-4">
-            <div class=" mb-4">
-                <div class="px-4 py-2">
-                    <div class="text-2xl mt-4 ">Order Summary</div>
-                </div>
-                <div class="px-4 pb-4 overflow-y-auto max-h-[679px]">
-                    <div v-for="product in products" :key="product.id" class="mb-1 flex flex-wrap">
-                        <div class="bg-gray-200 rounded-lg shadow flex w-full">
-                            <div class="w-1/3">
-                                <img :src="product.image" class="w-full object-contain" />
-                            </div>
-                            <div class="w-1/3 mt-8 ml-4">
-                                <div class="text-lg font-bold">{{ product.name }}</div>
-                                <div class="text-gray-500 mb-2">{{ product.category }}</div>
-                                <div class="text-xl font-bold">${{ product.price }}</div>
-                            </div>
-                            <div class="w-1/3">
-                                <div class="flex justify-center mt-14">
-                                    <Button icon="pi pi-minus" class="p-button-secondary p-button-text mr-2"
-                                        @click="decrement(product)"></Button>
-                                    <div class="bg-white w-12 flex justify-center items-center">{{ product.quantity }}</div>
-                                    <Button icon="pi pi-plus" class="p-button-secondary p-button-text ml-2"
-                                        @click="increment(product)"></Button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="px-4 py-2 justify-items-center mt-2 mb-6">
+        <div class="lg:w-4/12 mx-4 mt-4 border-2 drop-shadow-md h-full">
+            <div class="mt-4">
+                <div class="text-2xl ml-4 mb-2 ">Order Summary</div>
+            </div>
+            <div class=" mb-0">
+                <div class="px-4 py-2 justify-items-center mt-2 mb-2">
                     <div class="flex justify-between">
                         <div class="font-light text-lg">Subtotal</div>
                         <div class="font-bold">$1250.32</div>
                     </div>
-                    <div class="border-b border-gray-400"></div>
+                    <div class="border-b "></div>
                     <div class="mt-2">
                         <div class="flex justify-between">
                             <div class="font-light text-lg">Shipping</div>
                             <div class="font-bold">---</div>
                         </div>
                     </div>
-                    <div class="border-b border-gray-400"></div>
+                    <div class="border-b "></div>
                     <div class="mt-2">
                         <div class="flex justify-between">
                             <div class="font-light text-lg">Total(USD)</div>
@@ -157,11 +135,24 @@
                         </div>
                     </div>
                     <hr>
-                    <button
-                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold ml-5 mt-4 mb-4 py-2 px-4 rounded w-11/12 h-10"
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold mt-4 mb-4 rounded w-full h-12"
                         type="submit">
                         Confirm Order
                     </button>
+                </div>
+                <div class="px-4 overflow-y-auto max-h-[645px] mb-4">
+                    <div v-for="product in products" :key="product.id" class="mb-4 flex flex-wrap">
+                        <div class=" flex w-full">
+                            <div class="w-1/3">
+                                <img :src="product.image" class="w-full object-contain" />
+                            </div>
+                            <div class="w-2/3 mt-4 ml-4">
+                                <div class="text-lg font-bold">{{ product.name }}</div>
+                                <div class="text-gray-500 mb-2">{{ product.category }}</div>
+                                <div class="text-xl font-bold">${{ product.price }}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
