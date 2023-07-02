@@ -170,7 +170,7 @@ const setDataHeader = () => {
       items: [getCategoriesByParent(MainCategories.Kids)],
     },
     {
-      label: "Thường Hiệu",
+      label: "Thương Hiệu",
       items: [getAllBrands()],
     },
   ];

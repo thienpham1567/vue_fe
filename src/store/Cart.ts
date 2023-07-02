@@ -4,7 +4,7 @@ import { defineStore } from "pinia";
 import { ref, type Ref } from "vue";
 import { computed } from "vue";
 
-const useSizeStore = defineStore("size", () => {
+const useCartStore = defineStore("cart", () => {
     // State
     const sizes: Ref<SizeType[]> = ref([]);
 
@@ -26,4 +26,4 @@ const useSizeStore = defineStore("size", () => {
     };
 });
 
-export default useSizeStore;
+export default useCartStore;
