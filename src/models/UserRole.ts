@@ -3,33 +3,30 @@ import type {
   CreationParams,
   CreationResponse,
   ListResponse,
-  UserResponse,
-  UpdateParams,
-} from "@/types/user";
+  UserRoleResponse,
+  UpdateUserRoleParams,
+  UserRoleParams,
+} from "@/types/userRole";
 
-class User extends HTTPBaseService {
+class UserRole extends HTTPBaseService {
   public constructor() {
     super();
   }
 
-  async list(): Promise<ListResponse> {
-    return await this.instance.get("/users");
+  async list(params: UserRoleParams): Promise<ListResponse> {
+    return await this.instance.get("/userroles", { params });
   }
 
   async detail(id: number): Promise<UserResponse> {
     return await this.instance.get(`/users/${id}`);
   }
 
-  async findByKey(key: String): Promise<ListResponse> {
-    return await this.instance.get(`/users/key/${key}`);
-  }
-
   async create(params: CreationParams): Promise<CreationResponse> {
-    return await this.instance.post("/users", params);
+    return await this.instance.post("/userroles", params);
   }
 
-  async update(id: number, params: UpdateParams): Promise<UserResponse> {
-    return await this.instance.put(`/users/${id}`, params);
+  async update(id: number, params: UpdateUserRoleParams): Promise<UserRoleResponse> {
+    return await this.instance.put(`/userroles/${id}`, params);
   }
 
   async delete(id: number): Promise<void> {
@@ -41,4 +38,4 @@ class User extends HTTPBaseService {
   }
 }
 
-export default User;
+export default UserRole;

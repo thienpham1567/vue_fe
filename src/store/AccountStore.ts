@@ -35,6 +35,7 @@ const useAccountStore = defineStore("account", () => {
         localStorage.removeItem("token");
         user.value = null;
         userToken.value = "";
+
     };
 
     const setToken = (newToken?: string) => {

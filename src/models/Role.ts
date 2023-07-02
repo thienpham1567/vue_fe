@@ -5,23 +5,19 @@ import type {
   ListResponse,
   UserResponse,
   UpdateParams,
-} from "@/types/user";
+} from "@/types/role";
 
-class User extends HTTPBaseService {
+class Role extends HTTPBaseService {
   public constructor() {
     super();
   }
 
   async list(): Promise<ListResponse> {
-    return await this.instance.get("/users");
+    return await this.instance.get("/roles");
   }
 
   async detail(id: number): Promise<UserResponse> {
     return await this.instance.get(`/users/${id}`);
-  }
-
-  async findByKey(key: String): Promise<ListResponse> {
-    return await this.instance.get(`/users/key/${key}`);
   }
 
   async create(params: CreationParams): Promise<CreationResponse> {
@@ -41,4 +37,4 @@ class User extends HTTPBaseService {
   }
 }
 
-export default User;
+export default Role;
