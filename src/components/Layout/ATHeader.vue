@@ -19,38 +19,48 @@
         </div>
       </div>
       <Button icon="pi pi-shopping-cart" class="cart-btn" label="MY CART" raised @click="dialogCartVisible = true" />
+
+      <!-- Multi Language button  -->
+      <div class="flex  space-x-4 ">
+        <select v-model="selectedLanguage" @change="changeLanguage">
+          <option v-for=" language  in  languages " :value="language.code" :key="language.code">
+            {{ language.label }}
+          </option>
+        </select>
+        <p>{{ $t('hello') }}</p>
+      </div>
+
     </div>
     <div class="nav-menu">
       <MegaMenu :model="items">
         <template #end>
           <Button v-if="!isLogin" label="Sign In / Register" class="sign-in-register-btn" text
             @click="dialogSignInVisible = true" />
-          <button label="My Account" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
+
+          <button :label="$t('my-account')" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
             <div class="mb-3">
               <span v-if="showMyAccountSection">
-                <span class="font-bold">My Account</span>
+                <span class="font-bold">{{ $t('my-account') }}</span>
                 <i class="pi pi-chevron-down ml-2"></i>
               </span>
               <span v-else>
-                <span class="font-bold">My Account</span>
+                <span class="font-bold">{{ $t('my-account') }}</span>
                 <i class="pi pi-chevron-up ml-2"></i>
               </span>
             </div>
             <div :class="['my-account-section', { 'hidden': !showMyAccountSection }]">
               <div class="mb-2 flex justify-start">
-                <Button label="View order" class="sign-in-register-btn" text @click="goToViewOrders" />
+                <Button :label="$t('view-order')" class="sign-in-register-btn" text @click="goToViewOrders" />
               </div>
               <div class="mb-2 flex justify-start">
-                <Button label="My Account" class="sign-in-register-btn" text @click="goToMyAccount" />
+                <Button :label="$t('my-account')" class="sign-in-register-btn" text @click="goToMyAccount" />
               </div>
-              <div v-if="isAdmin" class="mb-2 flex justify-start">
-                <Button label="Admin" class="sign-in-register-btn" text />
-              </div>
-              <div v-if="isLogin" class="mb-2 flex justify-start">
-                <Button label="Logout" class="sign-in-register-btn" text @click="logout" />
+              <div class="mb-2 flex justify-start">
+                <Button :label="$t('logout')" class="sign-in-register-btn" text @click="logout" />
               </div>
             </div>
           </button>
+
         </template>
       </MegaMenu>
     </div>
@@ -94,6 +104,8 @@ import { useRouter } from 'vue-router';
 import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
 import { onMounted, ref } from 'vue';
 import jwt_decode from "jwt-decode";
+import { useLanguageStore } from '@/store/language';
+import { translate } from '@/i18n';
 
 enum MainCategories {
   Men = 1,
@@ -211,13 +223,38 @@ function goToCheckout() {
 
 function goToMyAccount() {
   dialogCartVisible.value = false;
-  router.push('/myaccount');
+  router.push('/myaccoun/myaccount');
 }
 
 function goToViewOrders() {
   dialogCartVisible.value = false;
   router.push('/myaccount/view-order');
 }
+
+const languageStore = useLanguageStore();
+
+const languages = ref([
+  { code: 'en', label: 'English' },
+  { code: 'vi', label: 'Tiếng Việt' }
+]);
+
+const selectedLanguage = computed({
+  get: () => languageStore.currentLanguage,
+  set: (value) => {
+    languageStore.setCurrentLanguage(value);
+    // Thực hiện bất kỳ hành động nào khác khi ngôn ngữ thay đổi
+  },
+});
+const $t = translate;
+
+const changeLanguage = (event: Event) => {
+  const target = event.target as HTMLSelectElement;
+  const selectedCode = target.value;
+  selected;
+}
+
+
+
 
 const token = localStorage.getItem('token');
 
