@@ -4,16 +4,11 @@
       <div class="flex items-center h-36">
         <Image :src="Logo" alt="Image" width="180" />
         <div class="p-inputgroup">
-          <AutoComplete v-model="selectedProduct" optionLabel="name" :suggestions="filteredProducts" @complete="search"
-            placeholder="Search for shoes, clothes, etc.">
-            <!-- <template #option="slotProps">
-                            <div class="flex align-options-center">
-                                <img :alt="slotProps.option.name"
-                                    src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                                    :class="`flag flag-${slotProps.option.code.toLowerCase()} mr-2`" style="width: 18px" />
-                                <div>{{ slotProps.option.name }}</div>
-                            </div>
-                        </template> -->
+          <AutoComplete v-model="searchQuery" dropdown :suggestions="filteredProducts" @complete="onSearchComplete"
+            placeholder="Search for shoes, clothes, etc." field="name">
+            <template #option="slotProps" class="w-full">
+              <SearchProduct v-for="product in filteredProducts" :product="product" />
+            </template>
           </AutoComplete>
           <Button icon="pi pi-search" class="search-btn" />
         </div>
@@ -92,8 +87,54 @@ import Sidebar from 'primevue/sidebar';
 import CartItem from "@/components/CartItems/CartItem.vue";
 import { useRouter } from 'vue-router';
 import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import jwt_decode from "jwt-decode";
+
+import { useProductStore } from '@/store';
+import { useRoute } from "vue-router";
+import SearchProduct from '@/components/Product/SearchProduct.vue';
+import { ProductVariationType } from '@/types/productVariation';
+export interface ProductProps {
+  product?: ProductVariationType;
+}
+
+const route = useRoute();
+const { fetchAllProducts, getProducts } = useProductStore();
+
+const searchQuery = ref('');
+const filteredProducts = ref([]);
+
+watch(
+  () => route.query,
+  toParams => {
+    if (toParams.brand || toParams.category) {
+      fetchAllProducts(toParams.brand, toParams.category);
+    }
+  }
+);
+
+watch(searchQuery, (newValue) => {
+  filterProducts(newValue);
+});
+
+function filterProducts(query: string) {
+  filteredProducts.value = getProducts.value.filter((product: ProductVariationType) =>
+    product?.product?.name?.toLowerCase().includes(query.toLowerCase())
+  );
+}
+
+function onSearchComplete() {
+  const searchQueryValue = searchQuery.value;
+
+  // Xử lý khi người dùng hoàn thành tìm kiếm
+  // Ví dụ: Chuyển hướng đến trang kết quả tìm kiếm
+  //   route.push({ path: '/search-results', query: { q: searchQueryValue }});
+}
+
+onMounted(() => {
+  fetchAllProducts(route.query.brand, route.query.category);
+  filterProducts('');
+});
 
 enum MainCategories {
   Men = 1,
@@ -105,8 +146,6 @@ const router = useRouter();
 const { getUser } = useAccountStore();
 const { getBrands, fetchBrands } = useBrandStore();
 const { getCategories, fetchCategories } = useCategoryStore();
-let selectedProduct = ref();
-let filteredProducts = ref([]);
 let dialogCartVisible = ref(false);
 let dialogSignInVisible = ref(false);
 
