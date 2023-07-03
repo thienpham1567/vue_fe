@@ -12,10 +12,29 @@ const useCategoryStore = defineStore("category", () => {
 	const getCategories = computed(() => categories);
 	const getCategory = computed(() => category);
 
+	const getMainCategories = computed(() =>
+		categories.value.filter((category) => !category.parentCategory)
+	);
+	const getMainSubCategories = computed(() =>
+		categories.value.filter((category) => category.categoryId && category.categoryId >= 4)
+	);
+	const getSubCategories = computed(() =>
+		categories.value.filter((category) => category.categoryId && category.categoryId < 4)
+	);
+
 	// Action
 	const fetchCategories = async () => {
 		const { data } = await new Category().list();
-		categories.value = data;
+		//categories.value = data;
+		setCategories(data);
+	};
+
+	const setCategory = (newCategory: CategoryType) => {
+		category.value = newCategory;
+	};
+
+	const setCategories = (newCategories: CategoryType[]) => {
+		categories.value = newCategories;
 	};
 
 	const addCategory = async (category: CreationParams) => {
@@ -38,6 +57,9 @@ const useCategoryStore = defineStore("category", () => {
 	return {
 		getCategory,
 		getCategories,
+		getMainCategories,
+		getMainSubCategories,
+		getSubCategories,
 		fetchCategories,
 		addCategory,
 		updateCategory,
