@@ -1,7 +1,7 @@
 <template>
-    <Card class="product">
+    <Card class="product flex">
         <template #header>
-            <div @click="gotoProductDetail">
+            <div @click="gotoProductDetail" class="w-20">
                 <Image :src="primaryImage?.imageUrl" alt="Image" class="fixed-size-image" />
             </div>
         </template>
@@ -12,14 +12,8 @@
             </div>
         </template>
         <template #content>${{ product?.product?.price }}</template>
-        <template #footer>
-            <i class="pi pi-heart"></i>
-            <p>10</p>
-        </template>
     </Card>
 </template>
-
-
 
 <script setup lang="ts">
 import Image from 'primevue/image';
