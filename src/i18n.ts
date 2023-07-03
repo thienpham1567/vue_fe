@@ -1,4 +1,6 @@
 import { ref } from 'vue';
+import en from '@/store/en';
+import vi from '@/store/vi';
 import { useLanguageStore } from '@/store/language';
 const translations = {
     en,
