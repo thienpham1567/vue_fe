@@ -250,8 +250,8 @@ const $t = translate;
 const changeLanguage = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   const selectedCode = target.value;
-  selected;
-}
+  selectedLanguage.value = selectedCode;
+};
 
 
 
