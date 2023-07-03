@@ -152,7 +152,7 @@ const currentProduct = ref<ProductType>({});
 const selectedProduct = ref<ProductType | null>(null);
 
 const categoriesWithLabel = computed(() =>
-    categories.value.map((category) => ({
+    categoryStore.getCategories.value.filter(category => category.parentCategory?.categoryId !== null).map((category) => ({
         ...category,
         label: `${category.name} - ${category.parentCategory?.name}`
     }))
@@ -270,15 +270,22 @@ const handleDelete = async () => {
 /*--Edit product by id fill up form in admin page--*/
 const editData = (rowData: { data: ProductType }) => {
     selectedProduct.value = { ...rowData.data };
+    currentProduct.value = selectedProduct.value;
+    console.log(selectedProduct);
+    console.log(categories);
+
 
     // Find the selected brand based on brandId
+    console.log("Brand: ", brands.value);
     selectedBrand.value = brands.value.find(
         brand => brand.brandId === selectedProduct.value.brand.brandId
     );
 
     // Find the selected category based on categoryId
+    console.log(categories.value);
+    console.log("Select: ", selectedProduct.value?.category?.categoryId);
     selectedCategory.value = categories.value.find(
-        category => category.categoryId === selectedProduct.value.category.categoryId
+        category => category.categoryId === selectedProduct.value?.category?.categoryId
     );
 
     currentProduct.value = { ...selectedProduct.value };
