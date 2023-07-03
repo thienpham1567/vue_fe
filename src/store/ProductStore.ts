@@ -2,6 +2,7 @@ import { ref, type Ref } from "vue";
 import { defineStore } from "pinia";
 import { computed } from "vue";
 import { ProductVariationType } from "@/types/productVariation";
+import { Product } from "@/types/product";
 import Product from "@/models/Product";
 
 const useProductStore = defineStore("product", () => {
@@ -30,7 +31,7 @@ const useProductStore = defineStore("product", () => {
   };
 
   const fetchProducts = async () => {
-    const { data } = await new Product().list({ productId: product.value.product?.productId!});
+    const { data } = await new Product().list({ productId: product.value.product?.productId! });
     products.value = data;
   }
 

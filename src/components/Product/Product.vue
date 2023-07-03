@@ -19,17 +19,6 @@
     </Card>
 </template>
 
-<style>
-.fixed-size-image {
-    width: 200px !important;
-    /* Đặt chiều rộng tùy ý */
-    height: 200px !important;
-    /* Đặt chiều cao tùy ý */
-    object-fit: cover !important;
-    /* Cân chỉnh kích thước hình ảnh để phù hợp với kích thước cố định */
-}
-</style>
-
 <script setup lang="ts">
 import Image from 'primevue/image';
 import { computed } from 'vue';
