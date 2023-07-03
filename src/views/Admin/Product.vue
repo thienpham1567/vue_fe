@@ -282,9 +282,7 @@ const editData = (rowData: { data: ProductType }) => {
     );
 
     // Find the selected category based on categoryId
-    console.log(categories.value);
-    console.log("Select: ", selectedProduct.value?.category?.categoryId);
-    selectedCategory.value = categories.value.find(
+    selectedCategory.value = categoryStore.getCategories.value.find(
         category => category.categoryId === selectedProduct.value?.category?.categoryId
     );
 
