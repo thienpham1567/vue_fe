@@ -5,6 +5,7 @@ import type {
   ListResponse,
   UserResponse,
   UpdateParams,
+  PasswordChangeParams,
 } from "@/types/user";
 
 class User extends HTTPBaseService {
@@ -19,7 +20,9 @@ class User extends HTTPBaseService {
   async detail(id: number): Promise<UserResponse> {
     return await this.instance.get(`/users/${id}`);
   }
-
+  async findByEmail(email: String): Promise<UserResponse> {
+    return await this.instance.get(`/users/email/${email}`);
+  }
   async findByKey(key: String): Promise<ListResponse> {
     return await this.instance.get(`/users/key/${key}`);
   }
@@ -31,7 +34,9 @@ class User extends HTTPBaseService {
   async update(id: number, params: UpdateParams): Promise<UserResponse> {
     return await this.instance.put(`/users/${id}`, params);
   }
-
+  async changePass(id: number, params: PasswordChangeParams): Promise<UserResponse> {
+    return await this.instance.post(`/users/changepassword/${id}`, params);
+  }
   async delete(id: number): Promise<void> {
     this.instance.delete(`/users/${id}`);
   }

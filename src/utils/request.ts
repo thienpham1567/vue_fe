@@ -18,9 +18,9 @@ export abstract class HTTPBaseService {
       const token = localStorage.getItem('token');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
-        console.log(config.headers.Authorization)
+
       }
-      console.log(config);
+
       return config;
 
     });

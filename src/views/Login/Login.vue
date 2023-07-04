@@ -14,7 +14,8 @@
                 <div class="mb-4">
                     <div class="flex justify-between">
                         <label for="password">Password</label>
-                        <a class="block text-sm text-indigo-700 fontme hover:underline" href="#">Forgot your password?</a>
+                        <a class="block text-sm text-indigo-700 fontme hover:underline" href="/account/fogot">Forgot your
+                            password?</a>
                     </div>
                     <Password v-model="passwordValue" placeholder="Password" :feedback="false" class="w-full w-inherit" />
                     <span v-if="passwordError" class="text-red-500">{{ passwordError }}</span>
@@ -50,7 +51,7 @@ import Logo from "@/assets/images/logo.png";
 import Image from 'primevue/image';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import  useAccountStore  from "@/store/AccountStore";
+import useAccountStore from "@/store/AccountStore";
 
 const router = useRouter();
 const emailValue = ref('');
@@ -78,4 +79,6 @@ function validateForm() {
     login(emailValue.value, passwordValue.value);
     return true;
 }
+
+
 </script>

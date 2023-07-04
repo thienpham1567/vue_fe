@@ -36,7 +36,7 @@
                 <i class="pi pi-chevron-up ml-2"></i>
               </span>
             </div>
-            <div :class="['my-account-section', { 'hidden': !showMyAccountSection }]">
+            <div :class="['my-account-section', { 'hidden': !showMyAccountSection }]" class="absolute bg-gray-300">
               <div class="mb-2 flex justify-start">
                 <Button label="View order" class="sign-in-register-btn" text @click="goToViewOrders" />
               </div>
@@ -44,7 +44,7 @@
                 <Button label="My Account" class="sign-in-register-btn" text @click="goToMyAccount" />
               </div>
               <div v-if="isAdmin" class="mb-2 flex justify-start">
-                <Button label="Admin" class="sign-in-register-btn" text />
+                <Button label="Admin" class="sign-in-register-btn" text @click="goToViewAdmin" />
               </div>
               <div v-if="isLogin" class="mb-2 flex justify-start">
                 <Button label="Logout" class="sign-in-register-btn" text @click="logout" />
@@ -52,6 +52,7 @@
             </div>
           </button>
         </template>
+
       </MegaMenu>
     </div>
   </nav>
@@ -110,6 +111,14 @@ let filteredProducts = ref([]);
 let dialogCartVisible = ref(false);
 let dialogSignInVisible = ref(false);
 const items = ref([]);
+
+
+
+const showMyAccountSection = ref(false);
+
+const toggleSection = () => {
+  showMyAccountSection.value = !showMyAccountSection.value;
+};
 
 function brands() {
   return getBrands.value.map(brand => {
@@ -219,6 +228,11 @@ function goToViewOrders() {
   router.push('/myaccount/view-order');
 }
 
+function goToViewAdmin() {
+  dialogCartVisible.value = false;
+  router.push('/admin');
+}
+
 const token = localStorage.getItem('token');
 
 const isLogin = ref(false);
@@ -231,9 +245,9 @@ function checkToken() {
     isLogin.value = true;
     const valueToken = jwt_decode(token!);
     const roles = valueToken.user.roles;
-    console.log(roles);
-    isAdmin.value = roles.some(role => role.authority === 'admin');
-    console.log(isAdmin.value);
+
+    isAdmin.value = roles.some(role => role.authority === 'ADMIN');
+
   }
 }
 

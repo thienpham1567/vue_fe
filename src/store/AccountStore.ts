@@ -43,7 +43,7 @@ const useAccountStore = defineStore("account", () => {
     };
 
     const setUser = (newUser?: UserType) => {
-        user.value = user;
+        user.value = user!.value;
     };
 
     const decodeToken = (token: string): UserType => {
