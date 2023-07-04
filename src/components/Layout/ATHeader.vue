@@ -18,19 +18,24 @@
           <Button icon="pi pi-search" class="search-btn" />
         </div>
       </div>
-      
-      <Button icon="pi pi-shopping-cart " class="cart-btn justify-self-end"  :label="$t('my-cart')" raised
+      <div class="juistify-between">
+      <div class="flex">
+        <Button icon="pi pi-shopping-cart " class="cart-btn"  :label="$t('my-cart')" raised
       @click="dialogCartVisible = true" />
-
       <!-- Multi Language button  -->
-      <div class="flex  space-x-4 ">
+      <div class="flex space-x-3 ml-3 bg-yellow-400">
         <select v-model="selectedLanguage" @change="changeLanguage">
           <option v-for=" language  in  languages " :value="language.code" :key="language.code">
             {{ language.label }}
           </option>
         </select>
-        <p>{{ $t('hello') }}</p>
       </div>
+      </div>
+      </div>
+        
+
+      
+      
 
     </div>
     <div class="nav-menu">
@@ -68,15 +73,15 @@
   </nav>
   <Sidebar v-model:visible="dialogCartVisible" position="right">
     <template #header>
-      <div class="text-2xl">Added To Cart</div>
+      <div class="text-2xl">{{ $t('cart') }}</div>
     </template>
     <CartItem />
     <div class="bg-gray-200 w-full h-1/6">
-      <div class="flex justify-end mr-4">Cart Subtotal (10 Items)$1,099.90</div>
+      <div class="flex justify-end mr-4 pt-2" style="font-size: 1.7rem;">{{ $t('subtotal') }}</div>
       <div class="flex justify-between m-4 pb-4">
-        <Button type="submit" label="VIEW CART" @click="goToCart"
+        <Button type="submit" :label="$t('my-cart')" @click="goToCart"
           class="px-4 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
-        <Button type="submit" label="PROCEED TO CHECKOUT" @click="goToCheckout"
+        <Button type="submit" :label="$t('Proceed-to-checkout')" @click="goToCheckout"
           class="px-4 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
       </div>
     </div>

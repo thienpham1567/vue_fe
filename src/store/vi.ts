@@ -10,6 +10,7 @@ const vi = {
     remove: 'Xóa',
     color: 'Màu',
     size: 'Kích cỡ',
+    
     //Cart-View-End
 
     //Header
@@ -63,6 +64,22 @@ const vi = {
     myacc: 'Tài khoản',
     shop: 'Cửa hàng',
 
+
+    //checkout
+    deliinfo: 'Thông tin thanh toán',
+    cname: 'Họ và tên',
+    pnum: 'Số điện thoại',
+    city: 'Thành phố',
+    district: 'Quận',
+    scheduledeli: 'Lên lịch giao hàng',
+    note: 'Ghi chú (nếu có)',
+    date: 'Ngày giao hàng',
+    paymethod: 'Phương thức thanh toán',
+    onlpay: 'Thanh toán Online',
+    cod: 'Thanh toán khi nhận hàng',
+    shippingcost: 'Phí giao hàng',
+    total: 'Tổng cộng',
+    confirm: 'Xác nhận',
 
 };
 

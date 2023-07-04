@@ -10,6 +10,7 @@ const en = {
     remove: 'Remove',
     color: 'Color',
     size: 'Size',
+  
     //Cart-View-End
 
     //Header
@@ -65,6 +66,22 @@ const en = {
     //ProductList
     brand: 'Brand',
     pricerange: 'Price range',
+
+    //checkout
+    deliinfo: 'Delivery infomation',
+    cname: 'Full name',
+    pnum: 'Phone number',
+    city: 'City',
+    district: 'District',
+    scheduledeli: 'Schedule delivery',
+    note: 'Note',
+    date: 'Dates',
+    paymethod: 'Payment menthod',
+    onlpay: 'Online payment',
+    cod: 'Cash on delivery (COD)',
+    shippingcost: 'Shipping',
+    total: 'Total',
+    confirm: 'Confirm',
 };
 
 export default en;
