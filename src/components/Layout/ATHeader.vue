@@ -36,9 +36,9 @@
     <div class="nav-menu">
       <MegaMenu :model="items">
         <template #end>
-          <Button v-if="!isLogin" label="Sign In / Register" class="sign-in-register-btn" text
-            @click="dialogSignInVisible = true" />
-
+          <Button class="sign-in-register-btn" text @click="goToMyAccount">{{ $t('my-account') }}</Button>
+          <Button class="sign-in-register-btn" text @click="goToViewOrders">{{ $t('view-order') }}</Button>
+          <Button :label="$t('sign-in/register')" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
           <button :label="$t('my-account')" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
             <div class="mb-3">
               <span v-if="showMyAccountSection">
@@ -62,7 +62,6 @@
               </div>
             </div>
           </button>
-
         </template>
       </MegaMenu>
     </div>
