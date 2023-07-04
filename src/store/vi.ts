@@ -22,7 +22,7 @@ const vi = {
     'my-cart': 'Giỏ hàng',
     'search-placehoder': 'Tìm kiếm giày, áo, phụ kiện...',
     'my-account': 'Tài khoản',
-    'view-order': 'Hiển thị đơn hàng',
+    'view-order': 'Xem đơn hàng',
     'logout': 'Đăng xuất',
     //Heder-End
     //OrderHistory
