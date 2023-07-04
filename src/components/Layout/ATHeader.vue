@@ -18,7 +18,9 @@
           <Button icon="pi pi-search" class="search-btn" />
         </div>
       </div>
-      <Button icon="pi pi-shopping-cart" class="cart-btn" label="MY CART" raised @click="dialogCartVisible = true" />
+      
+      <Button icon="pi pi-shopping-cart " class="cart-btn justify-self-end"  :label="$t('my-cart')" raised
+      @click="dialogCartVisible = true" />
 
       <!-- Multi Language button  -->
       <div class="flex  space-x-4 ">
