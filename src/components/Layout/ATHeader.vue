@@ -102,7 +102,7 @@ import Sidebar from 'primevue/sidebar';
 import CartItem from "@/components/CartItems/CartItem.vue";
 import { useRouter } from 'vue-router';
 import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import jwt_decode from "jwt-decode";
 import { useLanguageStore } from '@/store/language';
 import { translate } from '@/i18n';
@@ -223,13 +223,14 @@ function goToCheckout() {
 
 function goToMyAccount() {
   dialogCartVisible.value = false;
-  router.push('/myaccoun/myaccount');
+  router.push('/myaccount/myaccount');
 }
 
 function goToViewOrders() {
   dialogCartVisible.value = false;
   router.push('/myaccount/view-order');
 }
+
 
 const languageStore = useLanguageStore();
 
@@ -252,8 +253,6 @@ const changeLanguage = (event: Event) => {
   const selectedCode = target.value;
   selectedLanguage.value = selectedCode;
 };
-
-
 
 
 const token = localStorage.getItem('token');
@@ -280,3 +279,4 @@ const logout = () => {
 };
 checkToken();
 </script>
+

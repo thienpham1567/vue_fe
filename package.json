@@ -19,7 +19,7 @@
     "vee-validate": "^4.9.6",
     "vue": "^3.2.47",
     "vue-query": "^1.26.0",
-    "vue-router": "^4.2.0"
+    "vue-router": "^4.2.2"
   },
   "devDependencies": {
     "@types/node": "^20.1.3",

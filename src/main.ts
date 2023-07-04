@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import router from "@/router";
 import App from "@/App.vue";
-import PrimeVue from "primevue/config";
+import PrimeVue from 'primevue/config';
 import { VueQueryPlugin } from "vue-query";
 
 import "@/styles/global.scss";
