@@ -7,7 +7,7 @@ export interface CreationParams {
   name: string;
 }
 
-export type UpdateParams = Omit<BrandType, "id">;
+export type UpdateParams = Omit<BrandType, "brandId">;
 
 export interface CreationResponse {
   status: boolean;

@@ -1,16 +1,16 @@
 import Brand from "@/models/Brand";
 import type { UpdateParams } from "@/types/brand";
 import type { BrandType, CreationParams } from "@/types/brand";
-import { ref, computed } from "vue";
+import { ref, computed, type Ref } from "vue";
 
 const useBrandStore = () => {
   // State
-  const brands = ref<BrandType[]>([]);
-  const brand = ref<BrandType>({});
+  const brands: Ref<BrandType[]> = ref([]);
+  const brand: Ref<BrandType> = ref({});
 
   // Getters
-  const getBrands = computed(() => brands.value);
-  const getBrand = computed(() => brand.value);
+  const getBrands = computed(() => brands);
+  const getBrand = computed(() => brand);
 
   // Action
   const fetchBrands = async () => {
@@ -40,6 +40,8 @@ const useBrandStore = () => {
   const setBrand = (newBrand: BrandType) => (brand.value = newBrand);
 
   return {
+    brands,
+    brand,
     getBrand,
     getBrands,
     fetchBrands,

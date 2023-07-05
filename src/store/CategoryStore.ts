@@ -1,15 +1,15 @@
-import { ref, computed } from 'vue';
+import { ref, computed, type Ref } from 'vue';
 import Category from '@/models/Category';
 import type { CategoryType, CreationParams, UpdateParams } from '@/types/category';
 
 const useCategoryStore = () => {
   // State
-  const categories = ref<CategoryType[]>([]);
-  const category = ref<CategoryType>({});
+  const categories: Ref<CategoryType[]> = ref([]);
+  const category: Ref<CategoryType> = ref({});
 
   // Getters
-  const getCategories = computed(() => categories.value);
-  const getCategory = computed(() => category.value);
+  const getCategories = computed(() => categories);
+  const getCategory = computed(() => category);
 
   const getMainCategories = computed(() =>
     categories.value.filter((category) => !category.parentCategory)
@@ -53,6 +53,8 @@ const useCategoryStore = () => {
   };
 
   return {
+    categories,
+    category,
     getCategory,
     getCategories,
     getMainCategories,
