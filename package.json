@@ -18,6 +18,7 @@
     "primevue": "^3.29.2",
     "vee-validate": "^4.9.6",
     "vue": "^3.2.47",
+    "vue-future-slider": "^1.0.5",
     "vue-query": "^1.26.0",
     "vue-router": "^4.2.2"
   },

@@ -44,7 +44,7 @@
           <Button class="sign-in-register-btn" text @click="goToMyAccount">{{ $t('my-account') }}</Button>
           <Button class="sign-in-register-btn" text @click="goToViewOrders">{{ $t('view-order') }}</Button>
           <Button :label="$t('sign-in/register')" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
-          <button :label="$t('my-account')" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
+          <!-- <button :label="$t('my-account')" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
             <div class="mb-3">
               <span v-if="showMyAccountSection">
                 <span class="font-bold">{{ $t('my-account') }}</span>
@@ -66,14 +66,14 @@
                 <Button :label="$t('logout')" class="sign-in-register-btn" text @click="logout" />
               </div>
             </div>
-          </button>
+          </button> -->
         </template>
       </MegaMenu>
     </div>
   </nav>
   <Sidebar v-model:visible="dialogCartVisible" position="right">
     <template #header>
-      <div class="text-2xl">{{ $t('cart') }}</div>
+      <div class="text-2xl">{{ $t('my-cart') }}</div>
     </template>
     <CartItem />
     <div class="bg-gray-200 w-full h-1/6">

@@ -82,6 +82,22 @@ const en = {
     shippingcost: 'Shipping',
     total: 'Total',
     confirm: 'Confirm',
+
+    //Registration
+    firstname: 'First Name',
+    lname: 'Last Name',
+    pass: 'Password',
+    repass: 'Re-Password',
+    term: 'I have read and agree to the terms and conditions.',
+    create: 'Create Account',
+    alreadyhave: 'Already have account ? Sign in',
+
+
+     //login
+     signin: 'Sign In',
+     rememberme: 'Remember me',
+     newmem: 'New member ?',
+     forgotpass: 'Forgot Password',
 };
 
 export default en;

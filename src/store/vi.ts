@@ -81,6 +81,22 @@ const vi = {
     total: 'Tổng cộng',
     confirm: 'Xác nhận',
 
+
+    //Registration
+    firstname: 'Họ',
+    lname: 'Tên',
+    pass: 'Mật khẩu',
+    repass: 'Nhập lại mật khẩu',
+    term: 'Tôi đã đọc và đồng ý với các điều khoản và điều kiện.',
+    create: 'Tạo tài khoản',
+    alreadyhave: 'Bạn đã có tài khoản ? Đăng nhập',
+
+    //login
+    signin: 'Đăng nhập',
+    rememberme: 'Ghi nhớ đăng nhập',
+    newmem: 'Thành viên mới ?',
+    forgotpass: 'Quên mật khẩu ?',
+    
 };
 
 export default vi;
