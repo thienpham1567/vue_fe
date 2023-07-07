@@ -37,7 +37,7 @@
                     <div class="flex flex-row flex-wrap gap-2 mt-1">
                         <div v-for="size in adultShoesSizes" :key="size.sizeId" class="size">
                             <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
-                                :disabled="size.isOutOfStock" @update:modelValue="onSelectSize" />
+                                :disabled="size.isOutOfStock" />
                             <label :for="size.sizeId?.toString()">{{ size.value }}</label>
                         </div>
                     </div>
@@ -47,7 +47,7 @@
                     <div class="flex flex-row flex-wrap gap-2 mt-1">
                         <div v-for="size in kidShoesSizes" :key="size.sizeId" class="size">
                             <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
-                                :disabled="size.isOutOfStock" @update:modelValue="onSelectSize" />
+                                :disabled="size.isOutOfStock" />
                             <label :for="size.sizeId?.toString()">{{ size.value }}</label>
                         </div>
                     </div>
@@ -57,14 +57,14 @@
                     <div class="flex flex-row flex-wrap gap-2 mt-1">
                         <div v-for="size in clothingSizes" :key="size.sizeId" class="size">
                             <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
-                                :disabled="size.isOutOfStock" @update:modelValue="onSelectSize" />
+                                :disabled="size.isOutOfStock" />
                             <label :for="size.sizeId?.toString()">{{ size.value }}</label>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="mt-5">
-                <Button label="Add to cart" class="btn w-full" size="small" />
+                <Button label="Add to cart" class="btn w-full" size="small" @click="addCart" />
             </div>
         </div>
     </div>
@@ -76,16 +76,18 @@ import RadioButton from 'primevue/radiobutton';
 import Button from 'primevue/button';
 import { useRoute } from "vue-router";
 import { ProductVariationType } from "@/types/productVariation";
-import { useProductStore, useSizeStore } from "@/store";
+import { useProductStore, useSizeStore, useCartStore } from "@/store";
 import { ref, onMounted, computed, Ref } from "vue";
+import { ProductVariationSizeType } from '@/types/productVariationSize';
 
 const route = useRoute();
 const { productId } = route.params;
 const { getProduct, getAllProducts, fetchOneProduct } = useProductStore();
 const { fetchSizes, getSizes } = useSizeStore();
+const { addUpdateToCart } = useCartStore();
 
 let selectedProduct: Ref<ProductVariationType> = ref({});
-let selectedSize = ref();
+let selectedSize: Ref<ProductVariationSizeType> = ref({});
 
 // computed
 const kidShoesSizes = computed(() => {
@@ -96,9 +98,10 @@ const kidShoesSizes = computed(() => {
     });
     return sizes.map(size => {
         let productSizes = selectedProduct.value.productVariationSizes;
-        if (productSizes?.find(sizeProduct => size.sizeId === sizeProduct.size?.sizeId && sizeProduct.quantity! > 0)) {
+        let productSize = productSizes?.find(sizeProduct => size.sizeId === sizeProduct.size?.sizeId && sizeProduct.quantity! > 0);
+        if (productSize !== undefined) {
             return {
-                ...size, isOutOfStock: false,
+                ...size, isOutOfStock: false, productSize: productSize,
             }
         } else {
             return {
@@ -115,9 +118,10 @@ const adultShoesSizes = computed(() => {
     });
     return sizes.map(size => {
         let productSizes = selectedProduct.value.productVariationSizes;
-        if (productSizes?.find(sizeProduct => size.sizeId === sizeProduct.size?.sizeId && sizeProduct.quantity! > 0)) {
+        let productSize = productSizes?.find(sizeProduct => size.sizeId === sizeProduct.size?.sizeId && sizeProduct.quantity! > 0);
+        if (productSize !== undefined) {
             return {
-                ...size, isOutOfStock: false,
+                ...size, isOutOfStock: false, productSize: productSize,
             }
         } else {
             return {
@@ -150,8 +154,15 @@ const primaryImage = computed(() => selectedProduct.value.productImages?.find(pr
 const orderImages = computed(() => selectedProduct.value.productImages?.filter(productImage => !productImage.isPrimary));
 
 // functions
-const onSelectSize = () => {
-    console.log(selectedSize);
+const addCart = () => {
+    addUpdateToCart({
+        productVariationSize: selectedSize.value.productSize,
+        product: selectedProduct.value.product,
+        color: selectedProduct.value.color,
+        cartId: "",
+        quantity:1,
+        imageUrl: primaryImage.value?.imageUrl,
+    });
 }
 
 const onSelectProduct = (product: ProductVariationType) => {
