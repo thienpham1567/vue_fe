@@ -140,7 +140,7 @@ const clothingSizes = computed(() => {
         let productSizes = selectedProduct.value.productVariationSizes;
         if (productSizes?.find(sizeProduct => size.sizeId === sizeProduct.size?.sizeId && sizeProduct.quantity! > 0)) {
             return {
-                ...size, isOutOfStock: false,
+                ...size, isOutOfStock: false, productSize: productSize,
             }
         } else {
             return {
@@ -157,7 +157,6 @@ const orderImages = computed(() => selectedProduct.value.productImages?.filter(p
 const addCart = () => {
     addUpdateToCart({
         productVariationSize: selectedSize.value.productSize,
-        product: selectedProduct.value.product,
         color: selectedProduct.value.color,
         cartId: "",
         quantity:1,

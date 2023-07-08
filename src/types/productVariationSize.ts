@@ -1,9 +1,11 @@
+import { ProductVariationType } from "./productVariation";
 import type { SizeType } from "./size";
 
 export interface ProductVariationSizeType {
   productVariationSizeId?: number;
   size?: SizeType;
   quantity?: number;
+  productVariation: ProductVariationType
 }
 
 export interface CreationParams {

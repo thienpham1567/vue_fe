@@ -1,4 +1,3 @@
-import { ProductType } from '@/types/product';
 import type { ProductVariationSizeType } from "@/types/productVariationSize";
 import type { CartType } from "@/types/cart";
 import { ColorType } from '@/types/color';
@@ -6,7 +5,6 @@ import { ColorType } from '@/types/color';
 export interface CartItemType {
     cartItemId?: number;
     productVariationSize?: ProductVariationSizeType;
-    product: ProductType;
     color: ColorType
     cart?: CartType;
     price?: number;
@@ -16,7 +14,6 @@ export interface CartItemType {
 
 export interface CreationParams {
     productVariationSize?: ProductVariationSizeType;
-    product?: ProductType;
     color?: ColorType
     cartId?: String;
     quantity?: number;
