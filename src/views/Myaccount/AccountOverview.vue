@@ -1,61 +1,171 @@
 <template>
-    <div class="ml-4 mr-4 mt-4 mb-4">
-        <div class="text-2xl">Xin chào, tên</div>
-        <div class="my-4">You are logged in as Annoynimous</div>
-        <div class="border">
-            <div class="my-4 font-bold text-2xl ml-4">{{ $t('info') }}</div>
-            <div class="flex">
-                <div class="w-1/3">
-                    <div class="my-4 text-xl ml-4">{{ $t('paymentinfo') }}</div>
-                    <div class="my-4 ml-4">No address available</div>
-                    <a class="my-4 font-bold text-xl ml-4" href="#">{{ $t('newadd') }}</a>
-                </div>
-                <div class="w-1/3">
-                    <div class="my-4 text-xl">{{ $t('address') }}</div>
-                    <div class="mb-4">No card set as primary</div>
-                    <a class="my-4 font-bold text-xl" href="">{{ $t('newcard') }}</a>
-                </div>
-                <div class="w-1/3">
-                    <div class="my-4 text-xl mb-4">{{ $t('accountinfo') }}</div>
-                    <div>Name</div>
-                    <div>a@gmail.com</div>
-                    <div>******</div>
-                    <div class="mb-4">
-                        <a class="my-4 font-bold text-xl" href="">{{ $t('manageaccount') }}</a>
+    <div class="flex justify-center items-center h-screen ">
+        <div class="w-full h-full flex">
+            <TabView v-model:activeIndex="active" class="custom-tabpanel">
+                <TabPanel header="My Account">
+                    <div class="tabPanel-sub">
+                        <h2>Tài khoản của tôi</h2>
+                        <div class="form-detail">
+                            <div class="form-title">
+                                <label for="">{{ currentUser.userId }}</label>
+                            </div>
+                            <div class="form-title">
+                                <label for="">{{ currentUser.emailAddress }}</label>
+                            </div>
+                            <div class="form-title">
+                                <label for="">{{ currentUser.firstName }}</label>
+                            </div>
+                            <div class="form-title">
+                                <label for="">{{ currentUser.lastName }}</label>
+                            </div>
+                            <div class="form-title">
+                                <label for="">{{ currentUser.phoneNumber }}</label>
+                            </div>
+
+                            <Button label="Sửa" @click="visible = true" />
+                            <Button label="Đổi mật khẩu" @click="visiblePass = true" />
+                        </div>
                     </div>
-                    <div class="mb-4">
-                        <a class="my-4 font-bold text-xl" href="">{{ $t('manageemail') }}</a>
+                </TabPanel>
+                <TabPanel header="Order">
+                    <div class="tabPanel-sub">
+                        <h2>My Account</h2>
                     </div>
-                </div>
+                </TabPanel>
+                <TabPanel header="Header III">
+                    <div class="tabPanel-sub">
+                        <h2>My Account</h2>
+                    </div>
+                </TabPanel>
+            </TabView>
+        </div>
+
+
+        <Dialog v-model:visible="visible" modal header="Header" :style="{ width: '50vw' }">
+            <div class="form">
+                <span class="p-float-label">
+                    <InputText id="userId" v-model="currentUser.userId" readonly />
+
+                </span>
+                <span class="p-float-label">
+                    <InputText id="email" v-model="currentUser.emailAddress" readonly />
+
+                </span>
+                <span class="p-float-label">
+                    <InputText id="lastname" v-model="currentUser.lastName" />
+
+                </span>
+                <span class="p-float-label">
+                    <InputText id="firstname" v-model="currentUser.firstName" />
+
+                </span>
+                <span class="p-float-label">
+                    <InputText id="username" v-model="currentUser.phoneNumber" />
+
+                </span>
 
             </div>
-        </div>
-        
+            <template #footer>
+                <Button label="No" icon="pi pi-times" @click="visible = false" text />
+                <Button label="Lưu" icon="pi pi-check" @click="saveUser" autofocus />
+            </template>
+        </Dialog>
+        <Dialog v-model:visible="visiblePass" modal header="Header" :style="{ width: '50vw' }">
+            <div class="form">
+                <span class="p-float-label">
+                    <InputText type="password" id="oldPassword" v-model="oldPasswordValue" placeholder="Mật khẩu củ" />
+                </span>
+                <span class="p-float-label">
+                    <InputText type="password" id="newPassword1" v-model="newPasswordValue1" placeholder="Mật khẩu mới" />
+                </span>
+                <span class="p-float-label">
+                    <InputText type="password" id="newPassword" v-model="newPasswordValue" placeholder="Mật khẩu mới" />
+                </span>
+            </div>
+            <template #footer>
+                <Button label="No" icon="pi pi-times" @click="visiblePass = false" text />
+                <Button label="Lưu" icon="pi pi-check" @click="updatePass" autofocus />
+            </template>
+        </Dialog>
     </div>
 </template>
 <script setup lang="ts">
-import Image from 'primevue/image';
+import { onMounted, ref } from 'vue';
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel'
+import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
-import AutoComplete from 'primevue/autocomplete';
-import MegaMenu from 'primevue/megamenu';
-import Logo from "@/assets/images/logo.png";
-import CoreDialog from '@/components/Core/CoreDialog.vue';
-import Sidebar from 'primevue/sidebar';
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
-import { onMounted } from 'vue';
 import InputText from 'primevue/inputtext';
-import { useLanguageStore } from '@/store/language';
-import { translate } from '@/i18n';
+import useUserStore from '@/store/UserStore';
+import { UserType, UserParams, CreationParams, PasswordChangeParams } from '@/types/user';
+import jwt_decode from "jwt-decode";
 
-const $t = translate;
-const languageStore = useLanguageStore();
+const visiblePass = ref(false);
+const visible = ref(false);
+const active = ref(0);
+const userStore = useUserStore();
+const users = ref<UserType[]>([]);
+const currentUser = ref<UserType>({});
+const tableKey = ref(0);
+
+
+const valueToken = localStorage.getItem('token');
+const userValue = jwt_decode(valueToken!);
+const email = userValue.user.email;
+
+const oldPasswordValue = ref(null);
+const newPasswordValue1 = ref(null);
+const newPasswordValue = ref(null);
+
+const updatePass = async () => {
+    if (newPasswordValue.value === newPasswordValue1.value) {
+        const pass: PasswordChangeParams = {
+            oldPassword: oldPasswordValue.value!,
+            newPassword: newPasswordValue.value!
+        };
+        await userStore.changePass(currentUser.value.userId, pass);
+        currentUser.value = userStore.getUser.value;
+        window.location.reload();
+        visiblePass.value = false;
+    } else {
+        console.log("Sai mật khẩu mới")
+    };
+
+};
+
+const searchByEmail = async () => {
+
+    await userStore.fetchByEmail(email);
+
+    currentUser.value = userStore.getUser.value;
+
+    tableKey.value++;
+
+};
+const showEditDialog = (user: UserType) => {
+    currentUser.value = { ...user };
+    visible.value = true;
+
+};
+
+onMounted(searchByEmail);
+const saveUser = async () => {
+    // Thực hiện cập nhật danh mục
+    try {
+        await userStore.updateUser(currentUser.value.userId, currentUser.value as UserParams);
+        await userStore.fetchByEmail(email);
+        currentUser.value = userStore.getUser.value;
+        tableKey.value++; // Force DataTable re-render
+        window.location.reload();
+    } catch (error) {
+        console.error('Error updating user:', error);
+        // Xử lý lỗi
+    }
+    currentUser.value = {};
+    visible.value = false;
+
+}
 
 </script>
-
-<style>
-.inputSearch {
-    width: 30%;
-}
-</style>
+<style></style>
+  
