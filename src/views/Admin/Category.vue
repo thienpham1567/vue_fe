@@ -75,15 +75,15 @@ import Dropdown from 'primevue/dropdown';
 import useCategoryStore from '@/store/CategoryStore';
 import { CategoryType, CreationParams, UpdateParams } from '@/types/category';
 
-const { 
-    categories,
-	  getSubCategories,
-    fetchCategories,
-    addCategory,
-    updateCategory,
-    deleteCategory,
-    } = useCategoryStore();
-const currentCategory = reactive<CategoryType>({});
+const {
+  categories,
+  getSubCategories,
+  fetchCategories,
+  addCategory,
+  updateCategory,
+  deleteCategory,
+} = useCategoryStore();
+const currentCategory = ref<CategoryType>({});
 const dialogVisible = ref(false);
 const deleteDialogVisible = ref(false);
 const isEditing = ref(false);
@@ -100,7 +100,7 @@ onMounted(async () => {
 });
 
 const filteredCategories = computed(() => {
-  const filteredCategories3 = categories.value.slice(3);
+  const filteredCategories3 = categories.slice(3);
   const searchValue = searchText.value.trim().toLowerCase();
 
   if (searchValue !== '') {

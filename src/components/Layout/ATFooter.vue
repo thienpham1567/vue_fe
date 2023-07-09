@@ -48,15 +48,6 @@
                         </div>
                         <div class="md:w-1/3 mb-5">
                             <h5 class="text-footer-hover uppercase mb-4">{{ $t('follow') }}</h5>
-                            <div class="flex">
-                                <a class="btn btn-primary btn-square mr-3" href="#"><i class="fab fa-twitter fa-lg"></i></a>
-                                <a class="btn btn-primary btn-square mr-3" href="#"><i
-                                        class="fab fa-facebook-f fa-lg"></i></a>
-                                <a class="btn btn-primary btn-square mr-3" href="#"><i
-                                        class="fab fa-linkedin-in fa-lg"></i></a>
-                                <a class="btn btn-primary btn-square" href="#"><i class="fab fa-instagram fa-lg"></i></a>
-
-                            </div>
                             <!-- Map Start -->
                             <div class="container mx-auto mt-5">
                                 <div class="mapouter">

@@ -63,7 +63,7 @@
 
             </template>
             <template #footer>
-                <Button type="submit" :label="$t('create')"  @click="validateForm()"
+                <Button type="submit" :label="$t('create')" @click="validateForm()"
                     class="w-full px-4 py-2 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
             </template>
         </Card>
@@ -165,10 +165,8 @@ function validateForm() {
         emailAddress: emailValue.value!,
         phoneNumber: phoneNumberValue.value!,
         password: passwordValue.value!
-      };
-    
-    console.log(firstNameValue.value);
-    
+    };
+
     addUser(creationParams);
     return true;
 }
