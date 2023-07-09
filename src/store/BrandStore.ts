@@ -37,6 +37,8 @@ const useBrandStore = defineStore("brand", () => {
   };
 
   return {
+    brands,
+    brand,
     getBrand,
     getBrands,
     fetchBrands,

@@ -2,6 +2,10 @@
   <div class="brand-list">
     <h1 class="brand-list__title">Danh sách thương hiệu</h1>
 
+    <div class="brand-list__add-button">
+      <Button class="p-button-primary" label="Thêm thương hiệu" @click="showAddDialog"></Button>
+    </div>
+
     <div class="brand-list__table">
       <DataTable :value="brands" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]" :key="tableKey">
         <Column field="brandId" header="ID"></Column>
@@ -17,10 +21,6 @@
           </template>
         </Column>
       </DataTable>
-    </div>
-
-    <div class="brand-list__add-button">
-      <Button class="p-button-primary" label="Thêm thương hiệu" @click="showAddDialog"></Button>
     </div>
 
     <Dialog v-model="dialogVisible" :visible="dialogVisible" :header="dialogHeader" class="brand-list__dialog">
@@ -49,7 +49,7 @@
 
       <template #footer>
         <div class="brand-list__dialog-buttons">
-          <Button class="p-button-danger" label="Xóa" @click="deleteBrand"></Button>
+          <Button class="p-button-danger" label="Xóa" @click="delBrand"></Button>
           <Button class="p-button-secondary" label="Hủy" @click="cancelDelete"></Button>
         </div>
       </template>
@@ -67,8 +67,14 @@ import InputText from 'primevue/inputtext';
 import useBrandStore from '@/store/BrandStore';
 import { BrandType, CreationParams, UpdateParams } from '@/types/brand';
 
-const brandStore = useBrandStore();
-const brands = ref<BrandType[]>([]);
+const { 
+    brands,
+    getBrands,
+    fetchBrands,
+    addBrand,
+    updateBrand,
+    deleteBrand
+} = useBrandStore();
 const currentBrand = ref<BrandType>({});
 const dialogVisible = ref(false);
 const deleteDialogVisible = ref(false);
@@ -77,17 +83,13 @@ const tableKey = ref(0); // Key to force DataTable re-render
 
 onMounted(async () => {
   try {
-    await brandStore.fetchBrands();
-    brands.value = brandStore.getBrands.value;
+    await fetchBrands();
   } catch (error) {
     console.error('Error fetching reviews:', error);
     // Xử lý lỗi
   }
 });
 
-watch([brandStore.getBrands], () => {
-  brands.value = brandStore.getBrands.value;
-});
 
 const showAddDialog = () => {
   currentBrand.value = {};
@@ -110,9 +112,10 @@ const saveBrand = async () => {
   if (isEditing.value) {
     // Thực hiện cập nhật thương hiệu
     try {
-      await brandStore.updateBrand(currentBrand.value.brandId, currentBrand.value as UpdateParams);
-      await brandStore.fetchBrands();
-      tableKey.value += 1; // Force DataTable re-render
+      // console.log(currentBrand.value);
+      await updateBrand(currentBrand.value.brandId!, currentBrand.value as UpdateParams);
+      await fetchBrands();
+      // tableKey.value += 1; // Force DataTable re-render
     } catch (error) {
       console.error('Error updating brand:', error);
       // Xử lý lỗi
@@ -120,15 +123,14 @@ const saveBrand = async () => {
   } else {
     // Thực hiện thêm thương hiệu mới
     try {
-      await brandStore.addBrand(currentBrand.value as CreationParams);
-      await brandStore.fetchBrands();
+      await addBrand(currentBrand.value as CreationParams);
+      await fetchBrands();
       tableKey.value += 1; // Force DataTable re-render
     } catch (error) {
       console.error('Error adding brand:', error);
       // Xử lý lỗi
     }
   }
-
   currentBrand.value = {};
   dialogVisible.value = false;
 };
@@ -143,10 +145,10 @@ const cancelDelete = () => {
   deleteDialogVisible.value = false;
 };
 
-const deleteBrand = async () => {
+const delBrand = async () => {
   try {
-    await brandStore.deleteBrand(currentBrand.value.brandId);
-    await brandStore.fetchBrands();
+    await deleteBrand(currentBrand.value.brandId!);
+    await fetchBrands();
     tableKey.value += 1; // Force DataTable re-render
   } catch (error) {
     console.error('Error deleting brand:', error);

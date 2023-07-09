@@ -36,7 +36,7 @@
         </div>
         <div class="p-field">
           <label for="parentCategoryId">Danh mục cha</label>
-          <Dropdown id="parentCategoryId" v-model="currentCategory.parentCategory" :options="categoriess"
+          <Dropdown id="parentCategoryId" v-model="currentCategory.parentCategory" :options="getSubCategories"
             option-label="name" option-value="categoryId" :disabled="isEditing"></Dropdown>
         </div>
       </div>
@@ -55,7 +55,7 @@
 
       <template #footer>
         <div class="category-list__dialog-buttons">
-          <Button class="p-button-danger" label="Xóa" @click="deleteCategory"></Button>
+          <Button class="p-button-danger" label="Xóa" @click="delCategory"></Button>
           <Button class="p-button-secondary" label="Hủy" @click="cancelDelete"></Button>
         </div>
       </template>
@@ -75,49 +75,43 @@ import Dropdown from 'primevue/dropdown';
 import useCategoryStore from '@/store/CategoryStore';
 import { CategoryType, CreationParams, UpdateParams } from '@/types/category';
 
-const categoryStore = useCategoryStore();
-const categories = ref<CategoryType[]>([]);
-const categoriess = ref<CategoryType[]>([]);
+const { 
+    categories,
+	  getSubCategories,
+    fetchCategories,
+    addCategory,
+    updateCategory,
+    deleteCategory,
+    } = useCategoryStore();
 const currentCategory = reactive<CategoryType>({});
 const dialogVisible = ref(false);
 const deleteDialogVisible = ref(false);
 const isEditing = ref(false);
 const tableKey = ref(0); // Key to force DataTable re-render
-const parentCategoryOptions = ref<CategoryType[]>([]);
 const searchText = ref('');
 const searchKey = ref(0);
 
 onMounted(async () => {
   try {
-    await categoryStore.fetchCategories();
-    categoriess.value = categoryStore.getSubCategories.value;
+    await fetchCategories();
   } catch (error) {
     console.error('Error fetching categories:', error);
-    // Xử lý lỗi
-  }
-});
-
-onMounted(async () => {
-  try {
-    await categoryStore.fetchCategories();
-    // categories.value = categoryStore.getMainSubCategories.value;
-    loadDatatable();
-    parentCategoryOptions.value = categoryStore.getCategories.value.filter(category => !category.parentCategoryId);
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-    // Handle error
   }
 });
 
 const filteredCategories = computed(() => {
-  if (searchText.value.trim() !== '') {
-    const searchValue = searchText.value.toLowerCase().trim();
-    return categories.value.filter(category =>
+  const filteredCategories3 = categories.value.slice(3);
+  const searchValue = searchText.value.trim().toLowerCase();
+
+  if (searchValue !== '') {
+    return filteredCategories3.filter(category =>
       category.name.toLowerCase().includes(searchValue)
     );
   }
-  return categories.value;
+
+  return filteredCategories3;
 });
+
 
 const searchData = () => {
   searchKey.value += 1;
@@ -146,11 +140,8 @@ const cancelEdit = () => {
 const saveCategory = async () => {
   if (isEditing.value) {
     try {
-      await categoryStore.updateCategory(currentCategory.categoryId!, currentCategory as UpdateParams);
-      await categoryStore.fetchCategories();
-      // categories.value = categoryStore.getMainSubCategories.value;
-      loadDatatable();
-      // tableKey.value += 1; // Force DataTable re-render
+      await updateCategory(currentCategory.categoryId!, currentCategory as UpdateParams);
+      await fetchCategories();
       cancelEdit();
     } catch (error) {
       console.error('Error updating category:', error);
@@ -162,10 +153,8 @@ const saveCategory = async () => {
         name: currentCategory.name,
         parentCategoryId: currentCategory.parentCategory
       };
-      await categoryStore.addCategory(creationParams);
-      await categoryStore.fetchCategories();
-      // categories.value = categoryStore.getMainSubCategories.value;
-      loadDatatable();
+      await addCategory(creationParams);
+      await fetchCategories();
       // tableKey.value += 1; // Force DataTable re-render
       cancelEdit();
     } catch (error) {
@@ -174,10 +163,6 @@ const saveCategory = async () => {
     }
   }
 };
-
-const loadDatatable = () => {
-  categories.value = categoryStore.getMainSubCategories.value;
-}
 
 const showDeleteDialog = (category: CategoryType) => {
   currentCategory.categoryId = category.categoryId;
@@ -191,13 +176,11 @@ const cancelDelete = () => {
   deleteDialogVisible.value = false;
 };
 
-const deleteCategory = async () => {
+const delCategory = async () => {
   try {
-    await categoryStore.deleteCategory(currentCategory.categoryId!);
-    await categoryStore.fetchCategories();
-    // categories.value = categoryStore.getMainSubCategories.value;
-    loadDatatable();
-    tableKey.value += 1; // Force DataTable re-render
+    await deleteCategory(currentCategory.categoryId!);
+    await fetchCategories();
+    // tableKey.value += 1; // Force DataTable re-render
   } catch (error) {
     console.error('Error deleting category:', error);
     // Xử lý lỗi
@@ -222,8 +205,9 @@ const clearCurrentCategory = () => {
 }
 
 .category-list__title {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
 .category-list__table {
