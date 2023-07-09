@@ -45,3 +45,7 @@ export interface ListResponse {
 export interface QueryUserParams {
     user?: UserType;
 }
+export interface PasswordChangeParams {
+    newPassword?: string;
+    oldPassword?: string;
+}

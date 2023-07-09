@@ -11,5 +11,10 @@ export const account = {
       name: "Register",
       component: () => import("@/views/Registration/Registration.vue"),
     },
+    {
+      path: "fogot",
+      name: "Fogot",
+      component: () => import("@/views/MyAccount/FogotPassword.vue"),
+    },
   ],
 };

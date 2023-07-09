@@ -1,12 +1,15 @@
 import Admin from "@/layout/AdminLayout.vue";
-// import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
+import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
+import jwt_decode from "jwt-decode";
+
+
 
 export const admin = {
   path: "/admin",
   component: Admin,
-  // meta: {
-  //   requiresAuth: true,
-  // },
+  meta: {
+    requiresAuth: true,
+  },
   children: [
     {
       path: "dashboard",
@@ -69,20 +72,23 @@ export const admin = {
       component: () => import("@/views/Admin/Review.vue"),
     },
   ],
-  // beforeEnter: (
-  //   _to: RouteLocationNormalized,
-  //   _from: RouteLocationNormalized,
-  //   next: NavigationGuardNext
-  // ) => {
-  //   const { getToken, getUser } = useAccountStore();
-  //   if (
-  //     _to.meta.requiresAuth &&
-  //     getToken.value &&
-  //     getUser.value?.roles?.some((role) => role === "AD")
-  //   ) {
-  //     next();
-  //   } else {
-  //     next({ name: "Home" });
-  //   }
-  // },
+  beforeEnter: (
+    _to: RouteLocationNormalized,
+    _from: RouteLocationNormalized,
+    next: NavigationGuardNext
+  ) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const valueToken = jwt_decode(token);
+      const roles = valueToken.user.roles;
+      const isAdmin = roles.some(role => role.authority === 'ADMIN');
+      if (_to.meta.requiresAuth && isAdmin) {
+        next();
+      } else {
+        next({ name: 'Home' });
+      }
+    } else {
+      next({ name: 'Login' });
+    }
+  },
 };

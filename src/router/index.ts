@@ -16,7 +16,6 @@ import { myaccount } from "./myaccount";
 
 const routes: Array<RouteRecordRaw> = [home, product, account, cart, checkout, admin, myaccount];
 
-
 const router: Router = createRouter({
   history: createWebHistory(),
   routes,

@@ -14,7 +14,8 @@
                 <div class="mb-4">
                     <div class="flex justify-between">
                         <label for="password">{{ $t('pass') }} </label>
-                        
+                        <a class="block text-sm text-indigo-700 fontme hover:underline" href="/account/fogot">Forgot your
+                            password?</a>
                     </div>
                     <Password v-model="passwordValue" placeholder="Password" :feedback="false" class="w-full w-inherit" />
                     <a class="block text-sm text-indigo-700 fontme hover:underline mt-2" href="#">{{ $t('forgotpass') }} </a>
@@ -82,4 +83,6 @@ function validateForm() {
     login(emailValue.value, passwordValue.value);
     return true;
 }
+
+
 </script>

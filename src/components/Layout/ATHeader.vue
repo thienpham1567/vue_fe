@@ -50,7 +50,7 @@
                 <i class="pi pi-chevron-up ml-2"></i>
               </span>
             </div>
-            <div :class="['my-account-section', { 'hidden': !showMyAccountSection }]">
+            <div :class="['my-account-section', { 'hidden': !showMyAccountSection }]" class="absolute bg-gray-300">
               <div class="mb-2 flex justify-start">
                 <Button :label="$t('view-order')" class="sign-in-register-btn" text @click="goToViewOrders" />
               </div>
@@ -60,9 +60,13 @@
               <div class="mb-2 flex justify-start">
                 <Button :label="$t('logout')" class="sign-in-register-btn" text @click="logout" />
               </div>
+              <div v-if="isAdmin" class="mb-2 flex justify-start">
+                <Button label="Admin" class="sign-in-register-btn" text @click="goToViewAdmin" />
+              </div>
             </div>
           </button> -->
         </template>
+
       </MegaMenu>
     </div>
   </nav>
@@ -167,6 +171,14 @@ const { getCategories, fetchCategories } = useCategoryStore();
 let dialogCartVisible = ref(false);
 let dialogSignInVisible = ref(false);
 const items = ref([]);
+
+
+
+const showMyAccountSection = ref(false);
+
+const toggleSection = () => {
+  showMyAccountSection.value = !showMyAccountSection.value;
+};
 
 function brands() {
   return getBrands.value.map(brand => {
@@ -298,6 +310,10 @@ const changeLanguage = (event: Event) => {
   selectedLanguage.value = selectedCode;
 };
 
+function goToViewAdmin() {
+  dialogCartVisible.value = false;
+  router.push('/admin');
+}
 
 const token = localStorage.getItem('token');
 
@@ -311,9 +327,9 @@ function checkToken() {
     isLogin.value = true;
     const valueToken = jwt_decode(token!);
     const roles = valueToken.user.roles;
-    console.log(roles);
-    isAdmin.value = roles.some(role => role.authority === 'admin');
-    console.log(isAdmin.value);
+
+    isAdmin.value = roles.some(role => role.authority === 'ADMIN');
+
   }
 }
 
