@@ -7,22 +7,22 @@
                         <h2>Tài khoản của tôi</h2>
                         <div class="form-detail">
                             <div class="form-title">
-                                <label for="">{{ currentUser.userId }}</label>
+                                <label for="">Mã khách hàng: {{ currentUser.userId }}</label>
                             </div>
                             <div class="form-title">
-                                <label for="">{{ currentUser.emailAddress }}</label>
+                                <label for="">Email đăng nhập: {{ currentUser.emailAddress }}</label>
                             </div>
                             <div class="form-title">
-                                <label for="">{{ currentUser.firstName }}</label>
+                                <label for="">Họ và tên: {{ currentUser.lastName }} {{ currentUser.firstName }}</label>
                             </div>
                             <div class="form-title">
-                                <label for="">{{ currentUser.lastName }}</label>
+                                <label for=""></label>
                             </div>
                             <div class="form-title">
-                                <label for="">{{ currentUser.phoneNumber }}</label>
+                                <label for="">Số điên thoại: {{ currentUser.phoneNumber }}</label>
                             </div>
 
-                            <Button label="Sửa" @click="visible = true" />
+                            <Button label="Sửa" @click="visible = true" style="margin-right: 30px;" />
                             <Button label="Đổi mật khẩu" @click="visiblePass = true" />
                         </div>
                     </div>
@@ -41,44 +41,47 @@
         </div>
 
 
-        <Dialog v-model:visible="visible" modal header="Header" :style="{ width: '50vw' }">
+        <Dialog v-model:visible="visible" modal header="Sửa thông tin" :style="{ width: '50vw' }">
             <div class="form">
-                <span class="p-float-label">
+                <span class="form-value">
+                    <label for="">Mã khách hàng</label>
                     <InputText id="userId" v-model="currentUser.userId" readonly />
-
                 </span>
-                <span class="p-float-label">
+                <span class="form-value">
+                    <label for="">Email:</label>
                     <InputText id="email" v-model="currentUser.emailAddress" readonly />
-
                 </span>
-                <span class="p-float-label">
+                <span class="form-value">
+                    <label for="">Họ :</label>
                     <InputText id="lastname" v-model="currentUser.lastName" />
-
                 </span>
-                <span class="p-float-label">
+                <span class="form-value">
+                    <label for="">Tên:</label>
                     <InputText id="firstname" v-model="currentUser.firstName" />
-
                 </span>
-                <span class="p-float-label">
+                <span class="form-value">
+                    <label for="">Số điện thoại:</label>
                     <InputText id="username" v-model="currentUser.phoneNumber" />
-
                 </span>
 
             </div>
             <template #footer>
-                <Button label="No" icon="pi pi-times" @click="visible = false" text />
+                <Button label="Huỷ" icon="pi pi-times" @click="visible = false" text />
                 <Button label="Lưu" icon="pi pi-check" @click="saveUser" autofocus />
             </template>
         </Dialog>
         <Dialog v-model:visible="visiblePass" modal header="Header" :style="{ width: '50vw' }">
             <div class="form">
-                <span class="p-float-label">
+                <span class="form-value">
+                    <label for="">Mật khẩu cũ:</label>
                     <InputText type="password" id="oldPassword" v-model="oldPasswordValue" placeholder="Mật khẩu củ" />
                 </span>
-                <span class="p-float-label">
+                <span class="form-value">
+                    <label for="">Mật khẩu mới:</label>
                     <InputText type="password" id="newPassword1" v-model="newPasswordValue1" placeholder="Mật khẩu mới" />
                 </span>
-                <span class="p-float-label">
+                <span class="form-value">
+                    <label for="">Nhập lại mật khẩu mới:</label>
                     <InputText type="password" id="newPassword" v-model="newPasswordValue" placeholder="Mật khẩu mới" />
                 </span>
             </div>
