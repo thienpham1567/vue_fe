@@ -13,54 +13,72 @@
           <Button icon="pi pi-search" class="search-btn" />
         </div>
       </div>
-      <Button icon="pi pi-shopping-cart" class="cart-btn" label="MY CART" raised @click="dialogCartVisible = true" />
+      <div class="juistify-between">
+        <div class="flex">
+          <Button icon="pi pi-shopping-cart " class="cart-btn" :label="$t('my-cart')" raised
+            @click="dialogCartVisible = true" />
+          <!-- Multi Language button  -->
+          <div class="flex space-x-3 ml-3 bg-yellow-400">
+            <select v-model="selectedLanguage" @change="changeLanguage">
+              <option v-for=" language  in  languages " :value="language.code" :key="language.code">
+                {{ language.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
     </div>
     <div class="nav-menu">
       <MegaMenu :model="items">
         <template #end>
-          <Button v-if="!isLogin" label="Sign In / Register" class="sign-in-register-btn" text
-            @click="dialogSignInVisible = true" />
-          <button label="My Account" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
+          <Button :label="$t('sign-in/register')" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
+          <button :label="$t('my-account')" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
             <div class="mb-3">
               <span v-if="showMyAccountSection">
-                <span class="font-bold">My Account</span>
+                <span class="font-bold">{{ $t('my-account') }}</span>
                 <i class="pi pi-chevron-down ml-2"></i>
               </span>
               <span v-else>
-                <span class="font-bold">My Account</span>
+                <span class="font-bold">{{ $t('my-account') }}</span>
                 <i class="pi pi-chevron-up ml-2"></i>
               </span>
             </div>
-            <div :class="['my-account-section', { 'hidden': !showMyAccountSection }]">
+            <div :class="['my-account-section', { 'hidden': !showMyAccountSection }]" class="absolute bg-gray-300">
               <div class="mb-2 flex justify-start">
-                <Button label="View order" class="sign-in-register-btn" text @click="goToViewOrders" />
+                <Button :label="$t('view-order')" class="sign-in-register-btn" text @click="goToViewOrders" />
               </div>
               <div class="mb-2 flex justify-start">
-                <Button label="My Account" class="sign-in-register-btn" text @click="goToMyAccount" />
+                <Button :label="$t('my-account')" class="sign-in-register-btn" text @click="goToMyAccount" />
+              </div>
+              <div class="mb-2 flex justify-start">
+                <Button :label="$t('logout')" class="sign-in-register-btn" text @click="logout" />
               </div>
               <div v-if="isAdmin" class="mb-2 flex justify-start">
-                <Button label="Admin" class="sign-in-register-btn" text />
-              </div>
-              <div v-if="isLogin" class="mb-2 flex justify-start">
-                <Button label="Logout" class="sign-in-register-btn" text @click="logout" />
+                <Button label="Admin" class="sign-in-register-btn" text @click="goToViewAdmin" />
               </div>
             </div>
           </button>
         </template>
+
       </MegaMenu>
     </div>
   </nav>
   <Sidebar v-model:visible="dialogCartVisible" position="right">
     <template #header>
-      <div class="text-2xl">Added To Cart</div>
+      <div class="text-2xl">{{ $t('my-cart') }}</div>
     </template>
     <CartItem />
     <div class="bg-gray-200 w-full h-1/6">
-      <div class="flex justify-end mr-4">Cart Subtotal (10 Items)$1,099.90</div>
+      <div class="flex justify-end mr-4 pt-2" style="font-size: 1.7rem;">{{ $t('subtotal') }}</div>
       <div class="flex justify-between m-4 pb-4">
-        <Button type="submit" label="VIEW CART" @click="goToCart"
+        <Button type="submit" :label="$t('my-cart')" @click="goToCart"
           class="px-4 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
-        <Button type="submit" label="PROCEED TO CHECKOUT" @click="goToCheckout"
+        <Button type="submit" :label="$t('Proceed-to-checkout')" @click="goToCheckout"
           class="px-4 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
       </div>
     </div>
@@ -89,6 +107,8 @@ import { useRouter } from 'vue-router';
 import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
 import { onMounted, ref, watch, computed } from 'vue';
 import jwt_decode from "jwt-decode";
+import { useLanguageStore } from '@/store/language';
+import { translate } from '@/i18n';
 
 import { useProductStore } from '@/store';
 import { useRoute } from "vue-router";
@@ -149,6 +169,14 @@ const { getCategories, fetchCategories } = useCategoryStore();
 let dialogCartVisible = ref(false);
 let dialogSignInVisible = ref(false);
 const items = ref([]);
+
+
+
+const showMyAccountSection = ref(false);
+
+const toggleSection = () => {
+  showMyAccountSection.value = !showMyAccountSection.value;
+};
 
 function brands() {
   return getBrands.value.map(brand => {
@@ -250,12 +278,39 @@ function goToCheckout() {
 
 function goToMyAccount() {
   dialogCartVisible.value = false;
-  router.push('/myaccount');
+  router.push('/myaccount/myaccount');
 }
 
 function goToViewOrders() {
   dialogCartVisible.value = false;
   router.push('/myaccount/view-order');
+}
+
+const languageStore = useLanguageStore();
+
+const languages = ref([
+  { code: 'en', label: 'English' },
+  { code: 'vi', label: 'Tiếng Việt' }
+]);
+
+const selectedLanguage = computed({
+  get: () => languageStore.currentLanguage,
+  set: (value) => {
+    languageStore.setCurrentLanguage(value);
+    // Thực hiện bất kỳ hành động nào khác khi ngôn ngữ thay đổi
+  },
+});
+const $t = translate;
+
+const changeLanguage = (event: Event) => {
+  const target = event.target as HTMLSelectElement;
+  const selectedCode = target.value;
+  selectedLanguage.value = selectedCode;
+};
+
+function goToViewAdmin() {
+  dialogCartVisible.value = false;
+  router.push('/admin');
 }
 
 const token = localStorage.getItem('token');
@@ -270,9 +325,9 @@ function checkToken() {
     isLogin.value = true;
     const valueToken = jwt_decode(token!);
     const roles = valueToken.user.roles;
-    console.log(roles);
-    isAdmin.value = roles.some(role => role.authority === 'admin');
-    console.log(isAdmin.value);
+
+    isAdmin.value = roles.some(role => role.authority === 'ADMIN');
+
   }
 }
 
@@ -282,3 +337,4 @@ const logout = () => {
 };
 checkToken();
 </script>
+

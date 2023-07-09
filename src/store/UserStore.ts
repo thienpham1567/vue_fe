@@ -1,5 +1,5 @@
 import User from "@/models/User";
-import type { UserType, CreationParams, UserParams } from "@/types/UserType";
+import type { UserType, CreationParams, UserParams, PasswordChangeParams } from "@/types/UserType";
 import { ref, type Ref } from "vue";
 import { defineStore } from "pinia"
 import { computed } from "vue";
@@ -26,6 +26,11 @@ const useUserStore = defineStore("user", () => {
         const { data } = await new User().create(user);
         users.value.push(data);
     }
+    //
+    const fetchByEmail = async (email: String) => {
+        const { data } = await new User().findByEmail(email);
+        setUser(data);
+    }
     //Find by key
     const fetchByKey = async (key: String) => {
         const { data } = await new User().findByKey(key);
@@ -36,6 +41,11 @@ const useUserStore = defineStore("user", () => {
         await new User().update(id, user);
         setUser({});
         fetchUsers();
+    };
+    //ChangePass
+    const changePass = async (id: number, password: PasswordChangeParams) => {
+        await new User().changePass(id, password);
+        setUser({});
     };
     //Delete
     const deleteUser = async (id: number) => {
@@ -61,7 +71,9 @@ const useUserStore = defineStore("user", () => {
         updateUser,
         deleteUser,
         fetchWithUsers,
-        fetchByKey
+        fetchByKey,
+        fetchByEmail,
+        changePass
     }
 });
 

@@ -17,17 +17,12 @@ export interface CreationParams {
 // update User
 export type UserParams = Omit<UserType, "id">;
 
-
 export interface LoginParams {
     email: String;
     password: String;
 }
 
-export interface ListResponse {
-    status: boolean;
-    data: UserType[];
-    message?: string;
-}
+export type UpdateParams = Omit<UserType, "id">;
 
 export interface CreationResponse {
     status: boolean;
@@ -41,6 +36,16 @@ export interface UserResponse {
     message?: string;
 }
 
+export interface ListResponse {
+    status: boolean;
+    data: UserType[];
+    message?: string;
+}
+
 export interface QueryUserParams {
     user?: UserType;
+}
+export interface PasswordChangeParams {
+    newPassword?: string;
+    oldPassword?: string;
 }

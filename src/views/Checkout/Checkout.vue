@@ -4,22 +4,22 @@
         <div class="w-full lg:w-8/12 mx-4 mb-4 mt-4 border-2 drop-shadow-lg">
             <div class=" mb-4">
                 <div class=" py-2">
-                    <div class="text-2xl mt-4 ml-4">Delivery Information</div>
+                    <div class="text-2xl mt-4 ml-4">{{ $t('deliinfo') }}</div>
                 </div>
                 <div class="border-b-2 mx-4"></div>
                 <div class=" px-4 pb-4 rounded-md">
                     <div class="flex flex-wrap -mx-2">
                         <div class="w-full lg:w-1/2 px-2 mt-4">
                             <div class="mb-2">
-                                <label for="Name" class="text-xl">Name</label>
+                                <label for="Name" class="text-xl">{{ $t('cname') }}</label>
                             </div>
                             <InputText class="w-full" placeholder="" />
                         </div>
                         <div class="w-full lg:w-1/2 px-2 mt-4">
                             <div class="mb-2">
-                                <label for="Phone" class="text-xl ">Phone Number</label>
+                                <label for="Phone" class="text-xl ">{{ $t('pnum') }}</label>
                             </div>
-                            <InputText class="w-full" placeholder="+123 456 789" />
+                            <InputText class="w-full" placeholder="+0909436072" />
                         </div>
                         <div class="w-full lg:w-1/2 px-2">
                             <div class="mb-2 mt-4">
@@ -29,15 +29,15 @@
                         </div>
                         <div class="w-full lg:w-1/2 px-2">
                             <div class="mb-2 mt-4">
-                                <label for="City" class="text-xl">City</label>
+                                <label for="City" class="text-xl">{{ $t('city') }}</label>
                             </div>
-                            <InputText class="w-full" placeholder="Hawthorne" />
+                            <InputText class="w-full" placeholder="Ho Chi Minh city" />
                         </div>
                         <div class="w-full lg:w-1/2 px-2">
                             <div class="mb-2 mt-4">
-                                <label for="State" class="text-xl">State</label>
+                                <label for="State" class="text-xl">{{ $t('district') }}</label>
                             </div>
-                            <InputText class="w-full" placeholder="example@gmail.com" />
+                            <InputText class="w-full" placeholder="District 11" />
                         </div>
                         <div class="w-full lg:w-1/2 px-2">
                             <div class="mb-2 mt-4">
@@ -55,9 +55,9 @@
                         </div>
                         <div class="w-full px-2">
                             <div class="mb-2 mt-4">
-                                <label for="Address" class="text-xl">Address</label>
+                                <label for="Address" class="text-xl">{{$t('address')}}</label>
                             </div>
-                            <InputText class="w-full" placeholder="e.g. 4796 Libby Street" />
+                            <InputText class="w-full" placeholder="e.g. 138 Quang Trung" />
                         </div>
                     </div>
                 </div>
@@ -65,19 +65,19 @@
 
             <div class=" mb-4">
                 <div class="flex items-center justify-between px-4 py-2">
-                    <div class="text-2xl mt-4">Schedule Delivery</div>
+                    <div class="text-2xl mt-4">{{$t('scheduledeli')}}</div>
                     <div class="card">
                         <InputSwitch v-model="checked" />
                     </div>
                 </div>
                 <div class="px-4 pb-4">
                     <div class="mb-2">
-                        <label for="Address" class="text-xl">Notes</label>
+                        <label for="Address" class="text-xl">{{$t('note')}}</label>
                     </div>
                     <InputText class="w-full" :disabled="!checked" />
                     <div class="mt-4">
                         <div class="mb-2">
-                            <label for="Address" class="text-xl">Dates</label>
+                            <label for="Address" class="text-xl">{{$t('date')}}</label>
                         </div>
                         <Calendar v-model="dates" selectionMode="range" :manualInput="false" placeholder="Type your note"
                             dateFormat="dd/mm/yy" class="w-full" :disabled="!checked" />
@@ -87,23 +87,19 @@
 
             <div class="">
                 <div class="flex items-center justify-between px-4 py-2">
-                    <div class="text-2xl mt-4 mb-2">Payment Method</div>
+                    <div class="text-2xl mt-4 mb-2">{{$t('paymethod')}}</div>
                 </div>
                 <div class="px-4 py-4 flex justify-evenly">
                     <div class="flex items-center">
                         <RadioButton v-model="ingredient" inputId="ingredient1" name="OnlinePayment"
                             value="OnlinePayment" />
-                        <label for="ingredient1" class="ml-2">Online Payment</label>
+                        <label for="ingredient1" class="ml-2">{{$t('onlpay')}}</label>
                     </div>
                     <div class="flex items-center">
                         <RadioButton v-model="ingredient" inputId="CashOnDelivery" name="pizza" value="CashOnDelivery" />
-                        <label for="ingredient2" class="ml-2">Cash On Delivery</label>
+                        <label for="ingredient2" class="ml-2">{{$t('cod')}}</label>
                     </div>
-                    <div class="flex items-center">
-                        <RadioButton v-model="ingredient" inputId="ingredient3" name="POSonDelivery"
-                            value="POSonDelivery" />
-                        <label for="ingredient3" class="ml-2">POS on Delivery</label>
-                    </div>
+                   
                 </div>
             </div>
         </div>
@@ -112,32 +108,32 @@
         <!-- Right column start -->
         <div class="lg:w-4/12 mx-4 mt-4 border-2 drop-shadow-md h-full">
             <div class="mt-4">
-                <div class="text-2xl ml-4 mb-2 ">Order Summary</div>
+                <div class="text-2xl ml-4 mb-2 ">{{$t('cart-summary')}}</div>
             </div>
             <div class=" mb-0">
                 <div class="px-4 py-2 justify-items-center mt-2 mb-2">
                     <div class="flex justify-between">
-                        <div class="font-light text-lg">Subtotal</div>
+                        <div class="font-light text-lg">{{$t('subtotal')}}</div>
                         <div class="font-bold">$1250.32</div>
                     </div>
                     <div class="border-b "></div>
                     <div class="mt-2">
                         <div class="flex justify-between">
-                            <div class="font-light text-lg">Shipping</div>
+                            <div class="font-light text-lg">{{$t('shippingcost')}}</div>
                             <div class="font-bold">---</div>
                         </div>
                     </div>
                     <div class="border-b "></div>
                     <div class="mt-2">
                         <div class="flex justify-between">
-                            <div class="font-light text-lg">Total(USD)</div>
+                            <div class="font-light text-lg">{{$t('total')}}</div>
                             <div class="font-bold">$1250.32</div>
                         </div>
                     </div>
                     <hr>
                     <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold mt-4 mb-4 rounded w-full h-12"
                         type="submit">
-                        Confirm Order
+                        {{$t('confirm')}}
                     </button>
                 </div>
                 <div class="px-4 overflow-y-auto max-h-[645px] mb-4">
@@ -167,10 +163,14 @@ import InputSwitch from 'primevue/inputswitch';
 import InputText from 'primevue/inputtext';
 import Calendar from 'primevue/calendar';
 import Button from 'primevue/button';
+import { useLanguageStore } from '@/store/language';
+import { translate } from '@/i18n';
 // import InputNumber from 'primevue/inputnumber';
 const checked = ref(false);
 const dates = ref();
 const ingredient = ref('');
+const $t = translate;
+const languageStore = useLanguageStore();
 
 interface Product {
     id: number;

@@ -1,188 +1,249 @@
 <template>
-    <div class="order-list">
-      <h1 class="order-list__title">Danh sách đơn hàng</h1>
-  
-      <div class="order-list__table">
-        <DataTable :value="orders" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]">
-          <Column field="orderId" header="ID đơn hàng"></Column>
-          <Column field="customerName" header="Tên khách hàng"></Column>
-          <Column field="totalAmount" header="Tổng số tiền"></Column>
-          <Column field="status" header="Trạng thái"></Column>
-          <Column header="Thao tác">
-            <template #body="rowData">
-              <Button class="p-button p-button-sm p-button-info" label="Sửa" @click="editOrder(rowData)"></Button>
-            </template>
-          </Column>
-        </DataTable>
-      </div>
-  
-      <Dialog v-model="dialogVisible" :visible="dialogVisible" :header="dialogHeader" class="order-list__dialog">
-        <div class="p-fluid">
-          <div class="p-field">
-            <label for="orderId">ID đơn hàng</label>
-            <InputText id="orderId" v-model="currentOrder.orderId" :disabled="isEditing"></InputText>
-          </div>
-          <div class="p-field">
-            <label for="customerName">Tên khách hàng</label>
-            <InputText id="customerName" v-model="currentOrder.customerName"></InputText>
-          </div>
-          <div class="p-field">
-            <label for="customerAddress">Địa chỉ khách hàng</label>
-            <InputText id="customerAddress" v-model="currentOrder.customerAddress"></InputText>
-          </div>
-          <div class="p-field">
-            <label for="orderDate">Ngày đặt hàng</label>
-            <Calendar id="orderDate" v-model="currentOrder.orderDate"></Calendar>
-          </div>
-          <div class="p-field">
-            <label for="products">Danh sách sản phẩm</label>
-            <DataTable :value="currentOrder.products">
-              <Column field="productName" header="Tên sản phẩm"></Column>
-              <Column field="price" header="Giá"></Column>
-            </DataTable>
-          </div>
-        </div>
-  
-        <template #footer>
-          <div class="order-list__dialog-buttons">
-            <Button class="p-button p-button-success" label="Lưu" @click="saveOrder"></Button>
-            <Button class="p-button p-button-secondary" label="Hủy" @click="cancelEdit"></Button>
-          </div>
-        </template>
-      </Dialog>
-  
-      <Button class="p-button p-button-primary" label="Thêm đơn hàng" @click="addOrder"></Button>
+  <div class="order-list">
+    <h1 class="order-list__title">Danh sách đơn hàng</h1>
+    <div class="order-list__filters">
+      <InputText v-model="filterKeyword" placeholder="Tìm kiếm theo tên khách hàng" />
+      <Dropdown v-model="filterStatus" :options="statusOptions" optionLabel="label" optionValue="value"
+        placeholder="Chọn trạng thái" />
+      <Button label="Áp dụng" icon="pi pi-search" @click="applyFilters" />
+      <Button label="Xóa bộ lọc" icon="pi pi-times" @click="resetFilters" />
     </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref } from 'vue';
-  import DataTable from 'primevue/datatable';
-  import Column from 'primevue/column';
-  import Dialog from 'primevue/dialog';
-  import Button from 'primevue/button';
-  import InputText from 'primevue/inputtext';
-  import Calendar from 'primevue/calendar';
-  
-  interface Product {
-    productName: string;
-    price: number;
+
+    <DataTable :value="filteredOrders" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]"
+      :sort-mode="'multiple'">
+      <Column field="orderId" header="ID đơn hàng" sortable="custom" :sort-function="customSort"></Column>
+      <Column field="user.firstName" header="Họ" sortable="custom" :sort-function="customSort"></Column>
+      <Column field="user.lastName" header="Tên" sortable="custom" :sort-function="customSort"></Column>
+      <Column field="orderTotalPrice" header="Tổng số tiền" sortable="custom" :sort-function="customSort"></Column>
+      <Column field="ordersStatus" header="Trạng thái" :body="statusBodyTemplate" sortable="custom"
+        :sort-function="customSort">
+      </Column>
+      <Column header="Xem đơn hàng" :body="viewOrderTemplate">
+        <template #body="rowData">
+            <div class="category-list__actions">
+              <Button icon="pi pi-pencil" class="p-button-rounded p-button-success"
+                @click="openOrderDialog(rowData.data)"></Button>
+            </div>
+          </template>
+      </Column>
+    </DataTable>
+
+    <Dialog v-model="dialogVisible" :visible="dialogVisible" :header="dialogHeader" class="order-list__dialog">
+      <div class="p-fluid">
+        <div class="p-field">
+          <label for="orderId">ID đơn hàng</label>
+          <InputText id="orderId" v-model="currentOrder.orderId" :disabled="isEditing"></InputText>
+        </div>
+        <div class="p-field">
+          <label for="customerName">Tên khách hàng</label>
+          <InputText id="customerName" v-model="formattedName"></InputText>
+        </div>
+        <div class="p-field">
+          <label for="customerAddress">Địa chỉ khách hàng</label>
+          <InputText id="customerAddress" v-model="currentOrder.denormalizedAddress"></InputText>
+        </div>
+        <div class="p-field">
+          <label for="customerPhone">Số điện thoại</label>
+          <InputText id="customerPhone" v-model="currentOrder.user.phoneNumber"></InputText>
+        </div>
+        <div class="p-field">
+          <label for="orderDate">Ngày đặt hàng</label>
+          <Calendar id="orderDate" v-model="formattedDate"></Calendar>
+        </div>
+        <div class="p-field">
+          <label for="products">Danh sách sản phẩm</label>
+          <DataTable :value="currentOrder.orderLines">
+            <Column field="productVariationSize.productName" header="Tên sản phẩm"></Column>
+            <Column field="image" header="Hình"></Column>
+            <Column field="price" header="Giá"></Column>
+            <Column field="category" header="Loại sản phẩm"></Column>
+            <Column field="review" header="Đánh giá"></Column>
+          </DataTable>
+        </div>
+      </div>
+
+      <template #footer>
+        <div class="order-list__dialog-buttons">
+          <!-- <Button class="p-button p-button-success" label="Lưu" @click="saveOrder"></Button> -->
+          <Button class="p-button p-button-secondary" label="Hủy" @click="cancelEdit"></Button>
+        </div>
+      </template>
+    </Dialog>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import Dialog from 'primevue/dialog';
+import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import Calendar from 'primevue/calendar';
+import Dropdown from 'primevue/dropdown';
+import useOrderStore from '@/store/OrderStore';
+import { OrderType } from '@/types/order';
+import moment from 'moment';
+
+const orders = ref<OrderType[]>([]);
+const orderStore = useOrderStore();
+const dialogHeader = ref('');
+
+onMounted(async () => {
+  try {
+    await orderStore.fetchOrders();
+    orders.value = orderStore.getOrders.value;
+    console.log(orders.value);
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    // Handle error
   }
-  
-  interface Order {
-    orderId: number;
-    customerName: string;
-    customerAddress: string;
-    orderDate: Date;
-    products: Product[];
+});
+
+const filterKeyword = ref('');
+const filterStatus = ref('');
+const statusOptions = [
+  { label: 'Chưa xử lý', value: 'Chưa xử lý' },
+  { label: 'Đang xử lý', value: 'Đang xử lý' },
+  { label: 'Hoàn thành', value: 'Hoàn thành' },
+];
+
+const dialogVisible = ref(false);
+const currentOrder = ref<OrderType | null>(null);
+const isEditing = ref(false);
+
+
+const formattedDate = computed(() => {
+  if (currentOrder.value && currentOrder.value.createdAt) {
+    const datetime = moment(currentOrder.value.createdAt);
+    return datetime.format('YYYY-MM-DD');
   }
-  
-  const dialogHeader = ref('');
-  const orders = ref<Order[]>([
-    {
-      orderId: 1,
-      customerName: 'Nguyễn Văn A',
-      customerAddress: 'Số 123, Đường ABC, Thành phố XYZ',
-      orderDate: new Date(),
-      products: [
-        { productName: 'Sản phẩm A', price: 100 },
-        { productName: 'Sản phẩm B', price: 200 },
-      ],
-    },
-    {
-      orderId: 2,
-      customerName: 'Trần Thị B',
-      customerAddress: 'Số 456, Đường DEF, Thành phố XYZ',
-      orderDate: new Date(),
-      products: [
-        { productName: 'Sản phẩm C', price: 150 },
-        { productName: 'Sản phẩm D', price: 250 },
-      ],
-    },
-  ]);
-  const dialogVisible = ref(false);
-  const currentOrder = ref<Order>({
-    orderId: 0,
-    customerName: '',
-    customerAddress: '',
-    orderDate: new Date(),
-    products: [],
+  return null;
+});
+
+const formattedName = computed(() => {
+  if (currentOrder.value && currentOrder.value.user && currentOrder.value.user.firstName && currentOrder.value.user.lastName) {
+    return currentOrder.value.user.firstName + ' ' + currentOrder.value.user.lastName;
+  }
+  return null;
+});
+
+
+
+// const formattedDate = computed(() => {
+//   if (currentOrder.value && currentOrder.value.createdAt) {
+//     const dateObj = new Date(currentOrder.value.createdAt);
+//     return dateObj.toISOString().split('T')[0];
+//   }
+//   return null;
+// });
+
+// const formattedDate = computed(() => {
+//   if (currentOrder.value && currentOrder.value.createdAt) {
+//     const parts = currentOrder.value.createdAt.split(/[- :]/);
+//     const year = parseInt(parts[0]);
+//     const month = parseInt(parts[1]) - 1;
+//     const day = parseInt(parts[2]);
+//     const dateObj = new Date(year, month, day);
+//     return dateObj.toISOString().split('T')[0];
+//   }
+//   return null;
+// });
+
+// const formattedDate = computed(() => {
+//   if (currentOrder.value && typeof currentOrder.value.createdAt === 'string') {
+//     const parts = currentOrder.value.createdAt.split(' ');
+//     return parts[0];
+//   }
+//   return null;
+// });
+
+// const formattedDate = computed(() => {
+//   if (currentOrder.value && currentOrder.value.createdAt) {
+//     const dateObj = new Date(currentOrder.value.createdAt);
+//     const year = dateObj.getFullYear();
+//     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+//     const day = String(dateObj.getDate()).padStart(2, '0');
+//     return `${year}-${month}-${day}`;
+//   }
+//   return null;
+// });
+
+
+const openOrderDialog = (order: OrderType) => {
+  currentOrder.value = { ...order };
+  dialogHeader.value = `Thông tin đơn hàng #${order.orderId}`;
+  dialogVisible.value = true;
+};
+
+// Computed property for filtered orders based on filterKeyword and filterStatus
+const filteredOrders = computed(() => {
+  let filtered = orders.value;
+  if (filterKeyword.value) {
+    const keyword = filterKeyword.value.toLowerCase();
+    filtered = filtered.filter((order) => order.user.username.toLowerCase().includes(keyword));
+  }
+  if (filterStatus.value) {
+    filtered = filtered.filter((order) => order.ordersStatus === filterStatus.value);
+  }
+  return filtered;
+});
+
+// Custom sort function for sorting columns
+function customSort(event: any) {
+  const { field, order } = event.multiSortMeta[0];
+  if (field) {
+    const factor = order === 1 ? 1 : -1;
+    filteredOrders.value.sort((order1, order2) => {
+      const value1 = getFieldData(order1, field);
+      const value2 = getFieldData(order2, field);
+      return factor * value1.localeCompare(value2, undefined, { numeric: true });
+    });
+  }
+}
+
+// Helper function to get field data for sorting
+function getFieldData(order: OrderType, field: string) {
+  switch (field) {
+    case 'orderId':
+    case 'orderTotalPrice':
+      return String(order[field]);
+    case 'user.username':
+    case 'ordersStatus':
+      return order[field].toLowerCase();
+    default:
+      return '';
+  }
+}
+
+function applyFilters() {
+  const keyword = filterKeyword.value.toLowerCase();
+  const status = filterStatus.value;
+
+  filteredOrders.value = orders.value.filter((order) => {
+    const isKeywordMatched = order.user.username.toLowerCase().includes(keyword);
+    const isStatusMatched = !status || order.ordersStatus === status;
+    return isKeywordMatched && isStatusMatched;
   });
-  let isEditing = false;
-  
-  function addOrder() {
-    isEditing = false;
-    currentOrder.value = {
-      orderId: 0,
-      customerName: '',
-      customerAddress: '',
-      orderDate: new Date(),
-      products: [],
-    };
-    dialogVisible.value = true;
-    dialogHeader.value = 'Thêm đơn hàng';
-  }
-  
-  function editOrder(order: Order) {
-    isEditing = true;
-    currentOrder.value = { ...order };
-    dialogVisible.value = true;
-    dialogHeader.value = 'Sửa đơn hàng';
-  }
-  
-  function saveOrder() {
-    if (isEditing) {
-      // Gọi API để cập nhật đơn hàng
-      // axios.put(...)
-      //   .then(() => {
-      //     fetchOrders();
-      //     cancelEdit();
-      //   })
-      //   .catch((error) => {
-      //     console.error(error);
-      //   });
-    } else {
-      // Gọi API để thêm đơn hàng mới
-      // axios.post(...)
-      //   .then(() => {
-      //     fetchOrders();
-      //     cancelEdit();
-      //   })
-      //   .catch((error) => {
-      //     console.error(error);
-      //   });
-    }
-  }
-  
-  function cancelEdit() {
-    dialogVisible.value = false;
-    currentOrder.value = {
-      orderId: 0,
-      customerName: '',
-      customerAddress: '',
-      orderDate: new Date(),
-      products: [],
-    };
-  }
-  
-  // Fetch orders from the server
-  // function fetchOrders() {
-  //   // axios.get(...)
-  //   //   .then((response) => {
-  //   //     orders.value = response.data;
-  //   //   })
-  //   //   .catch((error) => {
-  //   //     console.error(error);
-  //   //   });
-  // }
-  
-  // onMounted(() => {
-  //   fetchOrders();
-  // });
-  </script>
-  
-  <style scoped>
-  .order-list {
+}
+
+// Reset the filters
+function resetFilters() {
+  filterKeyword.value = '';
+  filterStatus.value = '';
+  filteredOrders.value = orders.value;
+}
+
+
+const cancelEdit = () => {
+  currentOrder.value = {};
+  dialogVisible.value = false;
+};
+
+</script>
+
+<style scoped>
+.order-list {
   padding: 20px;
 }
 
@@ -192,7 +253,10 @@
   margin-bottom: 20px;
 }
 
-.order-list__table {
+.order-list__filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
@@ -205,5 +269,24 @@
   justify-content: flex-end;
   gap: 10px;
 }
-  </style>
-  
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.status-pending {
+  background-color: #ffc107;
+}
+
+.status-processing {
+  background-color: #007bff;
+}
+
+.status-completed {
+  background-color: #28a745;
+}
+</style>

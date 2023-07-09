@@ -230,7 +230,7 @@ const dataUserRole = async (updateUserRole: UserRoleType, newRoleId: number) => 
 
   currentUserRole.value = { ...updateUserRole, roleId: newRoleId };
   const roleId = currentUserRole.value.role?.roleId;
-  console.log(currentUserRole.value.roleId);
+  console.log(currentUserRole.value.user?.userId);
   console.log(roleId);
   console.log(currentUserRole.value);
   console.log("UserRoleID   " + JSON.stringify(currentUserRole.value));
@@ -241,6 +241,7 @@ const dataUserRole = async (updateUserRole: UserRoleType, newRoleId: number) => 
     roleId: currentUserRole.value.roleId!,
     role: currentUserRole.value.role!
   }
+
   saveUserRole(newUserRole, currentUserRole.value.userRoleId);
 };
 

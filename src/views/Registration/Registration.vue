@@ -9,13 +9,13 @@
                 <!-- Firt name & Last name -->
                 <div class="flex mb-4">
                     <span class="mr-4">
-                        <label for="firtname">First Name</label>
+                        <label for="firtname">{{ $t('firstname') }}</label>
                         <InputText v-model="firstNameValue" class="w-full" placeholder="First Name"
                             :class="{ 'is-invalid': firstNameError }" />
                         <span v-if="firstNameError" class="text-red-500">{{ firstNameError }}</span>
                     </span>
                     <span class="">
-                        <label for="lastname">Last Name</label>
+                        <label for="lastname">{{ $t('lname') }}</label>
                         <InputText v-model="lastNameValue" :class="{ 'is-invalid': lastNameError }" class="w-full"
                             placeholder="Last Name" />
                         <span v-if="lastNameError" class="text-red-500">{{ lastNameError }}</span>
@@ -23,7 +23,7 @@
                 </div>
                 <!-- Phone Number -->
                 <div class="mb-4">
-                    <label for="phonenumber"> Phone Number </label>
+                    <label for="phonenumber"> {{ $t('pnum') }}</label>
                     <InputText v-model="phoneNumberValue" :class="{ 'is-invalid': phoneNumberError }" inputId="phonenumber"
                         :useGrouping="false" placeholder="0123456789" class="w-full w-inherit" />
                     <span v-if="phoneNumberError" class="text-red-500">{{ phoneNumberError }}</span>
@@ -37,14 +37,14 @@
                 </div>
                 <!-- Password -->
                 <div class="mb-4">
-                    <label for="password">Password</label>
+                    <label for="password">{{ $t('pass') }}</label>
                     <Password v-model="passwordValue" placeholder="Password" :feedback="false"
                         :class="{ 'is-invalid': passwordError }" class="w-full w-inherit" />
                     <span v-if="passwordError" class="text-red-500">{{ passwordError }}</span>
                 </div>
                 <!-- Re-Password -->
                 <div class="mb-4">
-                    <label for="re-password">Re-Password</label>
+                    <label for="re-password">{{ $t('repass') }}</label>
                     <Password v-model="rePasswordValue" :class="{ 'is-invalid': rePasswordError }" placeholder="Re-Password"
                         :feedback="false" class="w-full w-inherit" />
                     <span v-if="rePasswordError" class="text-red-500">{{ rePasswordError }}</span>
@@ -53,18 +53,17 @@
                     <label class="inline-flex items-center">
                         <input type="checkbox" v-model="termsAccepted"
                             class="text-indigo-600 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500" />
-                        <span class="mx-2 text-sm text-gray-600">I have read and agree to the terms and conditions.</span>
+                        <span class="mx-2 text-sm text-gray-600">{{ $t('term') }}</span>
                     </label>
                     <div>
-                        <a class="block text-sm text-indigo-700 fontme hover:underline" href="#">Already have an account?
-                            Sign in</a>
+                        <a class="block text-sm text-indigo-700 fontme hover:underline" href="#">{{ $t('alreadyhave') }}</a>
                     </div>
                     <span v-if="termsError" class="text-red-500">{{ termsError }}</span>
                 </div>
 
             </template>
             <template #footer>
-                <Button type="submit" label="Create your ATSport account" @click="validateForm()"
+                <Button type="submit" :label="$t('create')" @click="validateForm()"
                     class="w-full px-4 py-2 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
             </template>
         </Card>
@@ -82,6 +81,11 @@ import { useRouter } from 'vue-router';
 import { ref, Ref } from 'vue';
 import useUserStore from '@/store/UserStore';
 import { CreationParams } from '@/types/user';
+import { useLanguageStore } from '@/store/language';
+import { translate } from '@/i18n';
+
+const $t = translate;
+const languageStore = useLanguageStore();
 
 
 const router = useRouter();
@@ -161,10 +165,8 @@ function validateForm() {
         emailAddress: emailValue.value!,
         phoneNumber: phoneNumberValue.value!,
         password: passwordValue.value!
-      };
-    
-    console.log(firstNameValue.value);
-    
+    };
+
     addUser(creationParams);
     return true;
 }
