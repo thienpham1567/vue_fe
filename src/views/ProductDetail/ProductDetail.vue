@@ -46,25 +46,25 @@
             <aside class="">
                 <div>
                     <div class="mt-4">
-                        <label class="text-3xl ml-1">Product Name</label>
+                        <label class="text-3xl ml-1">{{ $t('pname') }}</label>
                     </div>
                     <div class="mt-4">
-                        <label class="text-2xl ml-1">Mã sản phẩm</label>
+                        <label class="text-2xl ml-1">{{ $t('pid') }}</label>
                     </div>
                     <div class="mt-4">
-                        <label class="text-xl ml-1">SKU Code</label>
+                        <label class="text-xl ml-1">{{ $t('sku') }}</label>
                     </div>
                     <div class="mt-4">
-                        <label class="text-2xl ml-1">Price</label>
+                        <label class="text-2xl ml-1">{{ $t('price') }}</label>
                     </div>
                     <div class="mt-4">
                         <label class="text-2xl ml-1">or 4 interest-free payments of $21.24 with </label>
                     </div>
                     <div class="mt-4">
-                        <label class="text-2xl ml-1">star ratting</label>
+                        <label class="text-2xl ml-1">{{ $t('rate') }}</label>
                     </div>
                     <div class="mt-4">
-                        <label class="text-2xl ml-1">Color: White</label>
+                        <label class="text-2xl ml-1">{{ $t('color') }}</label>
                     </div>
                     <div class="flex flex-wrap">
                         <div class="img-item w-2/12 ml-1">
@@ -196,6 +196,11 @@
   
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useLanguageStore } from '@/store/language';
+import { translate } from '@/i18n';
+
+const $t = translate;
+const languageStore = useLanguageStore();
 const isBorderRed = ref<string | null>(null);
 const sizes = ref<string[]>(Array.from({ length: 15 }, (_, i) => (i + 4).toString()));
 const radioType = ref('radio');

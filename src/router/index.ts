@@ -12,8 +12,10 @@ import { cart } from "./cart";
 import { checkout } from "./checkout";
 import { account } from "./account";
 import { admin } from "./admin";
+import { myaccount } from "./myaccount";
 
-const routes: Array<RouteRecordRaw> = [home, product, account, cart, checkout, admin];
+const routes: Array<RouteRecordRaw> = [home, product, account, cart, checkout, admin, myaccount];
+
 
 const router: Router = createRouter({
   history: createWebHistory(),
