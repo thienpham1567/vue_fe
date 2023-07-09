@@ -2,6 +2,10 @@
   <div class="brand-list">
     <h1 class="brand-list__title">Danh sách thương hiệu</h1>
 
+    <div class="brand-list__add-button">
+      <Button class="p-button-primary" label="Thêm thương hiệu" @click="showAddDialog"></Button>
+    </div>
+
     <div class="brand-list__table">
       <DataTable :value="brands" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]" :key="tableKey">
         <Column field="brandId" header="ID"></Column>
@@ -17,10 +21,6 @@
           </template>
         </Column>
       </DataTable>
-    </div>
-
-    <div class="brand-list__add-button">
-      <Button class="p-button-primary" label="Thêm thương hiệu" @click="showAddDialog"></Button>
     </div>
 
     <Dialog v-model="dialogVisible" :visible="dialogVisible" :header="dialogHeader" class="brand-list__dialog">

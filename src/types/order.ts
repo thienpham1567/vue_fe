@@ -1,3 +1,5 @@
+import type { UserType } from "./user";
+import type { OrderLineType } from "./orderLine";
 export interface OrderType {
     orderId?: string;
     denormalizedAddress?: string;
@@ -6,7 +8,7 @@ export interface OrderType {
     createdAt?: string;
     updatedAt?: string;
     user?: UserType;
-    orderLines?: OrderLineType[];
+    orderLines?: OrderLineType;
   }
   
   export interface CreationParams {
@@ -16,7 +18,7 @@ export interface OrderType {
     createdAt?: string;
     updatedAt?: string;
     userId?: number;
-    orderLines?: OrderLineType[];
+    orderLines?: OrderLineType;
   }
   
   export type UpdateParams = Omit<OrderType, "orderId">;
@@ -39,19 +41,14 @@ export interface OrderType {
     message?: string;
   }
   
-  export interface UserType {
-    userId?: number;
-    username?: string;
-    email?: string;
-    password?: string;
-  }
+  // export interface UserType {
+  //   userId?: number;
+  //   username?: string;
+  //   email?: string;
+  //   password?: string;
+  // }
   
-  export interface OrderLineType {
-    orderLineId?: number;
-    price?: number;
-    quantity?: number;
-    productVariationSize?: ProductVariationSizeType;
-  }
+
   
   export interface ProductVariationSizeType {
     productVariationSizeId?: number;

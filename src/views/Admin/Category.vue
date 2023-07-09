@@ -205,8 +205,9 @@ const clearCurrentCategory = () => {
 }
 
 .category-list__title {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
 .category-list__table {

@@ -15,12 +15,20 @@
       <Column field="user.firstName" header="Họ" sortable="custom" :sort-function="customSort"></Column>
       <Column field="user.lastName" header="Tên" sortable="custom" :sort-function="customSort"></Column>
       <Column field="orderTotalPrice" header="Tổng số tiền" sortable="custom" :sort-function="customSort"></Column>
-      <Column field="ordersStatus" header="Trạng thái" :body="statusBodyTemplate" sortable="custom" :sort-function="customSort">
+      <Column field="ordersStatus" header="Trạng thái" :body="statusBodyTemplate" sortable="custom"
+        :sort-function="customSort">
       </Column>
-      <Column header="Xem đơn hàng" :body="viewOrderTemplate"></Column>
+      <Column header="Xem đơn hàng" :body="viewOrderTemplate">
+        <template #body="rowData">
+            <div class="category-list__actions">
+              <Button icon="pi pi-pencil" class="p-button-rounded p-button-success"
+                @click="openOrderDialog(rowData.data)"></Button>
+            </div>
+          </template>
+      </Column>
     </DataTable>
 
-    <Dialog v-model="dialogVisible" :header="dialogHeader" class="order-list__dialog">
+    <Dialog v-model="dialogVisible" :visible="dialogVisible" :header="dialogHeader" class="order-list__dialog">
       <div class="p-fluid">
         <div class="p-field">
           <label for="orderId">ID đơn hàng</label>
@@ -28,7 +36,7 @@
         </div>
         <div class="p-field">
           <label for="customerName">Tên khách hàng</label>
-          <InputText id="customerName" v-model="currentOrder.user.username"></InputText>
+          <InputText id="customerName" v-model="formattedName"></InputText>
         </div>
         <div class="p-field">
           <label for="customerAddress">Địa chỉ khách hàng</label>
@@ -36,30 +44,31 @@
         </div>
         <div class="p-field">
           <label for="customerPhone">Số điện thoại</label>
-          <InputText id="customerPhone" v-model="currentOrder.user.phone"></InputText>
+          <InputText id="customerPhone" v-model="currentOrder.user.phoneNumber"></InputText>
         </div>
         <div class="p-field">
           <label for="orderDate">Ngày đặt hàng</label>
-          <Calendar id="orderDate" v-model="currentOrder.createdAt"></Calendar>
+          <Calendar id="orderDate" v-model="formattedDate"></Calendar>
         </div>
         <div class="p-field">
           <label for="products">Danh sách sản phẩm</label>
           <DataTable :value="currentOrder.orderLines">
             <Column field="productVariationSize.productName" header="Tên sản phẩm"></Column>
+            <Column field="image" header="Hình"></Column>
             <Column field="price" header="Giá"></Column>
+            <Column field="category" header="Loại sản phẩm"></Column>
+            <Column field="review" header="Đánh giá"></Column>
           </DataTable>
         </div>
       </div>
 
       <template #footer>
         <div class="order-list__dialog-buttons">
-          <Button class="p-button p-button-success" label="Lưu" @click="saveOrder"></Button>
+          <!-- <Button class="p-button p-button-success" label="Lưu" @click="saveOrder"></Button> -->
           <Button class="p-button p-button-secondary" label="Hủy" @click="cancelEdit"></Button>
         </div>
       </template>
     </Dialog>
-
-    <Button class="p-button p-button-primary" label="Thêm đơn hàng" @click="addOrder"></Button>
   </div>
 </template>
 
@@ -74,6 +83,8 @@ import Calendar from 'primevue/calendar';
 import Dropdown from 'primevue/dropdown';
 import useOrderStore from '@/store/OrderStore';
 import { OrderType } from '@/types/order';
+import moment from 'moment';
+
 const orders = ref<OrderType[]>([]);
 const orderStore = useOrderStore();
 const dialogHeader = ref('');
@@ -89,85 +100,6 @@ onMounted(async () => {
   }
 });
 
-// Trong phần setup script
-
-// const orders = ref<OrderType[]>([
-//   {
-//     orderId: 1,
-//     user: { username: "John Doe", phone: "123456789" },
-//     orderTotalPrice: 100,
-//     ordersStatus: "pending",
-//     denormalizedAddress: "123 Main St",
-//     createdAt: new Date("2023-06-01"),
-//     orderLines: [
-//       { productVariationSize: { productName: "Product 1" }, price: 50 },
-//       { productVariationSize: { productName: "Product 2" }, price: 50 },
-//     ],
-//   },
-//   {
-//     orderId: 2,
-//     user: { username: "Jane Smith", phone: "987654321" },
-//     orderTotalPrice: 200,
-//     ordersStatus: "processing",
-//     denormalizedAddress: "456 Oak Ave",
-//     createdAt: new Date("2023-06-02"),
-//     orderLines: [
-//       { productVariationSize: { productName: "Product 3" }, price: 100 },
-//       { productVariationSize: { productName: "Product 4" }, price: 100 },
-//     ],
-//   },
-//   {
-//     orderId: 3,
-//     user: { username: "Jane Smith", phone: "987654321" },
-//     orderTotalPrice: 200,
-//     ordersStatus: "processing",
-//     denormalizedAddress: "456 Oak Ave",
-//     createdAt: new Date("2023-06-02"),
-//     orderLines: [
-//       { productVariationSize: { productName: "Product 3" }, price: 100 },
-//       { productVariationSize: { productName: "Product 4" }, price: 100 },
-//     ],
-//   },
-//   {
-//     orderId: 4,
-//     user: { username: "Jane Smith", phone: "987654321" },
-//     orderTotalPrice: 200,
-//     ordersStatus: "processing",
-//     denormalizedAddress: "456 Oak Ave",
-//     createdAt: new Date("2023-06-02"),
-//     orderLines: [
-//       { productVariationSize: { productName: "Product 3" }, price: 100 },
-//       { productVariationSize: { productName: "Product 4" }, price: 100 },
-//     ],
-//   },
-//   {
-//     orderId: 2,
-//     user: { username: "Jane Smith", phone: "987654321" },
-//     orderTotalPrice: 200,
-//     ordersStatus: "processing",
-//     denormalizedAddress: "456 Oak Ave",
-//     createdAt: new Date("2023-06-02"),
-//     orderLines: [
-//       { productVariationSize: { productName: "Product 3" }, price: 100 },
-//       { productVariationSize: { productName: "Product 4" }, price: 100 },
-//     ],
-//   },
-//   {
-//     orderId: 2,
-//     user: { username: "Jane Smith", phone: "987654321" },
-//     orderTotalPrice: 200,
-//     ordersStatus: "processing",
-//     denormalizedAddress: "456 Oak Ave",
-//     createdAt: new Date("2023-06-02"),
-//     orderLines: [
-//       { productVariationSize: { productName: "Product 3" }, price: 100 },
-//       { productVariationSize: { productName: "Product 4" }, price: 100 },
-//     ],
-//   },
-//   // Thêm các đơn hàng khác tại đây...
-// ]);
-
-
 const filterKeyword = ref('');
 const filterStatus = ref('');
 const statusOptions = [
@@ -179,6 +111,70 @@ const statusOptions = [
 const dialogVisible = ref(false);
 const currentOrder = ref<OrderType | null>(null);
 const isEditing = ref(false);
+
+
+const formattedDate = computed(() => {
+  if (currentOrder.value && currentOrder.value.createdAt) {
+    const datetime = moment(currentOrder.value.createdAt);
+    return datetime.format('YYYY-MM-DD');
+  }
+  return null;
+});
+
+const formattedName = computed(() => {
+  if (currentOrder.value && currentOrder.value.user && currentOrder.value.user.firstName && currentOrder.value.user.lastName) {
+    return currentOrder.value.user.firstName + ' ' + currentOrder.value.user.lastName;
+  }
+  return null;
+});
+
+
+
+// const formattedDate = computed(() => {
+//   if (currentOrder.value && currentOrder.value.createdAt) {
+//     const dateObj = new Date(currentOrder.value.createdAt);
+//     return dateObj.toISOString().split('T')[0];
+//   }
+//   return null;
+// });
+
+// const formattedDate = computed(() => {
+//   if (currentOrder.value && currentOrder.value.createdAt) {
+//     const parts = currentOrder.value.createdAt.split(/[- :]/);
+//     const year = parseInt(parts[0]);
+//     const month = parseInt(parts[1]) - 1;
+//     const day = parseInt(parts[2]);
+//     const dateObj = new Date(year, month, day);
+//     return dateObj.toISOString().split('T')[0];
+//   }
+//   return null;
+// });
+
+// const formattedDate = computed(() => {
+//   if (currentOrder.value && typeof currentOrder.value.createdAt === 'string') {
+//     const parts = currentOrder.value.createdAt.split(' ');
+//     return parts[0];
+//   }
+//   return null;
+// });
+
+// const formattedDate = computed(() => {
+//   if (currentOrder.value && currentOrder.value.createdAt) {
+//     const dateObj = new Date(currentOrder.value.createdAt);
+//     const year = dateObj.getFullYear();
+//     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+//     const day = String(dateObj.getDate()).padStart(2, '0');
+//     return `${year}-${month}-${day}`;
+//   }
+//   return null;
+// });
+
+
+const openOrderDialog = (order: OrderType) => {
+  currentOrder.value = { ...order };
+  dialogHeader.value = `Thông tin đơn hàng #${order.orderId}`;
+  dialogVisible.value = true;
+};
 
 // Computed property for filtered orders based on filterKeyword and filterStatus
 const filteredOrders = computed(() => {
@@ -231,12 +227,18 @@ function applyFilters() {
   });
 }
 
-// Hàm đặt lại bộ lọc
+// Reset the filters
 function resetFilters() {
   filterKeyword.value = '';
   filterStatus.value = '';
   filteredOrders.value = orders.value;
 }
+
+
+const cancelEdit = () => {
+  currentOrder.value = {};
+  dialogVisible.value = false;
+};
 
 </script>
 
