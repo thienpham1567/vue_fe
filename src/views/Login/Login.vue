@@ -18,7 +18,8 @@
                             password?</a>
                     </div>
                     <Password v-model="passwordValue" placeholder="Password" :feedback="false" class="w-full w-inherit" />
-                    <a class="block text-sm text-indigo-700 fontme hover:underline mt-2" href="#">{{ $t('forgotpass') }} </a>
+                    <a class="block text-sm text-indigo-700 fontme hover:underline mt-2" href="#">{{ $t('forgotpass') }}
+                    </a>
                     <span v-if="passwordError" class="text-red-500">{{ passwordError }}</span>
                 </div>
                 <div class="flex">
@@ -28,7 +29,7 @@
                         <span class="mx-2 text-sm text-gray-600">{{ $t('rememberme') }} </span>
                     </label>
                 </div>
-               
+
             </template>
             <template #footer>
                 <Button type="submit" :label="$t('signin')" @click="validateForm()"
@@ -50,7 +51,7 @@ import Logo from "@/assets/images/logo.png";
 import Image from 'primevue/image';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import  useAccountStore  from "@/store/AccountStore";
+import useAccountStore from "@/store/AccountStore";
 import { useLanguageStore } from '@/store/language';
 import { translate } from '@/i18n';
 

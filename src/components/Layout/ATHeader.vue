@@ -14,23 +14,23 @@
         </div>
       </div>
       <div class="juistify-between">
-      <div class="flex">
-        <Button icon="pi pi-shopping-cart " class="cart-btn"  :label="$t('my-cart')" raised
-      @click="dialogCartVisible = true" />
-      <!-- Multi Language button  -->
-      <div class="flex space-x-3 ml-3 bg-yellow-400">
-        <select v-model="selectedLanguage" @change="changeLanguage">
-          <option v-for=" language  in  languages " :value="language.code" :key="language.code">
-            {{ language.label }}
-          </option>
-        </select>
+        <div class="flex">
+          <Button icon="pi pi-shopping-cart " class="cart-btn" :label="$t('my-cart')" raised
+            @click="dialogCartVisible = true" />
+          <!-- Multi Language button  -->
+          <div class="flex space-x-3 ml-3 bg-yellow-400">
+            <select v-model="selectedLanguage" @change="changeLanguage">
+              <option v-for=" language  in  languages " :value="language.code" :key="language.code">
+                {{ language.label }}
+              </option>
+            </select>
+          </div>
+        </div>
       </div>
-      </div>
-      </div>
-        
 
-      
-      
+
+
+
 
     </div>
     <div class="nav-menu">
@@ -39,7 +39,7 @@
           <Button class="sign-in-register-btn" text @click="goToMyAccount">{{ $t('my-account') }}</Button>
           <Button class="sign-in-register-btn" text @click="goToViewOrders">{{ $t('view-order') }}</Button>
           <Button :label="$t('sign-in/register')" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
-          <!-- <button :label="$t('my-account')" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
+          <button :label="$t('my-account')" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
             <div class="mb-3">
               <span v-if="showMyAccountSection">
                 <span class="font-bold">{{ $t('my-account') }}</span>
@@ -64,7 +64,7 @@
                 <Button label="Admin" class="sign-in-register-btn" text @click="goToViewAdmin" />
               </div>
             </div>
-          </button> -->
+          </button>
         </template>
 
       </MegaMenu>

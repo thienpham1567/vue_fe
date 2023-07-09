@@ -4,35 +4,46 @@
             <div class="md:flex md:justify-between md:px-5">
                 <div class="md:w-1/4 mb-5 md:pr-5">
                     <h5 class="text-footer-hover uppercase mb-4">{{ $t('contact') }}</h5>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>Công viên phần mềm Quang QTSC Building 1, Trung, P Q.12, Thành phố Hồ Chí Minh, Việt Nam</p>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>Công viên phần mềm Quang QTSC
+                        Building 1, Trung, P Q.12, Thành phố Hồ Chí Minh, Việt Nam</p>
                     <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>ATSPORT@gmail.com.vn</p>
                     <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>{{ $t('phonenum') }}</p>
-                    
+
                 </div>
                 <div class="md:w-3/4">
                     <div class="md:flex">
                         <div class="md:w-1/3 mb-5">
                             <h5 class="text-footer-hover uppercase mb-4">{{ $t('shop') }}</h5>
                             <div class="flex flex-col justify-start">
-                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{ $t('home') }}</a>
-                                
-                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{ $t('shopdetail') }}</a>
-                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{ $t('Scart') }}</a>
-                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{ $t('checkout') }}</a>
-                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{ $t('ourshop') }}</a>
-                    <a class="text-footer-hover" href="#"><i class="fa fa-angle-right mr-2"></i>{{ $t('contactus') }}</a>
-                   
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{
+                                    $t('home') }}</a>
+
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{
+                                    $t('shopdetail') }}</a>
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{
+                                    $t('Scart') }}</a>
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{
+                                    $t('checkout') }}</a>
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{
+                                    $t('ourshop') }}</a>
+                                <a class="text-footer-hover" href="#"><i class="fa fa-angle-right mr-2"></i>{{
+                                    $t('contactus') }}</a>
+
                             </div>
                         </div>
                         <div class="md:w-1/3 mb-5">
                             <h5 class="text-footer-hover uppercase mb-4">{{ $t('myacc') }}</h5>
                             <div class="flex flex-col justify-start">
-                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{ $t('home') }}</a>
-                             
-                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{ $t('shopdetail') }}</a>
-                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{ $t('Scart') }}</a>
-                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{ $t('checkoutinfo') }}</a>
-                               
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{
+                                    $t('home') }}</a>
+
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{
+                                    $t('shopdetail') }}</a>
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{
+                                    $t('Scart') }}</a>
+                                <a class="text-footer-hover mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>{{
+                                    $t('checkoutinfo') }}</a>
+
                             </div>
                         </div>
                         <div class="md:w-1/3 mb-5">
