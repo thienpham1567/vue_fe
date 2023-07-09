@@ -3,7 +3,7 @@ import Category from '@/models/Category';
 import type { CategoryType, CreationParams, UpdateParams } from '@/types/category';
 import { defineStore } from 'pinia';
 
-const useCategoryStore = () => {
+const useCategoryStore = defineStore("category", () => {
 	// State
 	const categories: Ref<CategoryType[]> = ref([]);
 	const category: Ref<CategoryType> = ref({});
@@ -68,6 +68,6 @@ const useCategoryStore = () => {
 		deleteCategory,
 		setCategory,
 	};
-};
+})
 
 export default useCategoryStore;

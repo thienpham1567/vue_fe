@@ -276,7 +276,6 @@ function goToViewOrders() {
   router.push('/myaccount/view-order');
 }
 
-
 const languageStore = useLanguageStore();
 
 const languages = ref([
