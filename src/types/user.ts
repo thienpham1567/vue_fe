@@ -17,7 +17,6 @@ export interface CreationParams {
 // update User
 export type UserParams = Omit<UserType, "id">;
 
-
 export interface LoginParams {
     email: String;
     password: String;
@@ -30,19 +29,19 @@ export interface CreationResponse {
     data: UserType;
     message?: string;
 }
-  
+
 export interface UserResponse {
     status: boolean;
     data?: UserType;
     message?: string;
 }
-  
+
 export interface ListResponse {
     status: boolean;
     data: UserType[];
     message?: string;
 }
 
-export interface QueryUserParams{
+export interface QueryUserParams {
     user?: UserType;
 }

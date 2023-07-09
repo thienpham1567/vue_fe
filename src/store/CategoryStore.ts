@@ -4,13 +4,13 @@ import type { CategoryType, CreationParams, UpdateParams } from '@/types/categor
 import { defineStore } from 'pinia';
 
 const useCategoryStore = () => {
-  // State
-  const categories: Ref<CategoryType[]> = ref([]);
-  const category: Ref<CategoryType> = ref({});
+	// State
+	const categories: Ref<CategoryType[]> = ref([]);
+	const category: Ref<CategoryType> = ref({});
 
-  // Getters
-  const getCategories = computed(() => categories);
-  const getCategory = computed(() => category);
+	// Getters
+	const getCategories = computed(() => categories);
+	const getCategory = computed(() => category);
 
 	const getMainCategories = computed(() =>
 		categories.value.filter((category) => !category.parentCategory)
@@ -54,20 +54,20 @@ const useCategoryStore = () => {
 		fetchCategories();
 	};
 
-  return {
-    categories,
-    category,
-    getCategory,
-    getCategories,
-    getMainCategories,
-	getMainSubCategories,
-	getSubCategories,
-    fetchCategories,
-    addCategory,
-    updateCategory,
-    deleteCategory,
-    setCategory,
-  };
+	return {
+		categories,
+		category,
+		getCategory,
+		getCategories,
+		getMainCategories,
+		getMainSubCategories,
+		getSubCategories,
+		fetchCategories,
+		addCategory,
+		updateCategory,
+		deleteCategory,
+		setCategory,
+	};
 };
 
 export default useCategoryStore;
