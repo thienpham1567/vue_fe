@@ -59,9 +59,14 @@ export const admin = {
       component: () => import("@/views/Admin/Order.vue"),
     },
     {
-      path: "report",
-      name: "ReportAdmin",
-      component: () => import("@/views/Admin/Report.vue"),
+      path: "best-selling-brand",
+      name: "best-selling-brand",
+      component: () => import("@/views/Admin/BestSellingBrand.vue"),
+    },
+    {
+      path: "report-revenue",
+      name: "report-revenue",
+      component: () => import("@/views/Admin/ReportRevenue.vue"),
     },
     {
       path: "review",
