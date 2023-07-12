@@ -3,45 +3,75 @@
         <div class="flex font-bold text-4xl justify-center mb-4">Product Image</div>
         <div class=" mb-4">
             <div class="flex justify-between ml-2 mr-4">
-                <div class="w-1/2 ml-2 mr-2">
+                <div class="w-full ml-2 mr-2">
                     <Dropdown v-model="selectedBrand" :options="brands" optionLabel="name" placeholder="Select a Brand"
                         class="w-full md:w-14rem" />
-                </div>
-                <div class="w-1/2 ml-2">
-                    <Dropdown v-model="selectedCategory" :options="categoriesWithLabel" optionLabel="label"
-                        placeholder="Select a Category" class="w-full md:w-14rem">
-                        <template #value="slotProps">
-                            <div v-if="slotProps.value" class="flex align-items-center">
-                                <div>{{ slotProps.value.name }}</div>
-                                <div class="mx-1"> - </div>
-                                <div>{{
-                                    slotProps.value.parentCategory.name }}</div>
-                            </div>
-                            <span v-else>
-                                {{ slotProps.placeholder }}
-                            </span>
-                        </template>
-                    </Dropdown>
-                </div>
-            </div>
-            <div class="mr-4 ml-4 mt-4">
-                <label for="SKU-Code">SKU Code</label>
-                <InputText v-model="currentProduct.sku" class="w-full" placeholder="93AB3S" />
-            </div>
-            <div class="flex">
-                <div class="mr-4 ml-4 mt-4 w-1/2">
-                    <label for="ProductName">Product Name</label>
-                    <InputText v-model="currentProduct.name" class="w-full" placeholder="Product Name" />
-                </div>
-                <div class="mr-4 ml-4 mt-4 w-1/2">
-                    <label for="ProductPrice">Product Price</label>
-                    <InputNumber v-model="currentProduct.price" class="w-full" inputId="currency-us" placeholder="$00.00"
-                        mode="currency" currency="USD" locale="en-US" />
                 </div>
             </div>
             <div class="mr-4 ml-4 mt-4">
                 <label for="description">Description</label>
-                <Textarea v-model="currentProduct.description" class="w-full" rows="5" cols="30" />
+                <div class="card flex justify-content-center">
+                    <div class="flex flex-wrap gap-3">
+                        <div class="flex align-items-center">
+                            <RadioButton v-model="ingredient" inputId="ingredient1" name="PrimaryImg" value="IsPrimary" />
+                            <label for="ingredient1" class="ml-2">Is Primary</label>
+                        </div>
+                        <div class="flex align-items-center">
+                            <RadioButton v-model="ingredient" inputId="ingredient2" name="PrimaryImg" value="NotPrimary" />
+                            <label for="ingredient2" class="ml-2">Not Primary</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex">
+                <div class="mr-4 ml-4 mt-4 w-1/4">
+                    <label for="SKU-Code">Primary Image URL</label>
+                    <InputText v-model="currentImageURL" class="w-full" placeholder="" />
+                </div>
+                <div class="mr-4 ml-4 mt-4 w-1/4">
+                    <label for="SKU-Code">Sub Image URL</label>
+                    <InputText v-model="currentImageURL" class="w-full" placeholder="" />
+                </div>
+                <div class="mr-4 ml-4 mt-4 w-1/4">
+                    <label for="SKU-Code">Sub Image URL</label>
+                    <InputText v-model="currentImageURL" class="w-full" placeholder="" />
+                </div>
+                <div class="mr-4 ml-4 mt-4 w-1/4">
+                    <label for="SKU-Code">Sub Image URL</label>
+                    <InputText v-model="currentImageURL" class="w-full" placeholder="" />
+                </div>
+                <div class="mr-4 ml-4 mt-4 w-1/4">
+                    <label for="SKU-Code">Sub Image URL</label>
+                    <InputText v-model="currentImageURL" class="w-full" placeholder="" />
+                </div>
+            </div>
+            <div class="flex">
+                <div class="ml-4 mr-4 mt-4 justify-content-center w-1/4">
+                    <Image
+                        src="https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/5b6a5443f3e943889b15ae98018334fe_9366/TERREX_Free_Hiker_2_GORE-TEX_Hiking_Shoe_Red_GZ3311_01_standard.jpg"
+                        alt="Image" width="210" preview />
+                </div>
+                <div class="ml-4 mr-4 mt-4 justify-content-center w-1/4">
+                    <Image
+                        src="https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/09593e0933c4411cb671ae9801834636_9366/TERREX_Free_Hiker_2_GORE-TEX_Hiking_Shoe_Red_GZ3311_02_standard_hover.jpg"
+                        alt="Image" width="210" preview />
+                </div>
+                <div class="ml-4 mr-4 mt-4 justify-content-center w-1/4">
+                    <Image
+                        src="https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/d5cc172499d343f48e28ae9801834e57_9366/TERREX_Free_Hiker_2_GORE-TEX_Hiking_Shoe_Red_GZ3311_03_standard.jpg"
+                        alt="Image" width="210" preview />
+                </div>
+                <div class="ml-4 mr-4 mt-4 justify-content-center w-1/4">
+                    <Image
+                        src="https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fd27b9307f594fceb237ae9801837d1f_9366/TERREX_Free_Hiker_2_GORE-TEX_Hiking_Shoe_Red_GZ3311_09_standard.jpg"
+                        alt="Image" width="210" preview />
+                </div>
+                <div class="ml-4 mr-4 mt-4 justify-content-center w-1/4">
+                    <Image
+                        src="https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/42f446151e6e4d02b08dae9801835e37_9366/TERREX_Free_Hiker_2_GORE-TEX_Hiking_Shoe_Red_GZ3311_05_standard.jpg"
+                        alt="Image" width="210" preview />
+                </div>
             </div>
             <div class="flex ml-4 mr-4">
                 <div class="mt-4">
@@ -59,37 +89,17 @@
             </div>
         </div>
         <div class="border-b border-gray-400"></div>
-        <div class=" mb-4 mt-12">
+        <div class=" mb-4 mt-6">
             <div class="product-list__table">
-                <div class="flex justify-center">
-                    <h2 class="text-3xl font-semibold">Product list</h2>
+                <div class="flex justify-center mb-6">
+                    <h2 class="text-3xl font-semibold">Product Image list</h2>
                 </div>
                 <DataTable :value="products" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
-                    <Column field="productId" header="Product Id"></Column>
-                    <Column field="brand.brandId" header="Brand Id"></Column>
-                    <Column field="category.categoryId" header="Category Id"></Column>
-                    <Column field="createdAt" header="Created At"></Column>
-                    <Column field="updatedAt" header="Update At"></Column>
+                    <Column field="productId" header="Product Image Id"></Column>
+                    <Column field="brand.brandId" header="Image URL"></Column>
+                    <Column field="category.categoryId" header="Is Primary"></Column>
+                    <Column field="createdAt" header="Product Variation Id"></Column>
 
-                    <Column class="" field="description" header="Description">
-                        <template #body="rowData">
-                            <div class="description-cell">
-                                {{ rowData.data.description.length > 150 ? rowData.data.description.slice(0, 150) +
-                                    '...' :
-                                    rowData.data.description }}
-                            </div>
-                        </template>
-                    </Column>
-
-                    <Column field="name" header="Product Name"></Column>
-                    <!-- ngày tháng năm chưa format -->
-                    <Column field="price" header="Price">
-                        <template #body="rowData">
-                            ${{ rowData.data.price }}
-                        </template>
-                    </Column>
-
-                    <Column field="sku" header="SKU Code"></Column>
                     <!-- Add more columns as needed -->
                     <Column header="Tools">
                         <template #body="rowData">
@@ -120,17 +130,14 @@
 </template>
 
 <script setup lang="ts">
+import Image from 'primevue/image';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import Textarea from 'primevue/textarea';
-import InputNumber from 'primevue/inputnumber';
+import RadioButton from 'primevue/radiobutton';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
-// import TabView from 'primevue/tabview';
-// import TabPanel from 'primevue/tabpanel';
 import Dropdown from 'primevue/dropdown';
 import Dialog from 'primevue/dialog';
-//import useProductStore from '@/store/ProductStore';
 import { ProductType, CreationParams, UpdateAdminParams } from '@/types/product';
 import { BrandType } from '@/types/brand';
 import { CategoryType } from '@/types/category';
@@ -142,6 +149,10 @@ import useColorStore from '@/store/ColorStore';
 import useProductAdminStore from '@/store/ProductAdminStore';
 import useProductVariationAdminStore from '@/store/ProductVariationAdminStore';
 import { ref, onMounted, computed } from 'vue';
+
+//---------------------------------------
+const ingredient = ref('');
+//---------------------------------------
 
 const dialogVisible = ref(false);
 const deleteDialogVisible = ref(false);
@@ -157,6 +168,8 @@ const productStore = useProductAdminStore();
 const products = ref<ProductType[]>([]);
 const currentProduct = ref<ProductType>({});
 const selectedProduct = ref<ProductType | null>(null);
+
+//const currentImageURL = 
 
 
 // const price = ref<number | null>(null);
