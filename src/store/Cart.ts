@@ -9,21 +9,18 @@ const useCartStore = defineStore("cart", () => {
     // State
     const cartItems: Ref<CartItemType[]> = ref([]);
     const cart: Ref<CartType> = ref({});
-    const subTotalPrice: Ref<number> = ref(0);
-    const totalQuantity: Ref<number> = ref(0);
 
     // Getters
     const getCartItems = computed(() => cartItems);
-    const getSubTotalPrice = computed(() => subTotalPrice);
-    const getTotalQuantity = computed(() => totalQuantity);
+    const getCart = computed(() => cart);
+
 
     // Actions
-    const fetchCarts = async () => {
+    const fetchCart = async () => {
         const cartIdFromLocalStorage = cart.value.cartId! ?? localStorage.getItem("cartId");
         const { data } = await new Cart().list({ cartId: cartIdFromLocalStorage! });
-        cartItems.value = data!;
-        subTotalPrice.value = calculateTotalSubPrice();
-        totalQuantity.value = calculateTotalQuantity();
+        cart.value = data!;
+        cartItems.value = data?.cartItems ?? [];
     }
 
     const addUpdateToCart = async (cartItem: CreationParams) => {
@@ -32,9 +29,11 @@ const useCartStore = defineStore("cart", () => {
             cartItem.cartId = cartIdFromLocalStorege;
             const { data } = await new Cart().create(cartItem);
             cart.value = data!;
+            cartItems.value = data?.cartItems ?? [];
         } else {
             const { data } = await new Cart().create(cartItem);
             cart.value = data!;
+            cartItems.value = data?.cartItems ?? [];
             localStorage.setItem("cartId", cart.value.cartId!);
         }
     };
@@ -43,20 +42,13 @@ const useCartStore = defineStore("cart", () => {
         const cartId = cart.value.cartId! ?? localStorage.getItem("cartId");
         const { data } = await new Cart().delete(cartId, cartItemId);
         cart.value = data!;
+        cartItems.value = data?.cartItems ?? [];
     };
 
-    // watch(cart, () => {
-    //     fetchCartItems();
-    // });
-
-    const calculateTotalSubPrice = (): number => cartItems.value.reduce((price, item) => price + item.price!, 0);
-    const calculateTotalQuantity = (): number => cartItems.value.reduce((quantity, item) => quantity + item.quantity!, 0);
-
     return {
+        getCart,
         getCartItems,
-        getSubTotalPrice,
-        getTotalQuantity,
-        fetchCarts,
+        fetchCart,
         addUpdateToCart,
         removeItemFromCart
     };

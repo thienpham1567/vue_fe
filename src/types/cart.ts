@@ -6,7 +6,7 @@ export interface CartType {
     user?: UserType;
     itemTotalQuantity?: number;
     itemSubtotalPrice?: number;
-    
+    cartItems?: CartItemType[];
 }
 
 export type UpdateParams = Omit<CartType, "id">;
@@ -19,7 +19,7 @@ export interface CreationResponse {
 
 export interface ListResponse {
     status: boolean;
-    data?: CartItemType[];
+    data?: CartType;
     message?: string;
 }
 
