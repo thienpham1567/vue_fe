@@ -74,7 +74,7 @@
           <span class="mx-4">Report</span>
         </router-link>
 
-        <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
+        <router-link v-if="isAdmin" class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
           :class="[route.name === 'Blank' ? activeClass : inactiveClass]" to="/admin/accounts">
           <i class="pi pi-users" style="font-size: 2rem"></i>
           <span class="mx-4">Account Management</span>
@@ -89,6 +89,7 @@ import { ref } from 'vue';
 import { useSidebar } from '@/hooks/useSidebar';
 import { useRoute } from 'vue-router';
 import Logo from "@/assets/images/logo.png";
+import jwt_decode from "jwt-decode";
 
 const route = useRoute();
 const { isOpen } = useSidebar();
@@ -107,4 +108,13 @@ const toggleDropdown = () => {
 const closeDropdown = () => {
   open.value = false;
 };
+
+
+let isAdmin = ref(false);
+const token = localStorage.getItem('token');
+
+
+const valueToken = jwt_decode(token!);
+const roles = valueToken.user.roles;
+isAdmin.value = roles.some(role => role.authority === 'ADMIN');
 </script>

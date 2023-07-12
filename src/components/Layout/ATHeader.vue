@@ -36,8 +36,10 @@
     <div class="nav-menu">
       <MegaMenu :model="items">
         <template #end>
-          <Button :label="$t('sign-in/register')" class="sign-in-register-btn" text @click="dialogSignInVisible = true" />
-          <button :label="$t('my-account')" class="sign-in-register-btn" text @click="toggleSection('myAccount')">
+          <Button v-if="!isLogin" :label="$t('sign-in/register')" class="sign-in-register-btn" text
+            @click="dialogSignInVisible = true" />
+          <button v-if="isLogin" :label="$t('my-account')" class="sign-in-register-btn" text
+            @click="toggleSection('myAccount')">
             <div class="mb-3">
               <span v-if="showMyAccountSection">
                 <span class="font-bold">{{ $t('my-account') }}</span>
@@ -55,12 +57,13 @@
               <div class="mb-2 flex justify-start">
                 <Button :label="$t('my-account')" class="sign-in-register-btn" text @click="goToMyAccount" />
               </div>
+              <div v-if="isAdmin" class="mb-2 flex justify-start">
+                <Button label="Quản lý sản phẩm" class="sign-in-register-btn" text @click="goToViewAdmin" />
+              </div>
               <div class="mb-2 flex justify-start">
                 <Button :label="$t('logout')" class="sign-in-register-btn" text @click="logout" />
               </div>
-              <div v-if="isAdmin" class="mb-2 flex justify-start">
-                <Button label="Admin" class="sign-in-register-btn" text @click="goToViewAdmin" />
-              </div>
+
             </div>
           </button>
         </template>
@@ -319,14 +322,14 @@ const isLogin = ref(false);
 let isAdmin = ref(false);
 
 function checkToken() {
-  if (token == null) {
+  if (token === null) {
     isLogin.value = false;
   } else {
     isLogin.value = true;
     const valueToken = jwt_decode(token!);
     const roles = valueToken.user.roles;
 
-    isAdmin.value = roles.some(role => role.authority === 'ADMIN');
+    isAdmin.value = roles.some(role => role.authority === 'ADMIN' || role.authority === 'STAFF');
 
   }
 }
