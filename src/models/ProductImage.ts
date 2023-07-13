@@ -9,7 +9,7 @@ import type {
 } from "@/types/productImages";
 
 
-class ProductVariationSize extends HTTPBaseService {
+class ProductImage extends HTTPBaseService {
   public constructor() {
     super();
   }
@@ -23,15 +23,15 @@ class ProductVariationSize extends HTTPBaseService {
   }
 
   async create(params: CreationParams): Promise<CreationResponse> {
-    return await this.instance.post("/admin/productVariationSizes", params);
+    return await this.instance.post("/admin/productImages", params);
   }
 
   async update(id: number, params: UpdateParams): Promise<ProductImageResponse> {
-    return await this.instance.put(`/admin/productVariationSizes/${id}`, params);
+    return await this.instance.put(`/admin/productImages/${id}`, params);
   }
 
   async delete(id: number): Promise<void> {
-    await this.instance.delete(`/admin/productVariationSizes/${id}`);
+    await this.instance.delete(`/admin/productImages/${id}`);
   }
 
   deleteAll(ids: number[]): void {
@@ -39,4 +39,4 @@ class ProductVariationSize extends HTTPBaseService {
   }
 }
 
-export default ProductVariationSize;
+export default ProductImage;

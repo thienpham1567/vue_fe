@@ -1,7 +1,7 @@
 import { ProductVariationType } from "./productVariation";
 
 export interface ProductImagesType {
-    productImagesId?: number;
+    productImageld?: number;
     imageUrl?: string;
     isPrimary?: boolean;
     productVariation?: ProductVariationType;
@@ -10,7 +10,7 @@ export interface ProductImagesType {
 export type UpdateParams = Omit<ProductImagesType, "id">;
 
 export interface CreationProductImageParams {
-    productVariation?: ProductImagesType;
+    productVariation?: ProductVariationType;
 }
 
 export interface CreationResponse {

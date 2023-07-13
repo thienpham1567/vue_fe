@@ -1,6 +1,6 @@
 import ProductImage from "@/models/ProductImage";
 import { ref, computed } from "vue";
-import type { ProductImagesType } from "@/types/productImages";
+import type { ProductImagesType, CreationProductImageParams, UpdateParams } from "@/types/productImages";
 import ProductVariation from "@/models/ProductVariation";
 import type { ProductVariationType } from "@/types/productVariation";
 
@@ -32,24 +32,24 @@ const useProductImageAdminStore = () => {
     setProductImages(data);
   };
 
-  // const addProductVariation = async (productVariation: CreationProductVariationParams) => {
-  //   const { data } = await new ProductVariation().create(productVariation);
-  //   productVariations.value.push(data);
-  // };
+  const addProductImage = async (productImage: CreationProductImageParams) => {
+    const { data } = await new ProductImage().create(productImage);
+    productImages.value.push(data);
+  };
 
-  // const deleteProductVariation = async (id: number) => {
-  //   await new ProductVariation().delete(id);
-  //   setProductVariation({});
-  //   fetchAllProductVariationsAdmin();
-  // }
+  const deleteProductImage = async (id: number) => {
+    await new ProductImage().delete(id);
+    setProductImage({});
+    fetchAllProductImagesAdmin();
+  }
 
-  // const updateProduct = async (id: number, product: UpdateAdminParams) => {
-  //   await new Product().update(id, product);
-  //   setProduct({});
-  //   fetchAllProductsAdmin();
-  // };
+  const updateProductImage = async (id: number, productImage: UpdateParams) => {
+    await new ProductImage().update(id, productImage);
+    setProductImage({});
+    fetchAllProductImagesAdmin();
+  };
 
-  return { getproductImage, getproductImages, setProductImage, fetchAllProductImagesAdmin };
+  return { getproductImage, getproductImages, setProductImage, fetchAllProductImagesAdmin, addProductImage, deleteProductImage, updateProductImage };
 };
 
 export default useProductImageAdminStore;
