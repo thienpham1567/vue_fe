@@ -73,10 +73,9 @@
                 </DataTable>
             </div>
 
-            <Dialog v-model="deleteDialogVisible" :visible="deleteDialogVisible" header="Xác nhận xóa" :closable="false"
-                class="product-list__dialog">
-                <p>Bạn có chắc chắn muốn xóa size của sản phẩm này?</p>
-
+            <Dialog v-model="deleteDialogVisible" :visible="deleteDialogVisible" :closable="false">
+                <div class="flex justify-center text-2xl font-bold mt-4 mb-2 ">Xác nhận xóa</div>
+                <div class="text-2xl">Bạn có chắc chắn muốn xóa sản phẩm này?</div>
                 <template #footer>
                     <div class="product-list__dialog-buttons">
                         <Button class="p-button-danger" label="Xóa" @click="handleDelete"></Button>
