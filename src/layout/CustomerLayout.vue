@@ -5,10 +5,10 @@ import ATFooter from '@/components/Layout/ATFooter.vue';
 
 <template>
     <div>
-        <header >
+        <header>
             <ATHeader />
         </header>
-        <main class="content-page">
+        <main>
             <router-view />
         </main>
         <footer>
