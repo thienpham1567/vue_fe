@@ -80,7 +80,11 @@
                         </template>
                     </Column>
                     <Column field="isPrimary" header="Is Primary"></Column>
-                    <Column field="productVariation.productVariationId" header="Product Variation Id"></Column>
+                    <Column field="productVariation.productVariationId" header="Product Variation Id">
+                        <template #body="rowData">
+                            {{ getProductVariationName(rowData.data.productVariation.productVariationId) }}
+                        </template>
+                    </Column>
 
                     <!-- Add more columns as needed -->
                     <Column header="Tools">
@@ -126,6 +130,7 @@ import useProductImageAdminStore from '@/store/ProductImageAdminStore';
 import useProductVariationAdminStore from '@/store/ProductVariationAdminStore';
 import { ProductImagesType, CreationProductImageParams, UpdateParams } from '@/types/productImages';
 import { ProductVariationType } from '@/types/productVariation';
+import ProductVariation from '@/models/ProductVariation';
 
 //---------------------------------------
 const ingredient = ref('false');
@@ -154,6 +159,23 @@ watch(currentImageURL, (newValue) => {
 
 });
 
+// Tính toán productVariationWithLabel
+const productVariationsWithLabel = computed(() =>
+    productVariations.value
+        .filter(productVariation => productVariation.productVariationId !== null)
+        .map((productVariation) => ({
+            ...productVariation,
+            label: `${productVariation.product?.name}`
+        }))
+);
+// Method để tìm tên tương ứng với productVariationId
+function getProductVariationName(productVariationId: ProductVariationType) {
+    const matchedProductVariation = productVariationWithLabel.value.find(
+        productVariation => productVariation.productVariationId === productVariationId
+    );
+    return matchedProductVariation ? matchedProductVariation.label : 'null';
+}
+
 onMounted(async () => {
     /*--Load ProductImage into table--*/
     try {
@@ -167,6 +189,7 @@ onMounted(async () => {
     try {
         await productVariationStore.fetchAllProductVariationsAdmin();
         productVariations.value = productVariationStore.getproductVariations.value;
+        console.log("productVariations", productVariations.value);
     } catch (error) {
         console.log('Error fetching productVariations', error);
     }

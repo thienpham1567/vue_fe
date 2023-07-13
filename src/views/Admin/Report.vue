@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="admin-report">
       <h1 class="admin-report__title">Báo cáo admin</h1>
   
@@ -202,4 +202,4 @@
     margin-top: 20px;
   }
   </style>
-  
+   -->

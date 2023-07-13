@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="admin-report flex justify-center ">
     <div>
       <div class="admin-report__title">Nhãn hiệu bán chạy</div>
@@ -99,4 +99,4 @@ const setChartData = () => {
   margin-top: 20px;
 }
 </style>
-  
+   -->

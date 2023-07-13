@@ -66,11 +66,20 @@
                 </div>
                 <DataTable :value="products" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
                     <Column field="productId" header="Product Id"></Column>
-                    <Column field="brand.brandId" header="Brand Id"></Column>
-                    <Column field="category.categoryId" header="Category Id"></Column>
-                    <!-- <Column field="createdAt" header="Created At"></Column>
-                    <Column field="updatedAt" header="Update At"></Column> -->
-
+                    <Column field="brand.brandId" header="Brand Id">
+                        <template #body="rowData">
+                            <div>
+                                {{ rowData.data.brand.name }}
+                            </div>
+                        </template>
+                    </Column>
+                    <Column field="category.categoryId" header="Category Id">
+                        <template #body="rowData">
+                            <div>
+                                {{ rowData.data.category.name }}
+                            </div>
+                        </template>
+                    </Column>
                     <Column class="" field="description" header="Description">
                         <template #body="rowData">
                             <div class="description-cell">

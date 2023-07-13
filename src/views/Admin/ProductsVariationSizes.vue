@@ -53,7 +53,11 @@
                 <DataTable :value="productVariationSizes" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
                     <Column field="productVariationSizeId" header="ProductVariationSize Id"></Column>
                     <Column field="quantity" header="Quantity"></Column>
-                    <Column field="productVariation.productVariationId" header="ProductVariation Id"></Column>
+                    <Column field="productVariation.productVariationId" header="ProductVariation Id">
+                        <template #body="rowData">
+                            {{ getProductVariationName(rowData.data.productVariation.productVariationId) }}
+                        </template>
+                    </Column>
                     <Column field="size.value" header="Size id"></Column>
                     <!-- Add more columns as needed -->
                     <Column header="Tools">
@@ -156,6 +160,23 @@ onMounted(async () => {
     }
 
 });
+
+// Tính toán productVariationWithLabel
+const productVariationsWithLabel = computed(() =>
+    productVariations.value
+        .filter(productVariation => productVariation.productVariationId !== null)
+        .map((productVariation) => ({
+            ...productVariation,
+            label: `${productVariation.product?.name}`
+        }))
+);
+// Method để tìm tên tương ứng với productVariationId
+function getProductVariationName(productVariationId: ProductVariationType) {
+    const matchedProductVariation = productVariationWithLabel.value.find(
+        productVariation => productVariation.productVariationId === productVariationId
+    );
+    return matchedProductVariation ? matchedProductVariation.label : 'null';
+}
 
 /*--Refresh form & select box--*/
 const handleRefresh = async () => {
