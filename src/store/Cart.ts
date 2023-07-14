@@ -18,9 +18,11 @@ const useCartStore = defineStore("cart", () => {
     // Actions
     const fetchCart = async () => {
         const cartIdFromLocalStorage = cart.value.cartId! ?? localStorage.getItem("cartId");
-        const { data } = await new Cart().list({ cartId: cartIdFromLocalStorage! });
-        cart.value = data!;
-        cartItems.value = data?.cartItems ?? [];
+        if (cartIdFromLocalStorage !== null) {
+            const { data } = await new Cart().list({ cartId: cartIdFromLocalStorage! });
+            cart.value = data!;
+            cartItems.value = data?.cartItems ?? [];
+        }
     }
 
     const addUpdateToCart = async (cartItem: CreationParams) => {
