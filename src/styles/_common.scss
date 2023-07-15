@@ -1,6 +1,7 @@
 // Disable border after click button
 *:focus {
   box-shadow: none !important;
+  outline: none !important;
 }
 
 .p-dialog-header {

@@ -2,8 +2,8 @@
     <div class="flex flex-col lg:flex-row gap-6">
         <div class="w-full lg:w-8/12">
             <div class="bg-gray-100 flex justify-between text-black font-semibold p-2">
-                <div class="ml-4">{{ $t('item') }}</div>
-                <div class="mr-4">{{ $t('price') }} / {{ $t('quantity') }}</div>
+                <div>{{ $t('item') }}</div>
+                <div>{{ $t('price') }} / {{ $t('quantity') }}</div>
             </div>
             <CartItem :cart="getCart" :cartItems="getCartItems"/>
         </div>
