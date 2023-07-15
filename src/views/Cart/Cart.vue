@@ -16,7 +16,7 @@
                     <div class="border-b border-gray-300 my-2"></div>
                     <div class="flex justify-between">
                         <div class="font-light text-lg">{{ $t('subtotal') }}</div>
-                        <div class="font-bold">${{ getCart.itemSubtotalPrice }}</div>
+                        <div class="font-semibold">${{ getCart.itemSubtotalPrice }}</div>
                     </div>
                 </div>
             </div>

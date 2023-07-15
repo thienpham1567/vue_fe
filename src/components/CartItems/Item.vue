@@ -6,18 +6,18 @@
             </div>
             <div class="w-3/4 ml-4">
                 <div class="text-base font-normal">{{ item.productVariationSize?.productVariation.product?.name }}</div>
-                <div class="text-xl font-semibold">{{ item.productVariationSize?.productVariation.product?.brand?.name
+                <div class="text-l font-medium">{{ item.productVariationSize?.productVariation.product?.brand?.name
                 }}</div>
-                <div class="text-base font-light">Color: {{ item.color.value }}</div>
-                <div class="text-base font-light">Size: {{ item.productVariationSize?.size?.value }}</div>
+                <div class="text-sm text-base font-light">Màu: {{ item.color.value }}</div>
+                <div class="text-sm font-light">Kích cỡ: {{ item.productVariationSize?.size?.value }}</div>
             </div>
             <div class="flex flex-col justify-between">
-                <div class="text-l font-semibold text-end">${{ item.price }}</div>
+                <div class="text-l font-medium text-end">${{ item.price }}</div>
                 <div class="flex justify-center mt-2">
                     <Dropdown v-model="item.quantity" :options="limitedQuantity"
                         @update:modelValue="updateQuantity" />
                 </div>
-                <div class="mt-2 text-end cursor-pointer" @click="removeItemFromCart(item.cartItemId!)">Remove</div>
+                <div class="text-sm text-end cursor-pointer" @click="removeItemFromCart(item.cartItemId!)">Loại bỏ</div>
             </div>
         </div>
     </div>
