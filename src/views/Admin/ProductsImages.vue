@@ -2,20 +2,17 @@
     <div>
         <div class="flex font-bold text-4xl justify-center mb-4">Product Image</div>
         <div class=" mb-4">
-            <div class="flex justify-between ml-2 mr-4">
-                <div class="w-1/2 ml-2 mr-2">
-                    <Dropdown v-model="selectedBrand" :options="brands" optionLabel="name" placeholder="Select a Brand"
-                        class="w-full md:w-14rem" />
-                </div>
-                <div class="w-1/2 ml-2">
-                    <Dropdown v-model="selectedCategory" :options="categoriesWithLabel" optionLabel="label"
-                        placeholder="Select a Category" class="w-full md:w-14rem">
+            <div class="flex justify-between ml-2 mr-2">
+                <div class="w-full ml-2 mr-2">
+                    <label for="description">Product Variation</label>
+                    <Dropdown v-model="selectedProductVariation" :options="productVariationWithLabel" optionLabel="label"
+                        placeholder="Select a product variation" class="w-full md:w-14rem">
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="flex align-items-center">
-                                <div>{{ slotProps.value.name }}</div>
+                                <div>{{ slotProps.value.color.value }}</div>
                                 <div class="mx-1"> - </div>
                                 <div>{{
-                                    slotProps.value.parentCategory.name }}</div>
+                                    slotProps.value.product.name }}</div>
                             </div>
                             <span v-else>
                                 {{ slotProps.placeholder }}
@@ -25,25 +22,36 @@
                 </div>
             </div>
             <div class="mr-4 ml-4 mt-4">
-                <label for="SKU-Code">SKU Code</label>
-                <InputText v-model="currentProduct.sku" class="w-full" placeholder="93AB3S" />
-            </div>
-            <div class="flex">
-                <div class="mr-4 ml-4 mt-4 w-1/2">
-                    <label for="ProductName">Product Name</label>
-                    <InputText v-model="currentProduct.name" class="w-full" placeholder="Product Name" />
-                </div>
-                <div class="mr-4 ml-4 mt-4 w-1/2">
-                    <label for="ProductPrice">Product Price</label>
-                    <InputNumber v-model="currentProduct.price" class="w-full" inputId="currency-us" placeholder="$00.00"
-                        mode="currency" currency="USD" locale="en-US" />
-                </div>
-            </div>
-            <div class="mr-4 ml-4 mt-4">
                 <label for="description">Description</label>
-                <Textarea v-model="currentProduct.description" class="w-full" rows="5" cols="30" />
+                <div class="card flex justify-content-center">
+                    <div class="flex flex-wrap gap-3">
+                        <div class="flex align-items-center">
+                            <RadioButton v-model="ingredient" inputId="ingredient1" name="PrimaryImg" value="true" />
+                            <label for="ingredient1" class="ml-2">Is Primary</label>
+                        </div>
+                        <div class="flex align-items-center">
+                            <RadioButton v-model="ingredient" inputId="ingredient2" name="PrimaryImg" value="false" />
+                            <label for="ingredient2" class="ml-2">Not Primary</label>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="flex ml-4 mr-4">
+
+            <div class="flex ">
+                <div class="mr-4 ml-4 mt-4 w-full">
+                    <label for="SKU-Code">Primary Image URL</label>
+                    <InputText v-model="currentImageURL" class="w-full" placeholder="" />
+                </div>
+            </div>
+            <div class="flex justify-center">
+                <div class="flex ml-4 mr-4 mt-4 justify-center w-full">
+                    <Image v-if="currentImageURL" :src="currentImageURL" alt="Image" width="300" preview />
+                    <Image v-else
+                        src="https://www.lifewire.com/thmb/TRGYpWa4KzxUt1Fkgr3FqjOd6VQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/cloud-upload-a30f385a928e44e199a62210d578375a.jpg"
+                        alt="Image" width="500" preview />
+                </div>
+            </div>
+            <div class=" flex ml-4 mr-4">
                 <div class="mt-4">
                     <Button @click="handleSave" type="submit" label="Save"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
@@ -53,43 +61,31 @@
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
                 <div class="ml-2 mt-4">
-                    <Button type="submit" label="Reset"
+                    <Button @click="handleRefresh" type="submit" label="Reset"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
             </div>
         </div>
         <div class="border-b border-gray-400"></div>
-        <div class=" mb-4 mt-12">
+        <div class=" mb-4 mt-6">
             <div class="product-list__table">
-                <div class="flex justify-center">
-                    <h2 class="text-3xl font-semibold">Product list</h2>
+                <div class="flex justify-center mb-6">
+                    <h2 class="text-3xl font-semibold">Product Image list</h2>
                 </div>
-                <DataTable :value="products" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
-                    <Column field="productId" header="Product Id"></Column>
-                    <Column field="brand.brandId" header="Brand Id"></Column>
-                    <Column field="category.categoryId" header="Category Id"></Column>
-                    <Column field="createdAt" header="Created At"></Column>
-                    <Column field="updatedAt" header="Update At"></Column>
-
-                    <Column class="" field="description" header="Description">
+                <DataTable :value="productImages" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
+                    <Column field="productImageld" header="Product Image Id"></Column>
+                    <Column header="Image URL">
+                        <template #body="Props">
+                            <img :src="Props.data.imageUrl" style="width: 100px; height: 100px;" alt="image">
+                        </template>
+                    </Column>
+                    <Column field="isPrimary" header="Is Primary"></Column>
+                    <Column field="productVariation.productVariationId" header="Product Variation Id">
                         <template #body="rowData">
-                            <div class="description-cell">
-                                {{ rowData.data.description.length > 150 ? rowData.data.description.slice(0, 150) +
-                                    '...' :
-                                    rowData.data.description }}
-                            </div>
+                            {{ getProductVariationName(rowData.data.productVariation.productVariationId) }}
                         </template>
                     </Column>
 
-                    <Column field="name" header="Product Name"></Column>
-                    <!-- ngày tháng năm chưa format -->
-                    <Column field="price" header="Price">
-                        <template #body="rowData">
-                            ${{ rowData.data.price }}
-                        </template>
-                    </Column>
-
-                    <Column field="sku" header="SKU Code"></Column>
                     <!-- Add more columns as needed -->
                     <Column header="Tools">
                         <template #body="rowData">
@@ -104,9 +100,9 @@
                 </DataTable>
             </div>
 
-            <Dialog v-model="deleteDialogVisible" :visible="deleteDialogVisible" header="Xác nhận xóa" :closable="false"
-                class="product-list__dialog">
-                <p>Bạn có chắc chắn muốn xóa sản phẩm này?</p>
+            <Dialog v-model="deleteDialogVisible" :visible="deleteDialogVisible" :closable="false">
+                <div class="flex justify-center text-2xl font-bold mt-4 mb-2 ">Xác nhận xóa</div>
+                <div class="text-2xl">Bạn có chắc chắn muốn xóa sản phẩm này?</div>
 
                 <template #footer>
                     <div class="product-list__dialog-buttons">
@@ -120,220 +116,181 @@
 </template>
 
 <script setup lang="ts">
+import Image from 'primevue/image';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import Textarea from 'primevue/textarea';
-import InputNumber from 'primevue/inputnumber';
+import RadioButton from 'primevue/radiobutton';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
-// import TabView from 'primevue/tabview';
-// import TabPanel from 'primevue/tabpanel';
 import Dropdown from 'primevue/dropdown';
 import Dialog from 'primevue/dialog';
-//import useProductStore from '@/store/ProductStore';
-import { ProductType, CreationParams, UpdateAdminParams } from '@/types/product';
-import { BrandType } from '@/types/brand';
-import { CategoryType } from '@/types/category';
-import { ColorType } from '@/types/color';
-import { ProductVariationType, CreationProductVariationParams } from '@/types/productVariation';
-import useBrandStore from '@/store/BrandStore';
-import useCategoryStore from '@/store/CategoryStore';
-import useColorStore from '@/store/ColorStore';
-import useProductAdminStore from '@/store/ProductAdminStore';
+
+import { ref, onMounted, computed, watch } from 'vue';
+import useProductImageAdminStore from '@/store/ProductImageAdminStore';
 import useProductVariationAdminStore from '@/store/ProductVariationAdminStore';
-import { ref, onMounted, computed } from 'vue';
+import { ProductImagesType, CreationProductImageParams, UpdateParams } from '@/types/productImages';
+import { ProductVariationType } from '@/types/productVariation';
+import ProductVariation from '@/models/ProductVariation';
+
+//---------------------------------------
+const ingredient = ref('false');
+//---------------------------------------
 
 const dialogVisible = ref(false);
 const deleteDialogVisible = ref(false);
-const brandStore = useBrandStore();
-const brands = ref<BrandType[]>([]);
-const selectedBrand = ref(null);
 
-const categoryStore = useCategoryStore();
-const categories = ref<CategoryType[]>([]);
-const selectedCategory = ref(null);
+const productImageStore = useProductImageAdminStore();
+const productImages = ref<ProductImagesType[]>([]);
+const selectedProductImage = ref<ProductImagesType | null>(null);
+const currentProductImage = ref<ProductImagesType>({});
 
-const productStore = useProductAdminStore();
-const products = ref<ProductType[]>([]);
-const currentProduct = ref<ProductType>({});
-const selectedProduct = ref<ProductType | null>(null);
-
-
-// const price = ref<number | null>(null);
-
-
-const categoriesWithLabel = computed(() =>
-    categories.value.map((category) => ({
-        ...category,
-        label: `${category.name} - ${category.parentCategory?.name}`
+/*--Fill productVariation into selectbox--*/
+const productVariationStore = useProductVariationAdminStore();
+const productVariations = ref<ProductVariationType[]>([]);
+const selectedProductVariation = ref<ProductVariationType | null>(null);
+const productVariationWithLabel = computed(() =>
+    productVariationStore.getproductVariations.value.filter(productVariation => productVariation.productVariationId !== null).map((productVariation) => ({
+        ...productVariation,
+        label: `${productVariation.color?.value} - ${productVariation.product?.name}`
     }))
 );
+const currentImageURL = ref('');
+watch(currentImageURL, (newValue) => {
 
-/*--ProductVariation: select color--*/
-// const colorStore = useColorStore();
-// const colors = ref<ColorType[]>([]);
-// const selectedColor = ref(null);
+});
 
-// const productVariationStore = useProductVariationAdminStore();
-// const productVariations = ref<ProductVariationType[]>([]);
-// const currentProductVariation = ref<ProductVariationType>({});
-
-// const handleSaveProductVariation = async () => {
-//     try {
-//         // Lấy giá trị từ các select box
-//         const selectedColorValue = selectedColor.value;
-//         const selectedProductValue = selectedProduct.value;
-
-//         // Kiểm tra xem giá trị đã được chọn hay chưa
-//         if (!selectedColorValue || !selectedProductValue) {
-//             throw new Error("Brand and category must be selected.");
-//         }
-
-//         // Gán giá trị vào product.value
-//         currentProductVariation.value.color = selectedColorValue;
-//         currentProductVariation.value.product = selectedProductValue;
-//         console.log(currentProductVariation.value.color);
-//         console.log(currentProductVariation.value.product);
-//         await productVariationStore.addProductVariation(currentProductVariation.value as CreationProductVariationParams);
-//         // Xử lý phản hồi từ API ở đây (ví dụ: hiển thị thông báo thành công, cập nhật dữ liệu, vv.)
-//         await productVariationStore.fetchAllProductVariationsAdmin();
-//         console.log('ProductVariation created successfully!');
-//     } catch (error) {
-//         // Xử lý lỗi khi gọi API (ví dụ: hiển thị thông báo lỗi, ghi log lỗi, vv.)
-//         console.error('Error creating ProductVariation:', error);
-//     }
-
-//     currentProduct.value = {};
-//     selectedBrand.value = null;
-//     selectedCategory.value = null;
-//     dialogVisible.value = false;
-// };
-
+// Tính toán productVariationWithLabel
+const productVariationsWithLabel = computed(() =>
+    productVariations.value
+        .filter(productVariation => productVariation.productVariationId !== null)
+        .map((productVariation) => ({
+            ...productVariation,
+            label: `${productVariation.product?.name}`
+        }))
+);
+// Method để tìm tên tương ứng với productVariationId
+function getProductVariationName(productVariationId: ProductVariationType) {
+    const matchedProductVariation = productVariationWithLabel.value.find(
+        productVariation => productVariation.productVariationId === productVariationId
+    );
+    return matchedProductVariation ? matchedProductVariation.label : 'null';
+}
 
 onMounted(async () => {
-    /*--ProductVariation--*/
-    // try {
-    //     await productVariationStore.fetchAllProductVariationsAdmin();
-    //     productVariations.value = productVariationStore.getproductVariations.value;
-    // } catch (error) {
-    //     console.log("Error fetching productVariation", error);
-    // }
-    // /*--ProductVariation color--*/
-    // try {
-    //     await colorStore.fetchAllColor();
-    //     colors.value = colorStore.getColors.value;
-    //     console.log(colors);
-    // } catch (error) {
-    //     console.log("Error fetching color", error);
-    // }
-    /*--Product--*/
+    /*--Load ProductImage into table--*/
     try {
-        await productStore.fetchAllProductsAdmin();
-        products.value = productStore.getProducts.value;
-        console.log(products);
+        await productImageStore.fetchAllProductImagesAdmin();
+        productImages.value = productImageStore.getproductImages.value;
     } catch (error) {
-        console.error('Error fetching products', error);
+        console.log("Error fetching productImage", error);
     }
+
+    /*--Load ProductVariation into select box--*/
     try {
-        await brandStore.fetchBrands();
-        //brands.value = brandStore.getBrands.value.map(brands => brands.brandId + ' - ' + brands.name);
-        brands.value = brandStore.getBrands.value;
+        await productVariationStore.fetchAllProductVariationsAdmin();
+        productVariations.value = productVariationStore.getproductVariations.value;
+        console.log("productVariations", productVariations.value);
     } catch (error) {
-        console.error('Error fetching brands', error);
-    }
-    try {
-        await categoryStore.fetchCategories();
-        //categories.value = categoryStore.getMainSubCategories.value.map(categories => categories.categoryId + ' - ' + categories.name + ' - ' + categories.parentCategory?.name);
-        categories.value = categoryStore.getMainSubCategories.value;
-    } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.log('Error fetching productVariations', error);
     }
 
 });
 
+/*--Refresh form & select box--*/
+const handleRefresh = async () => {
+    ingredient.value = 'false';
+    selectedProductVariation.value = null;
+    currentProductImage.value = {};
+    currentImageURL.value = '';
 
+}
 const handleUpdate = async () => {
     try {
-        const selectedBrandValue = selectedBrand.value;
-        const selectedCategoryValue = selectedCategory.value;
+        const selectedProductVariationValue = selectedProductVariation.value;
         // Kiểm tra xem giá trị đã được chọn hay chưa
-        if (!selectedBrandValue || !selectedCategoryValue) {
-            throw new Error("Brand and category must be selected.");
+        if (!selectedProductVariationValue) {
+            throw new Error("ProductVariation must be selected.");
         }
         // Gán giá trị vào product.value
-        currentProduct.value.brand = selectedBrandValue;
-        currentProduct.value.category = selectedCategoryValue;
-        await productStore.updateProduct(currentProduct.value.productId, currentProduct.value as UpdateAdminParams);
-        await productStore.fetchAllProductsAdmin();
-        products.value = productStore.getProducts.value;
+        currentProductImage.value.isPrimary = ingredient.value;
+        currentProductImage.value.imageUrl = currentImageURL.value;
+        currentProductImage.value.productVariation = selectedProductVariationValue;
+        // chưa xong
+        await productImageStore.updateProductImage(currentProductImage.value.productImageld, currentProductImage.value as UpdateParams);
+        await productImageStore.fetchAllProductImagesAdmin();
+        productImages.value = productImageStore.getproductImages.value;
     } catch (error) {
-        console.error('Error updating product:', error);
+        console.error('Error updating productImage:', error);
     }
 }
 const handleSave = async () => {
     try {
-        // Lấy giá trị từ các select box
-        const selectedBrandValue = selectedBrand.value;
-        const selectedCategoryValue = selectedCategory.value;
+        // Lấy giá trị từ productVariation select box
+        const selectedProductVariationValue = selectedProductVariation.value;
+        //const selectedCategoryValue = selectedCategory.value;
 
         // Kiểm tra xem giá trị đã được chọn hay chưa
-        if (!selectedBrandValue || !selectedCategoryValue) {
-            throw new Error("Brand and category must be selected.");
+        if (!selectedProductVariationValue) {
+            throw new Error("ProductVariation must be selected.");
         }
+        // Chọn isPrimary
 
-        // Gán giá trị vào product.value
-        currentProduct.value.brand = selectedBrandValue;
-        currentProduct.value.category = selectedCategoryValue;
-        await productStore.addProduct(currentProduct.value as CreationParams);
-        console.log(currentProduct.value)
+        // Gán giá trị vào productImage.value
+        currentProductImage.value.isPrimary = ingredient.value;
+        currentProductImage.value.imageUrl = currentImageURL.value;
+        currentProductImage.value.productVariation = selectedProductVariationValue;
+        await productImageStore.addProductImage(currentProductImage.value as CreationProductImageParams);
+        console.log("Kiem tra: ", currentProductImage.value)
         // Xử lý phản hồi từ API ở đây (ví dụ: hiển thị thông báo thành công, cập nhật dữ liệu, vv.)
-        await productStore.fetchAllProductsAdmin();
+        await productImageStore.fetchAllProductImagesAdmin();
         console.log('Product created successfully!');
     } catch (error) {
         // Xử lý lỗi khi gọi API (ví dụ: hiển thị thông báo lỗi, ghi log lỗi, vv.)
         console.error('Error creating product:', error);
     }
 
-    currentProduct.value = {};
-    selectedBrand.value = null;
-    selectedCategory.value = null;
+    ingredient.value = '';
+    selectedProductVariation.value = null;
+    currentProductImage.value = {};
+    currentImageURL.value = '';
     dialogVisible.value = false;
 };
 const cancelDelete = () => {
-    currentProduct.value = {};
+    currentProductImage.value = {};
     deleteDialogVisible.value = false;
 };
 
-const showDeleteDialog = (product: ProductType) => {
-    currentProduct.value = { ...product };
+const showDeleteDialog = (productImage: ProductImagesType) => {
+    currentProductImage.value = { ...productImage };
     deleteDialogVisible.value = true;
 };
 const handleDelete = async () => {
     try {
-        await productStore.deleteProduct(currentProduct.value.productId);
-        await productStore.fetchAllProductsAdmin();
-        products.value = productStore.getProducts.value;
+        await productImageStore.deleteProductImage(currentProductImage.value.productImageld);
+        await productImageStore.fetchAllProductImagesAdmin();
+        productImages.value = productImageStore.getproductImages.value;
     } catch (error) {
-        console.error('Error deleting product:', error);
+        console.error('Error deleting productImage:', error);
     }
-    currentProduct.value = {};
+    currentProductImage.value = {};
     deleteDialogVisible.value = false;
 }
 
-const editData = (rowData: { data: ProductType }) => {
-    selectedProduct.value = { ...rowData.data };
+const editData = (rowData: { data: ProductImagesType }) => {
+    selectedProductImage.value = { ...rowData.data };
+    currentImageURL.value = selectedProductImage.value.imageUrl;
 
     // Find the selected brand based on brandId
-    selectedBrand.value = brands.value.find(
-        brand => brand.brandId === selectedProduct.value.brand.brandId
+    selectedProductVariation.value = productVariations.value.find(
+        productVariation => productVariation.productVariationId === selectedProductImage.value?.productVariation?.productVariationId
     );
+    if (selectedProductImage.value.isPrimary) {
+        ingredient.value = 'true';
+    } else {
+        ingredient.value = 'false';
+    }
 
-    // Find the selected category based on categoryId
-    selectedCategory.value = categories.value.find(
-        category => category.categoryId === selectedProduct.value.category.categoryId
-    );
-
-    currentProduct.value = { ...selectedProduct.value };
+    currentProductImage.value = { ...selectedProductImage.value };
 };
 
 </script>

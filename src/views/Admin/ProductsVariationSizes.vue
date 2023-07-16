@@ -4,18 +4,14 @@
         <div class=" mb-4">
             <div class="flex justify-between ml-2 mr-4">
                 <div class="w-1/2 ml-2 mr-2">
-                    <Dropdown v-model="selectedBrand" :options="brands" optionLabel="name"
-                        placeholder="Select a product variation" class="w-full md:w-14rem" />
-                </div>
-                <div class="w-1/2 ml-2">
-                    <Dropdown v-model="selectedCategory" :options="categoriesWithLabel" optionLabel="label"
-                        placeholder="Select a size" class="w-full md:w-14rem">
+                    <Dropdown v-model="selectedProductVariation" :options="productVariationWithLabel" optionLabel="label"
+                        placeholder="Select a product variation" class="w-full md:w-14rem">
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="flex align-items-center">
-                                <div>{{ slotProps.value.name }}</div>
+                                <div>{{ slotProps.value.color.value }}</div>
                                 <div class="mx-1"> - </div>
                                 <div>{{
-                                    slotProps.value.parentCategory.name }}</div>
+                                    slotProps.value.product.name }}</div>
                             </div>
                             <span v-else>
                                 {{ slotProps.placeholder }}
@@ -23,10 +19,15 @@
                         </template>
                     </Dropdown>
                 </div>
+                <div class="w-1/2 ml-2">
+                    <Dropdown v-model="selectedSize" :options="sizes" optionLabel="value" placeholder="Select a size"
+                        class="w-full md:w-14rem">
+                    </Dropdown>
+                </div>
             </div>
             <div class="mr-4 ml-4 mt-4">
                 <label for="SKU-Code">Quantity</label>
-                <InputText v-model="currentProduct.sku" class="w-full" placeholder="93AB3S" />
+                <InputNumber v-model="currentProductVariationSize.quantity" class="w-full" placeholder="quantity" />
             </div>
             <div class="flex ml-4 mr-4">
                 <div class="mt-4">
@@ -38,7 +39,7 @@
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
                 <div class="ml-2 mt-4">
-                    <Button type="submit" label="Reset"
+                    <Button @click="handleRefresh" type="submit" label="Reset"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
             </div>
@@ -47,34 +48,17 @@
         <div class=" mb-4 mt-12">
             <div class="product-list__table">
                 <div class="flex justify-center">
-                    <h2 class="text-3xl font-semibold">Product list</h2>
+                    <h2 class="text-3xl font-semibold">ProductVariation Sizes</h2>
                 </div>
-                <DataTable :value="products" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
-                    <Column field="productId" header="Product Id"></Column>
-                    <Column field="brand.brandId" header="Brand Id"></Column>
-                    <Column field="category.categoryId" header="Category Id"></Column>
-                    <Column field="createdAt" header="Created At"></Column>
-                    <Column field="updatedAt" header="Update At"></Column>
-
-                    <Column class="" field="description" header="Description">
+                <DataTable :value="productVariationSizes" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
+                    <Column field="productVariationSizeId" header="ProductVariationSize Id"></Column>
+                    <Column field="quantity" header="Quantity"></Column>
+                    <Column field="productVariation.productVariationId" header="ProductVariation Id">
                         <template #body="rowData">
-                            <div class="description-cell">
-                                {{ rowData.data.description.length > 150 ? rowData.data.description.slice(0, 150) +
-                                    '...' :
-                                    rowData.data.description }}
-                            </div>
+                            {{ getProductVariationName(rowData.data.productVariation.productVariationId) }}
                         </template>
                     </Column>
-
-                    <Column field="name" header="Product Name"></Column>
-                    <!-- ngày tháng năm chưa format -->
-                    <Column field="price" header="Price">
-                        <template #body="rowData">
-                            ${{ rowData.data.price }}
-                        </template>
-                    </Column>
-
-                    <Column field="sku" header="SKU Code"></Column>
+                    <Column field="size.value" header="Size id"></Column>
                     <!-- Add more columns as needed -->
                     <Column header="Tools">
                         <template #body="rowData">
@@ -89,10 +73,9 @@
                 </DataTable>
             </div>
 
-            <Dialog v-model="deleteDialogVisible" :visible="deleteDialogVisible" header="Xác nhận xóa" :closable="false"
-                class="product-list__dialog">
-                <p>Bạn có chắc chắn muốn xóa sản phẩm này?</p>
-
+            <Dialog v-model="deleteDialogVisible" :visible="deleteDialogVisible" :closable="false">
+                <div class="flex justify-center text-2xl font-bold mt-4 mb-2 ">Xác nhận xóa</div>
+                <div class="text-2xl">Bạn có chắc chắn muốn xóa sản phẩm này?</div>
                 <template #footer>
                     <div class="product-list__dialog-buttons">
                         <Button class="p-button-danger" label="Xóa" @click="handleDelete"></Button>
@@ -107,150 +90,114 @@
 <script setup lang="ts">
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import Textarea from 'primevue/textarea';
-import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
-import InputText from 'primevue/inputtext';
-// import TabView from 'primevue/tabview';
-// import TabPanel from 'primevue/tabpanel';
+import InputNumber from 'primevue/inputnumber';
 import Dropdown from 'primevue/dropdown';
 import Dialog from 'primevue/dialog';
-//import useProductStore from '@/store/ProductStore';
-import { ProductType, CreationParams, UpdateAdminParams } from '@/types/product';
-import { BrandType } from '@/types/brand';
-import { CategoryType } from '@/types/category';
-import { ColorType } from '@/types/color';
-import { ProductVariationType, CreationProductVariationParams } from '@/types/productVariation';
-import useBrandStore from '@/store/BrandStore';
-import useCategoryStore from '@/store/CategoryStore';
-import useColorStore from '@/store/ColorStore';
-import useProductAdminStore from '@/store/ProductAdminStore';
+import { ProductType, UpdateAdminParams } from '@/types/product';
 import useProductVariationAdminStore from '@/store/ProductVariationAdminStore';
+import useProductVariationSizeAdminStore from '@/store/ProductVariationSizeAdminStore';
+import useSizeStore from '@/store/SizeStore';
 import { ref, onMounted, computed } from 'vue';
+import { SizeType } from '@/types/size';
+import { ProductVariationType } from '@/types/productVariation';
+import { ProductVariationSizeType, UpdateParams, CreationProductVariationSizeParams } from '@/types/productVariationSize';
+import { CreationParams } from '@/types/user';
 
 const dialogVisible = ref(false);
 const deleteDialogVisible = ref(false);
-const brandStore = useBrandStore();
-const brands = ref<BrandType[]>([]);
-const selectedBrand = ref(null);
 
-const categoryStore = useCategoryStore();
-const categories = ref<CategoryType[]>([]);
-const selectedCategory = ref(null);
+/*--Fill ProductVariation into selectbox--*/
+const productVariationStore = useProductVariationAdminStore();
+const productVariations = ref<ProductVariationType[]>([]);
+const selectedProductVariation = ref<ProductVariationType | null>(null);
 
-const productStore = useProductAdminStore();
-const products = ref<ProductType[]>([]);
-const currentProduct = ref<ProductType>({});
-const selectedProduct = ref<ProductType | null>(null);
+/*--Fill productVariationSize to table--*/
+const productVariationSizeStore = useProductVariationSizeAdminStore();
+const productVariationSizes = ref<ProductVariationSizeType[]>([]);
+const currentProductVariationSize = ref<ProductVariationSizeType>({});
 
 
+// const currentProduct = ref<ProductType>({});
+const selectedProductVariationSize = ref<ProductVariationSizeType | null>(null);
+
+/*--Fill Size into selectbox--*/
+const sizeStore = useSizeStore();
+const sizes = ref<SizeType[]>([]);
+const selectedSize = ref<SizeType | null>(null);
 // const price = ref<number | null>(null);
 
-
-const categoriesWithLabel = computed(() =>
-    categories.value.map((category) => ({
-        ...category,
-        label: `${category.name} - ${category.parentCategory?.name}`
+const productVariationWithLabel = computed(() =>
+    productVariationStore.getproductVariations.value.filter(productVariation => productVariation.productVariationId !== null).map((productVariation) => ({
+        ...productVariation,
+        label: `${productVariation.color?.value} - ${productVariation.product?.name}`
     }))
 );
 
-/*--ProductVariation: select color--*/
-// const colorStore = useColorStore();
-// const colors = ref<ColorType[]>([]);
-// const selectedColor = ref(null);
-
-// const productVariationStore = useProductVariationAdminStore();
-// const productVariations = ref<ProductVariationType[]>([]);
-// const currentProductVariation = ref<ProductVariationType>({});
-
-// const handleSaveProductVariation = async () => {
-//     try {
-//         // Lấy giá trị từ các select box
-//         const selectedColorValue = selectedColor.value;
-//         const selectedProductValue = selectedProduct.value;
-
-//         // Kiểm tra xem giá trị đã được chọn hay chưa
-//         if (!selectedColorValue || !selectedProductValue) {
-//             throw new Error("Brand and category must be selected.");
-//         }
-
-//         // Gán giá trị vào product.value
-//         currentProductVariation.value.color = selectedColorValue;
-//         currentProductVariation.value.product = selectedProductValue;
-//         console.log(currentProductVariation.value.color);
-//         console.log(currentProductVariation.value.product);
-//         await productVariationStore.addProductVariation(currentProductVariation.value as CreationProductVariationParams);
-//         // Xử lý phản hồi từ API ở đây (ví dụ: hiển thị thông báo thành công, cập nhật dữ liệu, vv.)
-//         await productVariationStore.fetchAllProductVariationsAdmin();
-//         console.log('ProductVariation created successfully!');
-//     } catch (error) {
-//         // Xử lý lỗi khi gọi API (ví dụ: hiển thị thông báo lỗi, ghi log lỗi, vv.)
-//         console.error('Error creating ProductVariation:', error);
-//     }
-
-//     currentProduct.value = {};
-//     selectedBrand.value = null;
-//     selectedCategory.value = null;
-//     dialogVisible.value = false;
-// };
-
-
 onMounted(async () => {
+
+    /*--Load ProductVariationSize into table--*/
+    try {
+        await productVariationSizeStore.fetchAllProductVariationSizesAdmin();
+        productVariationSizes.value = productVariationSizeStore.getproductVariationSizes.value;
+    } catch (error) {
+        console.log('Error fetching productVariationSize', error);
+    }
     /*--ProductVariation--*/
-    // try {
-    //     await productVariationStore.fetchAllProductVariationsAdmin();
-    //     productVariations.value = productVariationStore.getproductVariations.value;
-    // } catch (error) {
-    //     console.log("Error fetching productVariation", error);
-    // }
-    // /*--ProductVariation color--*/
-    // try {
-    //     await colorStore.fetchAllColor();
-    //     colors.value = colorStore.getColors.value;
-    //     console.log(colors);
-    // } catch (error) {
-    //     console.log("Error fetching color", error);
-    // }
-    /*--Product--*/
     try {
-        await productStore.fetchAllProductsAdmin();
-        products.value = productStore.getProducts.value;
-        console.log(products);
+        await productVariationStore.fetchAllProductVariationsAdmin();
+        productVariations.value = productVariationStore.getproductVariations.value;
     } catch (error) {
-        console.error('Error fetching products', error);
+        console.log('Error fetching productVariations', error);
     }
+    /*--Size*/
     try {
-        await brandStore.fetchBrands();
-        //brands.value = brandStore.getBrands.value.map(brands => brands.brandId + ' - ' + brands.name);
-        brands.value = brandStore.getBrands.value;
+        await sizeStore.fetchSizes();
+        sizes.value = sizeStore.getSizes.value;
     } catch (error) {
-        console.error('Error fetching brands', error);
-    }
-    try {
-        await categoryStore.fetchCategories();
-        //categories.value = categoryStore.getMainSubCategories.value.map(categories => categories.categoryId + ' - ' + categories.name + ' - ' + categories.parentCategory?.name);
-        categories.value = categoryStore.getMainSubCategories.value;
-    } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.log('Error fetching sizes', error);
     }
 
 });
 
+// Tính toán productVariationWithLabel
+const productVariationsWithLabel = computed(() =>
+    productVariations.value
+        .filter(productVariation => productVariation.productVariationId !== null)
+        .map((productVariation) => ({
+            ...productVariation,
+            label: `${productVariation.product?.name}`
+        }))
+);
+// Method để tìm tên tương ứng với productVariationId
+function getProductVariationName(productVariationId: ProductVariationType) {
+    const matchedProductVariation = productVariationWithLabel.value.find(
+        productVariation => productVariation.productVariationId === productVariationId
+    );
+    return matchedProductVariation ? matchedProductVariation.label : 'null';
+}
+
+/*--Refresh form & select box--*/
+const handleRefresh = async () => {
+    selectedProductVariation.value = null;
+    selectedSize.value = null;
+    currentProductVariationSize.value = {};
+}
 
 const handleUpdate = async () => {
     try {
-        const selectedBrandValue = selectedBrand.value;
-        const selectedCategoryValue = selectedCategory.value;
+        const selectedProductVariationValue = selectedProductVariation.value;
+        const selectedSizeValue = selectedSize.value;
         // Kiểm tra xem giá trị đã được chọn hay chưa
-        if (!selectedBrandValue || !selectedCategoryValue) {
-            throw new Error("Brand and category must be selected.");
+        if (!selectedProductVariationValue || !selectedSizeValue) {
+            throw new Error("ProductVariation and size must be selected.");
         }
         // Gán giá trị vào product.value
-        currentProduct.value.brand = selectedBrandValue;
-        currentProduct.value.category = selectedCategoryValue;
-        await productStore.updateProduct(currentProduct.value.productId, currentProduct.value as UpdateAdminParams);
-        await productStore.fetchAllProductsAdmin();
-        products.value = productStore.getProducts.value;
+        currentProductVariationSize.value.productVariation = selectedProductVariationValue;
+        currentProductVariationSize.value.size = selectedSizeValue;
+        await productVariationSizeStore.updateProductVariationSize(currentProductVariationSize.value.productVariationSizeId, currentProductVariationSize.value as UpdateParams)
+        await productVariationSizeStore.fetchAllProductVariationSizesAdmin();
+        productVariationSizes.value = productVariationSizeStore.getproductVariationSizes.value;
     } catch (error) {
         console.error('Error updating product:', error);
     }
@@ -258,67 +205,71 @@ const handleUpdate = async () => {
 const handleSave = async () => {
     try {
         // Lấy giá trị từ các select box
-        const selectedBrandValue = selectedBrand.value;
-        const selectedCategoryValue = selectedCategory.value;
+        const selectedProductVariationValue = selectedProductVariation.value;
+        const selectedSizeValue = selectedSize.value;
 
         // Kiểm tra xem giá trị đã được chọn hay chưa
-        if (!selectedBrandValue || !selectedCategoryValue) {
-            throw new Error("Brand and category must be selected.");
+        if (!selectedProductVariationValue || !selectedSizeValue) {
+            throw new Error("ProductVariation and Size must be selected.");
         }
 
         // Gán giá trị vào product.value
-        currentProduct.value.brand = selectedBrandValue;
-        currentProduct.value.category = selectedCategoryValue;
-        await productStore.addProduct(currentProduct.value as CreationParams);
-        console.log(currentProduct.value)
+        currentProductVariationSize.value.productVariation = selectedProductVariationValue;
+        console.log("Variation: ", currentProductVariationSize.value.productVariation)
+        currentProductVariationSize.value.size = selectedSizeValue;
+        console.log("Size: ", currentProductVariationSize.value.size)
+        console.log("quantity: ", currentProductVariationSize.value.quantity)
+        await productVariationSizeStore.addProductVariationSize(currentProductVariationSize.value as CreationProductVariationSizeParams);
         // Xử lý phản hồi từ API ở đây (ví dụ: hiển thị thông báo thành công, cập nhật dữ liệu, vv.)
-        await productStore.fetchAllProductsAdmin();
-        console.log('Product created successfully!');
+        await productVariationSizeStore.fetchAllProductVariationSizesAdmin();
+        console.log('ProductVariationSize created successfully!');
     } catch (error) {
         // Xử lý lỗi khi gọi API (ví dụ: hiển thị thông báo lỗi, ghi log lỗi, vv.)
-        console.error('Error creating product:', error);
+        console.error('Error creating productVariationSize:', error);
     }
 
-    currentProduct.value = {};
-    selectedBrand.value = null;
-    selectedCategory.value = null;
+    currentProductVariationSize.value = {};
+    selectedProductVariation.value = null;
+    selectedSize.value = null;
     dialogVisible.value = false;
 };
 const cancelDelete = () => {
-    currentProduct.value = {};
+    currentProductVariationSize.value = {};
     deleteDialogVisible.value = false;
 };
 
-const showDeleteDialog = (product: ProductType) => {
-    currentProduct.value = { ...product };
+const showDeleteDialog = (productVariationSize: ProductVariationSizeType) => {
+    currentProductVariationSize.value = { ...productVariationSize };
     deleteDialogVisible.value = true;
 };
 const handleDelete = async () => {
     try {
-        await productStore.deleteProduct(currentProduct.value.productId);
-        await productStore.fetchAllProductsAdmin();
-        products.value = productStore.getProducts.value;
+        await productVariationSizeStore.deleteProductVariationSize(currentProductVariationSize.value.productVariationSizeId);
+        await productVariationSizeStore.fetchAllProductVariationSizesAdmin();
+        productVariationSizes.value = productVariationSizeStore.getproductVariationSizes.value;
     } catch (error) {
-        console.error('Error deleting product:', error);
+        console.error('Error deleting productVariationSizes:', error);
     }
-    currentProduct.value = {};
+    currentProductVariationSize.value = {};
     deleteDialogVisible.value = false;
 }
 
-const editData = (rowData: { data: ProductType }) => {
-    selectedProduct.value = { ...rowData.data };
+const editData = (rowData: { data: ProductVariationSizeType }) => {
+    selectedProductVariationSize.value = { ...rowData.data };
 
-    // Find the selected brand based on brandId
-    selectedBrand.value = brands.value.find(
-        brand => brand.brandId === selectedProduct.value.brand.brandId
+    // Find the selected brand based on sizeId
+    selectedSize.value = sizes.value.find(
+        size => size.sizeId === selectedProductVariationSize.value.size.sizeId
     );
 
-    // Find the selected category based on categoryId
-    selectedCategory.value = categories.value.find(
-        category => category.categoryId === selectedProduct.value.category.categoryId
+    // Find the selected brand based on productVariationId
+    selectedProductVariation.value = productVariationStore.getproductVariations.value.find(
+        productVariation => productVariation.productVariationId === selectedProductVariationSize.value?.productVariation?.productVariationId
     );
 
-    currentProduct.value = { ...selectedProduct.value };
+    console.log(selectedProductVariation.value)
+
+    currentProductVariationSize.value = { ...selectedProductVariationSize.value };
 };
 
 </script>

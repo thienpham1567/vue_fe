@@ -66,11 +66,20 @@
                 </div>
                 <DataTable :value="products" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
                     <Column field="productId" header="Product Id"></Column>
-                    <Column field="brand.brandId" header="Brand Id"></Column>
-                    <Column field="category.categoryId" header="Category Id"></Column>
-                    <!-- <Column field="createdAt" header="Created At"></Column>
-                    <Column field="updatedAt" header="Update At"></Column> -->
-
+                    <Column field="brand.brandId" header="Brand Id">
+                        <template #body="rowData">
+                            <div>
+                                {{ rowData.data.brand.name }}
+                            </div>
+                        </template>
+                    </Column>
+                    <Column field="category.categoryId" header="Category Id">
+                        <template #body="rowData">
+                            <div>
+                                {{ rowData.data.category.name }}
+                            </div>
+                        </template>
+                    </Column>
                     <Column class="" field="description" header="Description">
                         <template #body="rowData">
                             <div class="description-cell">
@@ -104,9 +113,9 @@
                 </DataTable>
             </div>
 
-            <Dialog v-model="deleteDialogVisible" :visible="deleteDialogVisible" header="Xác nhận xóa" :closable="false"
-                class="product-list__dialog">
-                <p>Bạn có chắc chắn muốn xóa sản phẩm này?</p>
+            <Dialog v-model="deleteDialogVisible" :visible="deleteDialogVisible" :closable="false">
+                <div class="flex justify-center text-2xl font-bold mt-4 mb-2 ">Xác nhận xóa</div>
+                <div class="text-2xl">Bạn có chắc chắn muốn xóa sản phẩm này?</div>
 
                 <template #footer>
                     <div class="product-list__dialog-buttons">
@@ -118,7 +127,7 @@
         </div>
     </div>
 </template>
-
+<style></style>
 <script setup lang="ts">
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';

@@ -18,7 +18,7 @@
         <button @click="toggleDropdown" class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4 w-full"
           :class="[route.name === 'Dashboard' ? activeClass : inactiveClass]">
           <i class="pi pi-box" style="font-size: 2rem"></i>
-          <span class="mx-4">Sản phẩm</span>
+          <span class="mx-4">Products</span>
           <i class="pi pi-chevron-down ml-auto"></i>
         </button>
         <div v-if="open" @click.away="closeDropdown"
@@ -26,7 +26,7 @@
           :class="{ 'opacity-100': open, 'opacity-0': !open }">
           <router-link class="block px-4 py-2 text-gray-500 "
             :class="[route.name === 'Products' ? activeClass : inactiveClass]" :to="{ name: 'ProductsAdmin' }">
-            <span class="mx-4">Products</span>
+            <span class="mx-4">Product</span>
           </router-link>
           <router-link class="block px-4 py-2 text-gray-500 "
             :class="[route.name === 'ProductsVariation' ? activeClass : inactiveClass]"
@@ -68,11 +68,26 @@
           <span class="mx-4">Reviews</span>
         </router-link>
 
-        <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[route.name === 'Modal' ? activeClass : inactiveClass]" to="/admin/report">
-          <i class="pi pi-chart-bar" style="font-size: 2rem"></i>
-          <span class="mx-4">Report</span>
-        </router-link>
+        <button @click="toggleDropdown" class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4 w-full"
+          :class="[route.name === 'Dashboard' ? activeClass : inactiveClass]">
+          <i class="pi pi-box" style="font-size: 2rem"></i>
+          <span class="mx-4">Thống kế</span>
+          <i class="pi pi-chevron-down ml-auto"></i>
+        </button>
+        <div v-if="open" @click.away="closeDropdown"
+          class="right-0 mt-2 py-2 bg-gray-900 rounded-md shadow-xl w-full transition-opacity ease-out duration-300"
+          :class="{ 'opacity-100': open, 'opacity-0': !open }">
+          <router-link class="block px-4 py-2 text-gray-500 "
+            :class="[route.name === 'Products' ? activeClass : inactiveClass]" :to="{ name: 'report-revenue' }">
+            <span class="mx-4">Doanh thu</span>
+          </router-link>
+          <router-link class="block px-4 py-2 text-gray-500 "
+            :class="[route.name === 'ProductsVariation' ? activeClass : inactiveClass]"
+            :to="{ name: 'best-selling-brand' }">
+            <span class="mx-4">Nhãn hiệu bán chạy</span>
+          </router-link>
+
+        </div>
 
         <router-link class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
           :class="[route.name === 'Blank' ? activeClass : inactiveClass]" to="/admin/accounts">
