@@ -5,15 +5,19 @@ import { ref, type Ref } from "vue";
 import jwt_decode from "jwt-decode";
 import { computed } from "vue";
 import router from "@/router";
+import { useToast } from 'primevue/usetoast';
 
 const useAccountStore = defineStore("account", () => {
     // State
     const user: Ref<UserType | null> = ref(null);
     const userToken: Ref<string> = ref("");
+    const errorMessage = ref("");
 
     // Getters
     const getUser = computed(() => user);
     const getToken = computed(() => userToken);
+
+    const getErrorMessage = computed(() => errorMessage);
 
     // Action
     const login = async (email: string, password: string) => {
@@ -21,12 +25,26 @@ const useAccountStore = defineStore("account", () => {
         if (localToken) {
             user.value = decodeToken(localToken);
             router.push({ name: "Home" });
-        } else {
-            const token = await new Account().login({ email, password });
-            if (token) {
-                localStorage.setItem("token", token);
-                user.value = decodeToken(token);
-                router.push({ name: "Home" });
+            return true;
+        } else if (!localToken) {
+            try {
+                const token = await new Account().login({ email, password });
+                if (token) {
+                    localStorage.setItem("token", token);
+                    user.value = decodeToken(token);
+                    router.push({ name: "Home" });
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (error) {
+                if (error.response.status === 401) {
+
+                    errorMessage.value = error.response.data;
+                    console.log(errorMessage.value);
+
+                }
+
             }
         }
     };
@@ -61,7 +79,7 @@ const useAccountStore = defineStore("account", () => {
             roles: userRoles,
         };
     };
-    return { getUser, getToken, login, logout, setToken, setUser };
+    return { getUser, getToken, login, logout, setToken, setUser, getErrorMessage };
 });
 
 export default useAccountStore;
