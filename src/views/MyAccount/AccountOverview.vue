@@ -7,23 +7,23 @@
                         <h2>Tài khoản của tôi</h2>
                         <div class="form-detail">
                             <div class="form-title">
-                                <label for="">{{ currentUser.userId }}</label>
+                                <label for="">Mã khách hàng: {{ currentUser.userId }}</label>
                             </div>
                             <div class="form-title">
-                                <label for="">{{ currentUser.emailAddress }}</label>
+                                <label for="">Email đăng nhập: {{ currentUser.emailAddress }}</label>
                             </div>
                             <div class="form-title">
-                                <label for="">{{ currentUser.firstName }}</label>
+                                <label for="">Họ và tên: {{ currentUser.lastName }} {{ currentUser.firstName }}</label>
                             </div>
                             <div class="form-title">
-                                <label for="">{{ currentUser.lastName }}</label>
+                                <label for=""></label>
                             </div>
                             <div class="form-title">
-                                <label for="">{{ currentUser.phoneNumber }}</label>
+                                <label for="">Số điên thoại: {{ currentUser.phoneNumber }}</label>
                             </div>
 
-                            <Button label="Sửa" @click="visible = true" />
-                            <Button label="Đổi mật khẩu" @click="visiblePass = true" />
+                            <Button label="Sửa" @click="visible = true" class="cl-button" />
+                            <Button label="Đổi mật khẩu" @click="visiblePass = true" class="cl-button" />
                         </div>
                     </div>
                 </TabPanel>
@@ -41,50 +41,65 @@
         </div>
 
 
-        <Dialog v-model:visible="visible" modal header="Header" :style="{ width: '50vw' }">
+        <Dialog v-model:visible="visible" modal :style="{ width: '50vw' }">
             <div class="form">
-                <span class="p-float-label">
+                <div class="flex justify-center text-2xl font-bold mt-4">Sửa thông tin</div>
+                <span class="form-value">
+                    <label for="">Mã khách hàng</label>
                     <InputText id="userId" v-model="currentUser.userId" readonly />
-
                 </span>
-                <span class="p-float-label">
+                <span class="form-value">
+                    <label for="">Email:</label>
                     <InputText id="email" v-model="currentUser.emailAddress" readonly />
-
                 </span>
-                <span class="p-float-label">
-                    <InputText id="lastname" v-model="currentUser.lastName" />
-
+                <span class="form-value">
+                    <label for="">Họ :</label>
+                    <InputText id="lastnameValue" v-model="currentUser.lastName" />
+                    <span v-if="lastNameError" class="text-red-500">{{ lastNameError }}</span>
                 </span>
-                <span class="p-float-label">
-                    <InputText id="firstname" v-model="currentUser.firstName" />
-
+                <span class="form-value">
+                    <label for="">Tên:</label>
+                    <InputText id="firstnameValue" v-model="currentUser.firstName" />
+                    <span v-if="firstNameError" class="text-red-500">{{ firstNameError }}</span>
                 </span>
-                <span class="p-float-label">
-                    <InputText id="username" v-model="currentUser.phoneNumber" />
-
+                <span class="form-value">
+                    <label for="">Số điện thoại:</label>
+                    <InputText id="phoneNumberValue" v-model="currentUser.phoneNumber" />
+                    <span v-if="phoneNumberError" class="text-red-500">{{ phoneNumberError }}</span>
                 </span>
 
             </div>
             <template #footer>
-                <Button label="No" icon="pi pi-times" @click="visible = false" text />
-                <Button label="Lưu" icon="pi pi-check" @click="saveUser" autofocus />
+                <Button label="Huỷ" icon="pi pi-times" @click="visible = false" text
+                    style="background-color: #00008B; color: white;" />
+                <Button label="Lưu" icon="pi pi-check" @click="saveUser" autofocus
+                    style="background-color: #00008B; color: white;" />
             </template>
         </Dialog>
-        <Dialog v-model:visible="visiblePass" modal header="Header" :style="{ width: '50vw' }">
+        <Dialog v-model:visible="visiblePass" modal :style="{ width: '50vw' }">
             <div class="form">
-                <span class="p-float-label">
+                <div class="flex justify-center text-2xl font-bold mt-4">Đổi mật khẩu</div>
+                <span class="form-value">
+                    <label for="">Mật khẩu cũ:</label>
                     <InputText type="password" id="oldPassword" v-model="oldPasswordValue" placeholder="Mật khẩu củ" />
+                    <span v-if="oldPasswordError" class="text-red-500">{{ oldPasswordError }}</span>
                 </span>
-                <span class="p-float-label">
+                <span class="form-value">
+                    <label for="">Mật khẩu mới:</label>
                     <InputText type="password" id="newPassword1" v-model="newPasswordValue1" placeholder="Mật khẩu mới" />
+                    <span v-if="newPasswordError1" class="text-red-500">{{ newPasswordError1 }}</span>
                 </span>
-                <span class="p-float-label">
+                <span class="form-value">
+                    <label for="">Nhập lại mật khẩu mới:</label>
                     <InputText type="password" id="newPassword" v-model="newPasswordValue" placeholder="Mật khẩu mới" />
+                    <span v-if="newPasswordError" class="text-red-500">{{ newPasswordError }}</span>
                 </span>
             </div>
             <template #footer>
-                <Button label="No" icon="pi pi-times" @click="visiblePass = false" text />
-                <Button label="Lưu" icon="pi pi-check" @click="updatePass" autofocus />
+                <Button label="Huỷ" icon="pi pi-times" @click="visiblePass = false" text
+                    style="background-color: #00008B; color: white;" />
+                <Button label="Lưu" icon="pi pi-check" @click="updatePass" autofocus
+                    style="background-color: #00008B; color: white;" />
             </template>
         </Dialog>
     </div>
@@ -117,21 +132,34 @@ const oldPasswordValue = ref(null);
 const newPasswordValue1 = ref(null);
 const newPasswordValue = ref(null);
 
+
+
+const lastNameError = ref('');
+const firstNameError = ref('');
+const phoneNumberError = ref('');
+
 const updatePass = async () => {
-    if (newPasswordValue.value === newPasswordValue1.value) {
+    validateChangePass();
+    if (newPasswordValue.value === newPasswordValue1.value || validateChangePass()) {
         const pass: PasswordChangeParams = {
             oldPassword: oldPasswordValue.value!,
             newPassword: newPasswordValue.value!
         };
         await userStore.changePass(currentUser.value.userId, pass);
+
+
         currentUser.value = userStore.getUser.value;
         window.location.reload();
         visiblePass.value = false;
+
+
     } else {
         console.log("Sai mật khẩu mới")
     };
 
 };
+
+
 
 const searchByEmail = async () => {
 
@@ -150,22 +178,57 @@ const showEditDialog = (user: UserType) => {
 
 onMounted(searchByEmail);
 const saveUser = async () => {
-    // Thực hiện cập nhật danh mục
-    try {
-        await userStore.updateUser(currentUser.value.userId, currentUser.value as UserParams);
-        await userStore.fetchByEmail(email);
-        currentUser.value = userStore.getUser.value;
-        tableKey.value++; // Force DataTable re-render
-        window.location.reload();
-    } catch (error) {
-        console.error('Error updating user:', error);
-        // Xử lý lỗi
-    }
-    currentUser.value = {};
-    visible.value = false;
+    if (validatePhoneNumber()) {
+        // Thực hiện cập nhật danh mục
+        try {
+            await userStore.updateUser(currentUser.value.userId, currentUser.value as UserParams);
+            await userStore.fetchByEmail(email);
+            currentUser.value = userStore.getUser.value;
+            tableKey.value++; // Force DataTable re-render
+            window.location.reload();
 
+        } catch (error) {
+            console.error('Error updating user:', error);
+            // Xử lý lỗi
+        }
+        currentUser.value = {};
+        visible.value = false;
+    }
 }
 
+
+function validatePhoneNumber() {
+    lastNameError.value = currentUser.value.lastName ? '' : 'LastName is required.';
+    firstNameError.value = currentUser.value.firstName ? '' : 'firstName is required.';
+
+
+    const phoneNumberRegex = /^(0[2-9]|84[2-9])(\d{8})$/;
+    if (!currentUser.value.phoneNumber) {
+        phoneNumberError.value = 'Phone Number is required.';
+    } else if (!phoneNumberRegex.test(currentUser.value.phoneNumber)) {
+        phoneNumberError.value = 'Invalid phone number format.';
+    } else {
+        phoneNumberError.value = '';
+    }
+    if (firstNameError.value || lastNameError.value || phoneNumberError.value
+    ) {
+        return false;
+    }
+    return true;
+}
+const oldPasswordError = ref('');
+const newPasswordError1 = ref('');
+const newPasswordError = ref('');
+function validateChangePass() {
+    oldPasswordError.value = oldPasswordValue.value ? '' : 'Password không được để trống.';
+    newPasswordError1.value = newPasswordValue1.value ? '' : 'Password không được để trống.';
+    newPasswordError.value = newPasswordValue.value ? '' : 'Password không được để trống.';
+    if (oldPasswordError.value || newPasswordError1.value || newPasswordError.value
+    ) {
+        return false;
+    }
+    return true;
+}
 </script>
 <style></style>
   

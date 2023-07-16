@@ -60,7 +60,7 @@
                     </div>
                     <span v-if="termsError" class="text-red-500">{{ termsError }}</span>
                 </div>
-
+                <label v-if="check === true" class="italic text-rose-500">Đăng ký thành công</label>
             </template>
             <template #footer>
                 <Button type="submit" :label="$t('create')" @click="validateForm()"
@@ -109,7 +109,7 @@ const termsError = ref('');
 const { addUser } = useUserStore();
 
 
-
+const check = ref(false);
 
 // Kiểm tra các điều kiện bổ sung (ví dụ: định dạng phone)
 function validatePhoneNumber() {
@@ -168,6 +168,8 @@ function validateForm() {
     };
 
     addUser(creationParams);
+
+    check.value = true;
     return true;
 }
 

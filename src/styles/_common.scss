@@ -6,7 +6,7 @@
 .p-dialog-header {
   display: unset;
   padding: 0 !important;
-  
+
   .p-dialog-header-icons {
     display: none !important;
   }
@@ -26,8 +26,9 @@
     background: $light-blue !important;
     color: white !important;
     border: 1px solid $light-blue !important;
-  } 
+  }
 }
+
 .p-sidebar-header {
   justify-content: space-between;
 }
@@ -43,4 +44,8 @@
       height: 100%;
     }
   }
+}
+
+.errorMessage {
+  color: red;
 }

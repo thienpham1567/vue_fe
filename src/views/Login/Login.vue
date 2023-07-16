@@ -29,15 +29,15 @@
                         <span class="mx-2 text-sm text-gray-600">{{ $t('rememberme') }} </span>
                     </label>
                 </div>
-                <label v-if="isLogin === true" class="italic text-rose-500">Đăng nhập thất bại, kiểm tra lại tài khoản và
-                    mật
-                    khẩu</label>
+
+                <p class="errorMessage" v-if="getErrorMessage !== '' || getErrorMessage !== undefined">{{ getErrorMessage }}
+                </p>
             </template>
             <template #footer>
                 <Button type="submit" :label="$t('signin')" @click="validateForm()"
                     class="w-full px-4 py-2 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 <span class="divider text-gray-500 text-sm">{{ $t('new-mem') }} </span>
-                <Button type="submit" :label="$t('create')"
+                <Button type="submit" :label="$t('create')" @click="goToRegistration"
                     class="w-full px-4 py-2 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
             </template>
         </Card>
@@ -70,9 +70,9 @@ const passwordError = ref('');
 
 const isLogin = ref(false);
 
-const { login } = useAccountStore();
+const { login, getErrorMessage } = useAccountStore();
 
-function validateForm() {
+async function validateForm() {
     emailError.value = emailValue.value ? '' : 'Email is required.';
     passwordError.value = passwordValue.value ? '' : 'Password is required.';
 
@@ -86,14 +86,14 @@ function validateForm() {
     if (emailError.value || passwordError.value) {
         return false;
     }
-    // login(emailValue.value, passwordValue.value)
+    await login(emailValue.value, passwordValue.value);
 
-
-    login(emailValue.value, passwordValue.value);
     isLogin.value = true;
 
     return true;
 }
 
-
+const goToRegistration = () => {
+    router.push('/account/register');
+}
 </script>
