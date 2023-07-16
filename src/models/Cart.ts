@@ -1,6 +1,6 @@
 import { HTTPBaseService } from "@/utils/request";
 import type { CartResponse, ListResponse } from "@/types/cart";
-import type { CartItemType } from "@/types/cartItem";
+import type { CreationParams } from "@/types/cartItem";
 
 class Cart extends HTTPBaseService {
   public constructor() {
@@ -11,16 +11,12 @@ class Cart extends HTTPBaseService {
     return await this.instance.get("/cart", { params });
   }
 
-  async detail(id: string): Promise<CartResponse> {
-    return await this.instance.get(`/cart/${id}`);
-  }
-
-  async create(params: CartItemType): Promise<CartResponse> {
+  async create(params: CreationParams): Promise<CartResponse> {
     return await this.instance.post(`/cart/update`, params);
   }
 
-  async delete(cartId: string, cartItem: number): Promise<CartResponse> {
-    let params = { cartItem };
+  async delete(cartId: string, cartItemId: number): Promise<CartResponse> {
+    let params = { cartItemId };
     return await this.instance.delete(`/cart/remove/${cartId}`, { params });
   }
 }

@@ -2,8 +2,6 @@ import Admin from "@/layout/AdminLayout.vue";
 import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 import jwt_decode from "jwt-decode";
 
-
-
 export const admin = {
   path: "/admin",
   component: Admin,

@@ -15,8 +15,12 @@
       </div>
       <div class="juistify-between">
         <div class="flex">
-          <Button icon="pi pi-shopping-cart " class="cart-btn" :label="$t('my-cart')" raised
+          
+          <Button v-if="getCart.itemTotalQuantity === undefined || getCart.itemTotalQuantity <= 0" icon="pi pi-shopping-cart " class="cart-btn" :label="$t('my-cart')" raised
             @click="dialogCartVisible = true" />
+          <Button v-else icon="pi pi-shopping-cart " class="cart-btn" :label="`Giỏ hàng ${getCart.itemTotalQuantity}`" raised
+            @click="dialogCartVisible = true" />
+
           <!-- Multi Language button  -->
           <div class="flex space-x-3 ml-3 bg-yellow-400">
             <select v-model="selectedLanguage" @change="changeLanguage">
@@ -27,10 +31,6 @@
           </div>
         </div>
       </div>
-
-
-
-
 
     </div>
     <div class="nav-menu">
@@ -75,14 +75,18 @@
     <template #header>
       <div class="text-2xl">{{ $t('my-cart') }}</div>
     </template>
-    <CartItem />
-    <div class="bg-gray-200 w-full h-1/6">
-      <div class="flex justify-end mr-4 pt-2" style="font-size: 1.7rem;">{{ $t('subtotal') }}</div>
-      <div class="flex justify-between m-4 pb-4">
-        <Button type="submit" :label="$t('my-cart')" @click="goToCart"
-          class="px-4 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
-        <Button type="submit" :label="$t('Proceed-to-checkout')" @click="goToCheckout"
-          class="px-4 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
+    <div class="flex flex-col justify-between h-full">
+      <div class="mx-4">
+        <CartItem :cart="getCart" :cartItems="getCartItems"/>
+      </div>
+      <div class="bg-gray-100 w-full">
+        <div class="text-end mr-4 pt-2" style="font-size: 1.5rem;">{{ $t('subtotal') }}: ${{ getCart.itemSubtotalPrice }}</div>
+        <div class="flex justify-between m-4">
+          <Button type="submit" :label="$t('my-cart')" @click="goToCart"
+            class="text-sm text-center text-white btn-color-light rounded focus:outline-none" />
+          <Button type="submit" :label="$t('Proceed-to-checkout')" @click="goToCheckout"
+            class="text-sm text-center text-white btn-color-medium rounded focus:outline-none" />
+        </div>
       </div>
     </div>
   </Sidebar>
@@ -107,25 +111,28 @@ import CoreDialog from '@/components/Core/CoreDialog.vue';
 import Sidebar from 'primevue/sidebar';
 import CartItem from "@/components/CartItems/CartItem.vue";
 import { useRouter } from 'vue-router';
-import { useBrandStore, useAccountStore, useCategoryStore } from "@/store";
+import { useBrandStore, useAccountStore, useCategoryStore, useCartStore } from "@/store";
 import { onMounted, ref, watch, computed } from 'vue';
 import jwt_decode from "jwt-decode";
 import { useLanguageStore } from '@/store/language';
 import { translate } from '@/i18n';
-
 import { useProductStore } from '@/store';
 import { useRoute } from "vue-router";
-import SearchProduct from '@/components/Product/SearchProduct.vue';
 import { ProductVariationType } from '@/types/productVariation';
-export interface ProductProps {
-  product?: ProductVariationType;
-}
+import SearchProduct from '@/components/Product/SearchProduct.vue';
 
 const route = useRoute();
+const router = useRouter();
 const { fetchAllProducts, getProducts } = useProductStore();
-
+const { getUser } = useAccountStore();
+const { getBrands, fetchBrands } = useBrandStore();
+const { getCategories, fetchCategories } = useCategoryStore();
+const { getCart, getCartItems, fetchCart } = useCartStore();
 const searchQuery = ref('');
 const filteredProducts = ref([]);
+const items = ref([]);
+let dialogCartVisible = ref(false);
+let dialogSignInVisible = ref(false);
 
 watch(
   () => route.query,
@@ -164,16 +171,6 @@ enum MainCategories {
   Women = 2,
   Kids = 3
 }
-
-const router = useRouter();
-const { getUser } = useAccountStore();
-const { getBrands, fetchBrands } = useBrandStore();
-const { getCategories, fetchCategories } = useCategoryStore();
-let dialogCartVisible = ref(false);
-let dialogSignInVisible = ref(false);
-const items = ref([]);
-
-
 
 const showMyAccountSection = ref(false);
 
@@ -240,16 +237,10 @@ const setDataHeader = () => {
       items: [getCategoriesByParent(MainCategories.Kids)],
     },
     {
-      label: "Thường Hiệu",
+      label: "Thương Hiệu",
       items: [getAllBrands()],
     },
   ];
-}
-
-const fetchData = () => {
-  Promise.all([fetchBrands(), fetchCategories()]).then(() => {
-    setDataHeader();
-  });
 }
 
 const goToLogin = () => {
@@ -271,8 +262,6 @@ const gotoProductList = (brand?: number, category?: number) => {
     query: { category: category, brand: brand },
   });
 };
-
-onMounted(fetchData);
 
 function goToCheckout() {
   dialogCartVisible.value = false;
@@ -339,5 +328,13 @@ const logout = () => {
   window.location.reload();
 };
 checkToken();
+
+const fetchData = () => {
+  Promise.all([fetchBrands(), fetchCategories(), fetchCart()]).then(() => {
+    setDataHeader();
+  });
+}
+
+onMounted(fetchData);
 </script>
 
