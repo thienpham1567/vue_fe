@@ -55,6 +55,17 @@ export const admin = {
       path: "accounts",
       name: "AccountManagement",
       component: () => import("@/views/Admin/Account.vue"),
+      beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('token');
+        const valueToken = jwt_decode(token!);
+        const roles = valueToken.user.roles;
+        const isStaff = roles.some(role => role.authority === 'STAFF');
+        if (!isStaff) {
+          next(); // Cho phép truy cập nếu là vai trò admin
+        } else {
+          next("/403"); // Chuyển hướng đến trang lỗi 403 nếu không có quyền truy cập
+        }
+      },
     },
     {
       path: "orders",
@@ -87,7 +98,8 @@ export const admin = {
       const valueToken = jwt_decode(token);
       const roles = valueToken.user.roles;
       const isAdmin = roles.some(role => role.authority === 'ADMIN');
-      if (_to.meta.requiresAuth && isAdmin) {
+      const isStaff = roles.some(role => role.authority === 'STAFF');
+      if (_to.meta.requiresAuth && isAdmin || isStaff) {
         next();
       } else {
         next({ name: 'Home' });

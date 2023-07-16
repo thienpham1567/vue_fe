@@ -29,7 +29,9 @@
                         <span class="mx-2 text-sm text-gray-600">{{ $t('rememberme') }} </span>
                     </label>
                 </div>
-
+                <label v-if="isLogin === true" class="italic text-rose-500">Đăng nhập thất bại, kiểm tra lại tài khoản và
+                    mật
+                    khẩu</label>
             </template>
             <template #footer>
                 <Button type="submit" :label="$t('signin')" @click="validateForm()"
@@ -65,6 +67,9 @@ const passwordValue = ref('');
 const emailError = ref('');
 const passwordError = ref('');
 
+
+const isLogin = ref(false);
+
 const { login } = useAccountStore();
 
 function validateForm() {
@@ -81,7 +86,12 @@ function validateForm() {
     if (emailError.value || passwordError.value) {
         return false;
     }
+    // login(emailValue.value, passwordValue.value)
+
+
     login(emailValue.value, passwordValue.value);
+    isLogin.value = true;
+
     return true;
 }
 
