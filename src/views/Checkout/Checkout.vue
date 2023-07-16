@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col lg:flex-row">
         <!-- Left column start -->
-        <div class="w-full lg:w-7/12 mb-4 mt-4 border drop-shadow">
+        <div class="w-full lg:w-8/12 mb-4 mt-4 border">
             <div class="mb-4">
                 <div class="py-2">
                     <div class="text-2xl mt-4 ml-4">{{ $t('deliinfo') }}</div>
@@ -81,7 +81,7 @@
         <!-- Left column End -->
 
         <!-- Right column start -->
-        <div class="lg:w-5/12 mx-4 mt-4 border drop-shadow h-full">
+        <div class="lg:w-4/12 mx-4 mt-4 border h-full">
             <div class="py-2">
                 <div class="text-2xl mt-4 ml-4">{{ $t('cart-summary') }}</div>
             </div>

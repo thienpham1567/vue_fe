@@ -8,7 +8,7 @@ import ATFooter from '@/components/Layout/ATFooter.vue';
         <header>
             <ATHeader />
         </header>
-        <main>
+        <main class="content-page">
             <router-view />
         </main>
         <footer>
