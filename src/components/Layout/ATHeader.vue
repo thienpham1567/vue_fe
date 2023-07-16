@@ -4,22 +4,22 @@
       <div class="flex items-center h-36">
         <Image :src="Logo" alt="Image" width="180" />
         <div class="p-inputgroup">
-          <AutoComplete v-model="searchQuery" dropdown :suggestions="filteredProducts" @complete="onSearchComplete"
+          <AutoComplete v-model="searchQuery" :suggestions="filteredProducts" @complete="onSearchComplete"
             placeholder="Search for shoes, clothes, etc." field="name">
             <template #option="slotProps" class="w-full">
               <SearchProduct v-for="product in filteredProducts" :product="product" />
             </template>
           </AutoComplete>
-          <Button icon="pi pi-search" class="search-btn" />
         </div>
       </div>
       <div class="juistify-between">
         <div class="flex">
-          
-          <Button v-if="getCart.itemTotalQuantity === undefined || getCart.itemTotalQuantity <= 0" icon="pi pi-shopping-cart " class="cart-btn" :label="$t('my-cart')" raised
+
+          <Button v-if="getCart.itemTotalQuantity === undefined || getCart.itemTotalQuantity <= 0"
+            icon="pi pi-shopping-cart " class="cart-btn" :label="$t('my-cart')" raised
             @click="dialogCartVisible = true" />
-          <Button v-else icon="pi pi-shopping-cart " class="cart-btn" :label="`Giỏ hàng ${getCart.itemTotalQuantity}`" raised
-            @click="dialogCartVisible = true" />
+          <Button v-else icon="pi pi-shopping-cart " class="cart-btn" :label="`Giỏ hàng ${getCart.itemTotalQuantity}`"
+            raised @click="dialogCartVisible = true" />
 
           <!-- Multi Language button  -->
           <div class="flex space-x-3 ml-3 bg-yellow-400">
@@ -40,7 +40,7 @@
             @click="dialogSignInVisible = true" />
           <button v-if="isLogin" :label="$t('my-account')" class="sign-in-register-btn" text
             @click="toggleSection('myAccount')">
-            <div class="mb-3">
+            <div class="flex justify-center mb-3 mt-3">
               <span v-if="showMyAccountSection">
                 <span class="font-bold">{{ $t('my-account') }}</span>
                 <i class="pi pi-chevron-down ml-2"></i>
@@ -50,24 +50,23 @@
                 <i class="pi pi-chevron-up ml-2"></i>
               </span>
             </div>
-            <div :class="['my-account-section', { 'hidden': !showMyAccountSection }]" class="absolute bg-gray-300">
+            <div :class="['my-account-section', { 'hidden': !showMyAccountSection }]"
+              class="absolute bg-white rounded border shadow-xl z-50 w-40 right-0 ">
               <div class="mb-2 flex justify-start">
-                <Button :label="$t('view-order')" class="sign-in-register-btn" text @click="goToViewOrders" />
+                <Button :label="$t('view-order')" class="sign-in-register-btn w-full" text @click="goToViewOrders" />
               </div>
               <div class="mb-2 flex justify-start">
-                <Button :label="$t('my-account')" class="sign-in-register-btn" text @click="goToMyAccount" />
+                <Button :label="$t('my-account')" class="sign-in-register-btn w-full" text @click="goToMyAccount" />
               </div>
               <div v-if="isAdmin" class="mb-2 flex justify-start">
-                <Button label="Quản lý sản phẩm" class="sign-in-register-btn" text @click="goToViewAdmin" />
+                <Button label="Quản lý sản phẩm" class="sign-in-register-btn w-full" text @click="goToViewAdmin" />
               </div>
               <div class="mb-2 flex justify-start">
-                <Button :label="$t('logout')" class="sign-in-register-btn" text @click="logout" />
+                <Button :label="$t('logout')" class="sign-in-register-btn w-full" text @click="logout" />
               </div>
-
             </div>
           </button>
         </template>
-
       </MegaMenu>
     </div>
   </nav>
@@ -77,10 +76,11 @@
     </template>
     <div class="flex flex-col justify-between h-full">
       <div class="mx-4">
-        <CartItem :cart="getCart" :cartItems="getCartItems"/>
+        <CartItem :cart="getCart" :cartItems="getCartItems" />
       </div>
       <div class="bg-gray-100 w-full">
-        <div class="text-end mr-4 pt-2" style="font-size: 1.5rem;">{{ $t('subtotal') }}: ${{ getCart.itemSubtotalPrice }}</div>
+        <div class="text-end mr-4 pt-2" style="font-size: 1.5rem;">{{ $t('subtotal') }}: ${{ getCart.itemSubtotalPrice }}
+        </div>
         <div class="flex justify-between m-4">
           <Button type="submit" :label="$t('my-cart')" @click="goToCart"
             class="text-sm text-center text-white btn-color-light rounded focus:outline-none" />
