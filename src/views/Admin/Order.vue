@@ -27,8 +27,11 @@
           </template>
       </Column>
     </DataTable>
-
-    <Dialog v-model="dialogVisible" :visible="dialogVisible" :header="dialogHeader" class="order-list__dialog">
+    
+    <Dialog v-model="dialogVisible" :visible="dialogVisible" class="order-list__dialog">
+      <div class="centered-text">
+        <h1>{{ dialogHeader }}</h1>
+      </div>
       <div class="p-fluid">
         <div class="p-field">
           <label for="orderId">ID đơn hàng</label>
@@ -36,19 +39,19 @@
         </div>
         <div class="p-field">
           <label for="customerName">Tên khách hàng</label>
-          <InputText id="customerName" v-model="formattedName"></InputText>
+          <InputText id="customerName" v-model="formattedName"  :disabled="isEditing"></InputText>
         </div>
         <div class="p-field">
           <label for="customerAddress">Địa chỉ khách hàng</label>
-          <InputText id="customerAddress" v-model="currentOrder.denormalizedAddress"></InputText>
+          <InputText id="customerAddress" v-model="currentOrder.denormalizedAddress"  :disabled="isEditing"></InputText>
         </div>
         <div class="p-field">
           <label for="customerPhone">Số điện thoại</label>
-          <InputText id="customerPhone" v-model="currentOrder.user.phoneNumber"></InputText>
+          <InputText id="customerPhone" v-model="currentOrder.user.phoneNumber"  :disabled="isEditing"></InputText>
         </div>
         <div class="p-field">
           <label for="orderDate">Ngày đặt hàng</label>
-          <Calendar id="orderDate" v-model="formattedDate"></Calendar>
+          <Calendar id="orderDate" v-model="formattedDate"  :disabled="isEditing"></Calendar>
         </div>
         <div class="p-field">
           <label for="products">Danh sách sản phẩm</label>
@@ -110,7 +113,7 @@ const statusOptions = [
 
 const dialogVisible = ref(false);
 const currentOrder = ref<OrderType | null>(null);
-const isEditing = ref(false);
+const isEditing = ref(true);
 
 
 const formattedDate = computed(() => {
@@ -288,5 +291,25 @@ const cancelEdit = () => {
 
 .status-completed {
   background-color: #28a745;
+}
+
+.order-list__dialog {
+  /* Căn giữa dialog */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog-header {
+  /* Căn giữa nội dung của header */
+  text-align: center;
+}
+
+.centered-text {
+  /* Căn giữa và làm đậm phần hiển thị dialogHeader */
+  text-align: center;
+  font-weight: bold;
+  color: black;
+  font-size: 24px; /* Tăng kích thước của thẻ div */
 }
 </style>
