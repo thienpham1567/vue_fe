@@ -1,18 +1,21 @@
 <template>
-    <Card class="product flex">
-        <template #header>
-            <div @click="gotoProductDetail" class="w-20">
-                <Image :src="primaryImage?.imageUrl" alt="Image" class="fixed-size-image" />
-            </div>
-        </template>
-        <template #title>{{ product?.product?.brand?.name }}</template>
-        <template #subtitle>
-            <div @click="gotoProductDetail">
-                {{ product?.product?.name }}
-            </div>
-        </template>
-        <template #content>${{ product?.product?.price }}</template>
-    </Card>
+    <div @click="gotoProductDetail">
+        <Card class="product flex hover:bg-gray-200">
+            <template #header>
+                <div class="w-20 flex justify-center mt-5">
+                    <Image :src="primaryImage?.imageUrl" alt="Image" class="fixed-size-image" />
+                </div>
+            </template>
+            <template #title>{{ product?.product?.brand?.name }} - {{ product?.product?.category?.parentCategory?.name
+            }}</template>
+            <template #subtitle>
+                <div @click="gotoProductDetail">
+                    {{ product?.product?.name }}
+                </div>
+            </template>
+            <template #content>${{ product?.product?.price }}</template>
+        </Card>
+    </div>
 </template>
 
 <script setup lang="ts">
