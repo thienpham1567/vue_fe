@@ -7,7 +7,7 @@
     </div>
 
     <div class="brand-list__table">
-      <DataTable :value="brands" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]" :key="tableKey">
+      <DataTable :value="getBrands" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]" :key="tableKey">
         <Column field="brandId" header="ID"></Column>
         <Column field="name" header="Tên"></Column>
         <Column header="Thao tác">
@@ -68,7 +68,6 @@ import useBrandStore from '@/store/BrandStore';
 import { BrandType, CreationParams, UpdateParams } from '@/types/brand';
 
 const { 
-    brands,
     getBrands,
     fetchBrands,
     addBrand,
