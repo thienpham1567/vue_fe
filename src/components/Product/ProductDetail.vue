@@ -72,7 +72,7 @@
     <!-- Review Product -->
     <div class="font-semibold text-2xl">ĐÁNH GIÁ SẢN PHẨM</div>
     <div class="border-b border-gray-400 mb-4"></div>
-    <div class="flex mb-4" v-for="review in filteredReviews" :key="review.reviewId">
+    <div class="flex mb-4" v-for="(review, index) in displayedReviews" :key="review.reviewId">
         <div class="w-1/12">
             <div class=" bg-slate-300 rounded-3xl h-10 ">
                 <div class="flex justify-center pt-2 ">
@@ -81,11 +81,16 @@
             </div>
         </div>
         <div class="w-2/3 pl-4">
-            <div class="text-4xl mb-2">{{ review?.userId }}</div>
-            <Rating v-model="ratingValue" class="mb-2" />
-            <div class="mb-2">Ngày Review: {{ review.createdAt }} | Phân loại brand: Nike</div>
-            <div mb-2>{{ review.content }}</div>
+            <div class="font-semibold mb-2">{{ review?.userId }}</div>
+            <div class=" mb-2">Sản phẩm: {{ selectedProduct?.product?.name }}</div>
+            <Rating v-model="review.rateStar" class="mb-2" :cancel="false" readonly />
+            <div class="mb-2">Thương hiệu:
+                {{ selectedProduct.product?.brand?.name }}</div>
+            <div mb-2>Đã đánh giá: {{ review.content }}</div>
         </div>
+    </div>
+    <div v-if="displayedReviews.length < filteredReviews.length" class="flex justify-center">
+        <button @click="loadMoreReviews" class="text-blue-500 hover:text-blue-700 text-lg font-semibold">Xem thêm</button>
     </div>
 
     <div class="font-semibold text-2xl">ĐÁNH GIÁ CỦA BẠN</div>
@@ -94,7 +99,7 @@
         <Rating v-model="ratingSubmitValue" class="mb-2" />
     </div>
     <div class="w-full mt-2">
-        <Textarea v-model="commentsValue" rows="5" cols="174" />
+        <Textarea v-model="commentsValue" rows="5" class="w-full" />
     </div>
     <div class="mt-2">
         <Button label="GỬI ĐÁNH GIÁ CỦA BẠN" class="btn w-full" size="small" @click="" />
@@ -116,9 +121,10 @@ import { ProductVariationSizeType } from '@/types/productVariationSize';
 import useReviewStore from '@/store/ReviewStore';
 import { product } from '@/router/product';
 import ProductVariation from '@/models/ProductVariation';
+import Review from '@/models/Review';
 
 const ratingSubmitValue = ref('');
-const ratingValue = ref(3);
+const ratingValue = ref('3');
 const commentsValue = ref('');
 const route = useRoute();
 const { productId } = route.params;
@@ -126,6 +132,8 @@ const { getProduct, getAllProducts, fetchOneProduct } = useProductStore();
 const { fetchReviews, getAllReviews } = useReviewStore();
 const { fetchSizes, getSizes } = useSizeStore();
 const { addUpdateToCart } = useCartStore();
+let displayedReviews = ref([]);
+const reviewsPerLoad = 2;
 
 let selectedProduct: Ref<ProductVariationType> = ref({});
 let selectedSize: Ref<ProductVariationSizeType> = ref({});
@@ -215,6 +223,7 @@ const fetchData = () => {
     Promise.all([fetchReviews(), fetchSizes(), fetchOneProduct(+productId)]).then(() => {
         selectedProduct.value = getProduct.value;
         filterReviews();
+        loadInitialReviews();
     });
     console.log(selectedProduct);
 }
@@ -227,6 +236,16 @@ const filterReviews = () => {
         // Ví dụ: return review.reviewId === selectedProduct.value.variationId;
         // Thay thế selectedProduct.value.variationId bằng thuộc tính biến thể sản phẩm bạn muốn so sánh.
     });
+};
+
+const loadInitialReviews = () => {
+    displayedReviews.value = filteredReviews.value.slice(0, reviewsPerLoad);
+};
+
+const loadMoreReviews = () => {
+    const currentLength = displayedReviews.value.length;
+    const newReviews = filteredReviews.value.slice(currentLength, currentLength + reviewsPerLoad);
+    displayedReviews.value = [...displayedReviews.value, ...newReviews];
 };
 
 onMounted(fetchData);
