@@ -72,7 +72,7 @@
     <!-- Review Product -->
     <div class="font-semibold text-2xl">ĐÁNH GIÁ SẢN PHẨM</div>
     <div class="border-b border-gray-400 mb-4"></div>
-    <div class="flex mb-4">
+    <div class="flex mb-4" v-for="review in getAllReviews" :key="review">
         <div class="w-1/12">
             <div class=" bg-slate-300 rounded-3xl h-10 ">
                 <div class="flex justify-center pt-2 ">
@@ -81,7 +81,7 @@
             </div>
         </div>
         <div class="w-2/3 pl-4">
-            <div class="mb-2">Nguyễn Duy An</div>
+            <div class="text-4xl mb-2">{{ selectedProduct.review?.userId }}</div>
             <Rating v-model="ratingValue" class="mb-2" />
             <div class="mb-2">Ngày Review: 12/03/2012 | Phân loại brand: Nike</div>
             <div mb-2>Mô tả được hiển thị ở đây</div>
@@ -113,6 +113,9 @@ import { ProductVariationType } from "@/types/productVariation";
 import { useProductStore, useSizeStore, useCartStore } from "@/store";
 import { ref, onMounted, computed, Ref } from "vue";
 import { ProductVariationSizeType } from '@/types/productVariationSize';
+import useReviewStore from '@/store/ReviewStore';
+import { product } from '@/router/product';
+import ProductVariation from '@/models/ProductVariation';
 
 const ratingSubmitValue = ref('');
 const ratingValue = ref(3);
@@ -120,11 +123,13 @@ const commentsValue = ref('');
 const route = useRoute();
 const { productId } = route.params;
 const { getProduct, getAllProducts, fetchOneProduct } = useProductStore();
+const { fetchReviews, getAllReviews } = useReviewStore();
 const { fetchSizes, getSizes } = useSizeStore();
 const { addUpdateToCart } = useCartStore();
 
 let selectedProduct: Ref<ProductVariationType> = ref({});
 let selectedSize: Ref<ProductVariationSizeType> = ref({});
+
 
 // computed
 const kidShoesSizes = computed(() => {
@@ -206,9 +211,10 @@ const onSelectProduct = (product: ProductVariationType) => {
 }
 
 const fetchData = () => {
-    Promise.all([fetchSizes(), fetchOneProduct(+productId)]).then(() => {
+    Promise.all([fetchReviews(), fetchSizes(), fetchOneProduct(+productId)]).then(() => {
         selectedProduct.value = getProduct.value;
     });
+    console.log(selectedProduct);
 }
 
 onMounted(fetchData);

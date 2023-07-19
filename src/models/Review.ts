@@ -13,7 +13,7 @@ class Review extends HTTPBaseService {
   }
 
   async list(): Promise<ListResponse> {
-    return await this.instance.get("/reviews");
+    return await this.instance.get("/admin/reviews");
   }
 
   async detail(id: number): Promise<ReviewResponse> {

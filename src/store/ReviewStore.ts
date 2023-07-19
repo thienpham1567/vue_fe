@@ -11,6 +11,7 @@ const useReviewStore = () => {
   // Getters
   const getReviews = computed(() => reviews.value);
   const getReview = computed(() => review.value);
+  const getAllReviews = computed(() => reviews);
 
   // Actions
   const fetchReviews = async () => {
@@ -47,6 +48,7 @@ const useReviewStore = () => {
   return {
     getReview,
     getReviews,
+    getAllReviews,
     fetchReviews,
     addReview,
     updateReview,

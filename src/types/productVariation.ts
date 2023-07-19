@@ -2,6 +2,7 @@ import { ProductImagesType } from './productImages';
 import { ProductVariationSizeType } from './productVariationSize';
 import type { ProductType } from "./product";
 import type { ColorType } from "./color";
+import type { ReviewType } from "./review";
 
 export interface ProductVariationType {
   productVariationId?: number;
@@ -9,6 +10,7 @@ export interface ProductVariationType {
   color?: ColorType;
   productVariationSizes?: ProductVariationSizeType[];
   productImages?: ProductImagesType[];
+  review?: ReviewType;
 }
 
 export interface CreationProductVariationParams {

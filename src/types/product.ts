@@ -1,5 +1,6 @@
 import type { BrandType } from "./brand";
 import type { CategoryType } from "./category";
+import type { ReviewType } from "./review";
 
 export interface ProductType {
   productId?: number;
@@ -46,4 +47,5 @@ export interface ListResponse {
 export interface QueryProductParams {
   brand?: BrandType;
   category?: CategoryType;
+  review?: ReviewType;
 }
