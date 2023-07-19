@@ -68,9 +68,43 @@
             </div>
         </div>
     </div>
+
+    <!-- Review Product -->
+    <div class="font-semibold text-2xl">ĐÁNH GIÁ SẢN PHẨM</div>
+    <div class="border-b border-gray-400 mb-4"></div>
+    <div class="flex mb-4">
+        <div class="w-1/12">
+            <div class=" bg-slate-300 rounded-3xl h-10 ">
+                <div class="flex justify-center pt-2 ">
+                    <i class="pi pi-user" style="font-size: 2rem"></i>
+                </div>
+            </div>
+        </div>
+        <div class="w-2/3 pl-4">
+            <div class="mb-2">Nguyễn Duy An</div>
+            <Rating v-model="ratingValue" class="mb-2" />
+            <div class="mb-2">Ngày Review: 12/03/2012 | Phân loại brand: Nike</div>
+            <div mb-2>Mô tả được hiển thị ở đây</div>
+        </div>
+    </div>
+
+    <div class="font-semibold text-2xl">ĐÁNH GIÁ CỦA BẠN</div>
+    <div class="border-b border-gray-400 mb-4"></div>
+    <div class="flex justify-center">
+        <Rating v-model="ratingSubmitValue" class="mb-2" />
+    </div>
+    <div class="w-full mt-2">
+        <Textarea v-model="commentsValue" rows="5" cols="174" />
+    </div>
+    <div class="mt-2">
+        <Button label="GỬI ĐÁNH GIÁ CỦA BẠN" class="btn w-full" size="small" @click="" />
+    </div>
 </template>
 
 <script setup lang="ts">
+import Rating from 'primevue/rating';
+import Textarea from 'primevue/textarea';
+import 'primeicons/primeicons.css';
 import Image from 'primevue/image';
 import RadioButton from 'primevue/radiobutton';
 import Button from 'primevue/button';
@@ -80,6 +114,9 @@ import { useProductStore, useSizeStore, useCartStore } from "@/store";
 import { ref, onMounted, computed, Ref } from "vue";
 import { ProductVariationSizeType } from '@/types/productVariationSize';
 
+const ratingSubmitValue = ref('');
+const ratingValue = ref(3);
+const commentsValue = ref('');
 const route = useRoute();
 const { productId } = route.params;
 const { getProduct, getAllProducts, fetchOneProduct } = useProductStore();
@@ -159,7 +196,7 @@ const addCart = () => {
         productVariationSize: selectedSize.value.productSize,
         color: selectedProduct.value.color,
         cartId: "",
-        quantity:1,
+        quantity: 1,
         imageUrl: primaryImage.value?.imageUrl,
     });
 }
