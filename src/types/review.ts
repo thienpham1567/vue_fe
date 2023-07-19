@@ -3,7 +3,7 @@ import type { UserType } from "./user";
 
 export interface ReviewType {
     reviewId?: number;
-    userId?: UserType;
+    user?: UserType;
     productVariationId?: ProductVariationType;
     content?: string;
     rateStar?: number;
@@ -11,8 +11,11 @@ export interface ReviewType {
 }
 
 export interface CreationParams {
-    name?: string;
-    parentCategoryId?: number;
+    user?: UserType;
+    productVariationId?: number;
+    content?: string;
+    rateStar?: number;
+    createdAt?: Date;
 }
 
 export type UpdateParams = Omit<ReviewType, "id">;

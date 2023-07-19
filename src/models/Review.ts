@@ -21,7 +21,7 @@ class Review extends HTTPBaseService {
   }
 
   async create(params: CreationParams): Promise<CreationResponse> {
-    return await this.instance.post("/reviews", params);
+    return await this.instance.post("/admin/reviews", params);
   }
 
   async update(id: number, params: UpdateParams): Promise<ReviewResponse> {
@@ -29,7 +29,7 @@ class Review extends HTTPBaseService {
   }
 
   async delete(id: number): Promise<void> {
-    await this.instance.delete(`/reviews/${id}`);
+    await this.instance.delete(`/admin/reviews/${id}`);
   }
 
   async deleteAll(ids: number[]): Promise<void> {

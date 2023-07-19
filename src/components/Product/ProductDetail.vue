@@ -66,6 +66,19 @@
             <div class="mt-5">
                 <Button label="Add to cart" class="btn w-full" size="small" @click="addCart" />
             </div>
+            <div class="mt-4">
+                <div class="font-semibold text-2xl">ĐÁNH GIÁ CỦA BẠN</div>
+                <div class="border-b border-gray-400 mb-4"></div>
+                <div class="flex justify-center">
+                    <Rating v-model="ratingSubmitValue" class="mb-2" />
+                </div>
+                <div class="w-full mt-2">
+                    <Textarea v-model="commentsValue" rows="5" class="w-full" />
+                </div>
+                <div class="mt-2">
+                    <Button label="GỬI ĐÁNH GIÁ CỦA BẠN" class="btn w-full" size="small" @click="handleSaveReview" />
+                </div>
+            </div>
         </div>
     </div>
 
@@ -81,7 +94,7 @@
             </div>
         </div>
         <div class="w-2/3 pl-4">
-            <div class="font-semibold mb-2">{{ review?.userId }}</div>
+            <div class="font-semibold mb-2">{{ review?.user.emailAddress }}</div>
             <div class=" mb-2">Sản phẩm: {{ selectedProduct?.product?.name }}</div>
             <Rating v-model="review.rateStar" class="mb-2" :cancel="false" readonly />
             <div class="mb-2">Thương hiệu:
@@ -103,7 +116,7 @@
             </button>
         </div>
     </div>
-    <div class="font-semibold text-2xl">ĐÁNH GIÁ CỦA BẠN</div>
+    <!-- <div class="font-semibold text-2xl">ĐÁNH GIÁ CỦA BẠN</div>
     <div class="border-b border-gray-400 mb-4"></div>
     <div class="flex justify-center">
         <Rating v-model="ratingSubmitValue" class="mb-2" />
@@ -113,7 +126,7 @@
     </div>
     <div class="mt-2">
         <Button label="GỬI ĐÁNH GIÁ CỦA BẠN" class="btn w-full" size="small" @click="" />
-    </div>
+    </div> -->
 </template>
 
 <script setup lang="ts">
@@ -132,9 +145,12 @@ import useReviewStore from '@/store/ReviewStore';
 import { product } from '@/router/product';
 import ProductVariation from '@/models/ProductVariation';
 import Review from '@/models/Review';
+import { ReviewType, CreationParams } from '@/types/review';
+import { UserType } from '@/types/user';
+import jwt_decode from "jwt-decode";
+
 
 const ratingSubmitValue = ref('');
-const ratingValue = ref('3');
 const commentsValue = ref('');
 const route = useRoute();
 const { productId } = route.params;
@@ -142,12 +158,14 @@ const { getProduct, getAllProducts, fetchOneProduct } = useProductStore();
 const { fetchReviews, getAllReviews } = useReviewStore();
 const { fetchSizes, getSizes } = useSizeStore();
 const { addUpdateToCart } = useCartStore();
+const reviewStore = useReviewStore();
 let displayedReviews = ref([]);
 const reviewsPerLoad = 2;
 
 let selectedProduct: Ref<ProductVariationType> = ref({});
 let selectedSize: Ref<ProductVariationSizeType> = ref({});
 let filteredReviews = ref([]);
+const currentReview = ref<ReviewType>({});
 
 
 // computed
@@ -213,6 +231,30 @@ const clothingSizes = computed(() => {
 
 const primaryImage = computed(() => selectedProduct.value.productImages?.find(productImage => productImage.isPrimary));
 const orderImages = computed(() => selectedProduct.value.productImages?.filter(productImage => !productImage.isPrimary));
+
+const handleSaveReview = async () => {
+    try {
+        const token = localStorage.getItem("token");
+        const useValue = jwt_decode(token!);
+        const userId = useValue.user;
+        const selectStar = ratingSubmitValue.value;
+        const inputContent = commentsValue.value;
+        const productVariation = selectedProduct;
+        currentReview.value.rateStar = selectStar;
+        currentReview.value.content = inputContent;
+        currentReview.value.user = userId;
+        currentReview.value.productVariationId = productVariation.value.productVariationId;
+        console.log("object: ", currentReview.value);
+        await reviewStore.addReview(currentReview.value as CreationParams);
+        fetchData();
+        console.log('Insert review success');
+    } catch (error) {
+        console.log('Insert review failed');
+    }
+    currentReview.value = {};
+    ratingSubmitValue.value = '';
+    commentsValue.value = '';
+}
 
 // functions
 const addCart = () => {
