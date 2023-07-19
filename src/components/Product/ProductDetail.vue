@@ -89,10 +89,20 @@
             <div mb-2>Đã đánh giá: {{ review.content }}</div>
         </div>
     </div>
-    <div v-if="displayedReviews.length < filteredReviews.length" class="flex justify-center">
-        <button @click="loadMoreReviews" class="text-blue-500 hover:text-blue-700 text-lg font-semibold">Xem thêm</button>
+    <div class="flex justify-center">
+        <div v-if="displayedReviews.length < filteredReviews.length" class="flex justify-center mr-4">
+            <button @click="loadMoreReviews" class="text-blue-500 hover:text-blue-700 text-lg font-semibold">Xem
+                thêm
+                <i class="pi pi-chevron-down"></i>
+            </button>
+        </div>
+        <div v-if="displayedReviews.length > reviewsPerLoad" class="flex justify-center">
+            <button @click="collapseReviews" class="text-blue-500 hover:text-blue-700 text-lg font-semibold">Thu
+                lại
+                <i class="pi pi-chevron-up"></i>
+            </button>
+        </div>
     </div>
-
     <div class="font-semibold text-2xl">ĐÁNH GIÁ CỦA BẠN</div>
     <div class="border-b border-gray-400 mb-4"></div>
     <div class="flex justify-center">
@@ -246,6 +256,12 @@ const loadMoreReviews = () => {
     const currentLength = displayedReviews.value.length;
     const newReviews = filteredReviews.value.slice(currentLength, currentLength + reviewsPerLoad);
     displayedReviews.value = [...displayedReviews.value, ...newReviews];
+};
+
+const collapseReviews = () => {
+    const currentLength = displayedReviews.value.length;
+    const newLength = currentLength - 2;
+    displayedReviews.value = displayedReviews.value.slice(0, newLength);
 };
 
 onMounted(fetchData);
