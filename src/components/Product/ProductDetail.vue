@@ -72,7 +72,7 @@
     <!-- Review Product -->
     <div class="font-semibold text-2xl">ĐÁNH GIÁ SẢN PHẨM</div>
     <div class="border-b border-gray-400 mb-4"></div>
-    <div class="flex mb-4" v-for="review in getAllReviews" :key="review">
+    <div class="flex mb-4" v-for="review in filteredReviews" :key="review.reviewId">
         <div class="w-1/12">
             <div class=" bg-slate-300 rounded-3xl h-10 ">
                 <div class="flex justify-center pt-2 ">
@@ -81,10 +81,10 @@
             </div>
         </div>
         <div class="w-2/3 pl-4">
-            <div class="text-4xl mb-2">{{ selectedProduct.review?.userId }}</div>
+            <div class="text-4xl mb-2">{{ review?.userId }}</div>
             <Rating v-model="ratingValue" class="mb-2" />
-            <div class="mb-2">Ngày Review: 12/03/2012 | Phân loại brand: Nike</div>
-            <div mb-2>Mô tả được hiển thị ở đây</div>
+            <div class="mb-2">Ngày Review: {{ review.createdAt }} | Phân loại brand: Nike</div>
+            <div mb-2>{{ review.content }}</div>
         </div>
     </div>
 
@@ -129,6 +129,7 @@ const { addUpdateToCart } = useCartStore();
 
 let selectedProduct: Ref<ProductVariationType> = ref({});
 let selectedSize: Ref<ProductVariationSizeType> = ref({});
+let filteredReviews = ref([]);
 
 
 // computed
@@ -213,9 +214,20 @@ const onSelectProduct = (product: ProductVariationType) => {
 const fetchData = () => {
     Promise.all([fetchReviews(), fetchSizes(), fetchOneProduct(+productId)]).then(() => {
         selectedProduct.value = getProduct.value;
+        filterReviews();
     });
     console.log(selectedProduct);
 }
+
+const filterReviews = () => {
+    // Lọc đánh giá dựa trên biến thể sản phẩm
+    filteredReviews.value = getAllReviews.value.filter((review) => {
+        return review.productVariationId === selectedProduct.value.productVariationId;
+        // Kiểm tra review.reviewId với biến thể sản phẩm mong muốn
+        // Ví dụ: return review.reviewId === selectedProduct.value.variationId;
+        // Thay thế selectedProduct.value.variationId bằng thuộc tính biến thể sản phẩm bạn muốn so sánh.
+    });
+};
 
 onMounted(fetchData);
 </script>
