@@ -103,21 +103,6 @@
   </CoreDialog>
 </template>
 
-<style>
-.p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item {
-  margin: 0 0 0 0;
-  padding: 0 !important;
-  border: 0 none;
-  color: #495057;
-  background: transparent;
-  transition: box-shadow 0.2s;
-  border-radius: 0;
-}
-
-.p-autocomplete-panel .p-autocomplete-items {
-  padding: 0 0 !important;
-}
-</style>
 
 <script setup lang="ts">
 import Image from 'primevue/image';
