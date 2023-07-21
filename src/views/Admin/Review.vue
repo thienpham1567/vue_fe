@@ -6,7 +6,11 @@
       <DataTable :value="reviews" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
         <Column field="reviewId" header="Review Id"></Column>
         <Column field="user.emailAddress" header="User email"></Column>
-        <Column field="productVariationId" header="Product Variation Id"></Column>
+        <Column field="productVariationId" header="Product Variation">
+          <template #body="rowData">
+            <div>{{ getProductVariationName(rowData.data.productVariationId) }}</div>
+          </template>
+        </Column>
         <Column field="content" header="Content"></Column>
 
         <Column field="rateStar" header="Rate Star"></Column>
@@ -37,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import useReviewStore from '@/store/ReviewStore';
@@ -45,11 +49,17 @@ import { ReviewType } from '@/types/review';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Dialog from 'primevue/dialog';
+import { ProductVariationType } from '@/types/productVariation';
+import useProductVariationAdminStore from '@/store/ProductVariationAdminStore';
 const dialogVisible = ref(false);
 const deleteDialogVisible = ref(false);
 const reviewStore = useReviewStore();
 const reviews = ref<ReviewType[]>([]);
 const currentReview = ref<ReviewType>({});
+
+const productVariationStore = useProductVariationAdminStore();
+const productVariations = ref<ProductVariationType[]>([]);
+const selectedProductVariation = ref<ProductVariationType | null>(null);
 
 /*--Cancel layout modal delete confirm--*/
 const cancelDelete = () => {
@@ -76,6 +86,24 @@ const handleDelete = async () => {
   deleteDialogVisible.value = false;
 }
 
+// Tính toán productVariationWithLabel
+const productVariationsWithLabel = computed(() =>
+  productVariations.value
+    .filter(productVariation => productVariation.productVariationId !== null)
+    .map((productVariation) => ({
+      ...productVariation,
+      label: `${productVariation.product?.name}`
+    }))
+);
+// Method để tìm tên tương ứng với productVariationId
+function getProductVariationName(productVariationId) {
+  const matchedProductVariation = productVariationsWithLabel.value.find(
+    productVariation => productVariation.productVariationId === productVariationId
+  );
+  return matchedProductVariation ? matchedProductVariation.product?.name || 'null' : 'null';
+}
+
+
 onMounted(async () => {
   try {
     await reviewStore.fetchReviews();
@@ -83,6 +111,12 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error fetching reviews:', error);
     // Handle error
+  }
+  try {
+    await productVariationStore.fetchAllProductVariationsAdmin();
+    productVariations.value = productVariationStore.getproductVariations.value;
+  } catch (error) {
+    console.log('Error fetching productVariations', error);
   }
 });
 </script>
