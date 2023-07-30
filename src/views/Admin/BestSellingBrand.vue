@@ -1,25 +1,50 @@
-<!-- <template>
-  <div class="admin-report flex justify-center ">
-    <div>
-      <div class="admin-report__title">Nhãn hiệu bán chạy</div>
+<template>
+  <div class="flex justify-center h-full">
+    <div class="bg-slate-100 w-1/2 m-2 h-full">
+      <div class="admin-report flex justify-center ">
+        <div>
+          <div class="admin-report__title mt-4">NHÃN HIỆU BÁN CHẠY</div>
+        </div>
+      </div>
+      <div class="admin-report flex justify-center mb-4">
+        <div class=" flex justify-content-center w-1/2 ">
+          <Chart type="doughnut" :data="chartData" :options="chartOptions" class="w-full md:w-30rem" />
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="admin-report flex justify-center ">
-    <div class="card flex justify-content-center w-1/2 h-1/2 ">
-      <Chart type="doughnut" :data="chartData" :options="chartOptions" class="w-full md:w-30rem" />
-    </div>
+    <Top5User />
   </div>
 </template>
   
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import Chart from 'primevue/chart';
+import { reportByBrandType } from '@/types/reportByBrand';
+import useReportByBrandStore from '@/store/ReportByBrandStore';
+import Top5User from '@/views/Admin/Top5User.vue';
+
+const reportByBrandStore = useReportByBrandStore();
+const ReportByBrands = ref<reportByBrandType[]>([]);
 
 /*--Report: best selling by brands--*/
-onMounted(() => {
+onMounted(async () => {
   chartData.value = setChartData();
+  /*--Load Report By Brand--*/
+  try {
+    await reportByBrandStore.fetchReportByBrands();
+    ReportByBrands.value = reportByBrandStore.getReportByBrands.value;
+
+    // Truyền ReportByBrand.name vào labels []
+    const labels = ReportByBrands.value.map((brand) => brand.name);
+    chartData.value.labels = labels;
+    const data = ReportByBrands.value.map((brand) => brand.quantity);
+    chartData.value.datasets[0].data = data;
+  } catch (error) {
+    console.log('Error fetching ReportByBrands', error);
+  }
 });
 
+// Biểu đồ Order
 const chartData = ref();
 const chartOptions = ref({
   cutout: '60%'
@@ -29,10 +54,10 @@ const setChartData = () => {
   const documentStyle = getComputedStyle(document.body);
 
   return {
-    labels: ['Nike', 'Adidas', 'Puma', 'New Balance'],
+    labels: [],
     datasets: [
       {
-        data: [540, 325, 702, 300],
+        data: [],
         backgroundColor: [documentStyle.getPropertyValue('--blue-500'), documentStyle.getPropertyValue('--yellow-500'), documentStyle.getPropertyValue('--green-500'), documentStyle.getPropertyValue('--pink-500')],
         hoverBackgroundColor: [documentStyle.getPropertyValue('--blue-400'), documentStyle.getPropertyValue('--yellow-400'), documentStyle.getPropertyValue('--green-400'), documentStyle.getPropertyValue('--pink-400')]
       }
@@ -43,10 +68,6 @@ const setChartData = () => {
 </script>
   
 <style scoped>
-.admin-report {
-  padding: 20px;
-}
-
 .admin-report__title {
   font-size: 24px;
   font-weight: bold;
@@ -98,5 +119,10 @@ const setChartData = () => {
   justify-content: center;
   margin-top: 20px;
 }
+
+.chart-top {
+  width: 34rem;
+  height: 17rem;
+}
 </style>
-   -->
+  
