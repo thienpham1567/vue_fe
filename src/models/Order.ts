@@ -3,6 +3,7 @@ import type {
   CreationParams,
   CreationResponse,
   ListResponse,
+  OrderById,
   OrderResponse,
   UpdateParams,
 } from "@/types/order";
@@ -15,6 +16,10 @@ class Order extends HTTPBaseService {
 
   async list(params: QueryUserParams): Promise<ListResponse> {
     return await this.instance.get("/orders", {params});
+  }
+
+  async listbyid(params: OrderById): Promise<ListResponse> {
+    return await this.instance.get("/orders/byuserid", {params});
   }
 
   async detail(id: string): Promise<OrderResponse> {

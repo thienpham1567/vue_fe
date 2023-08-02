@@ -76,14 +76,14 @@ import useCategoryStore from '@/store/CategoryStore';
 import { CategoryType, CreationParams, UpdateParams } from '@/types/category';
 
 const {
-  categories,
+  getCategories,
   getSubCategories,
   fetchCategories,
   addCategory,
   updateCategory,
   deleteCategory,
 } = useCategoryStore();
-const currentCategory = ref<CategoryType>({});
+const currentCategory = reactive<CategoryType>({});
 const dialogVisible = ref(false);
 const deleteDialogVisible = ref(false);
 const isEditing = ref(false);
@@ -100,11 +100,11 @@ onMounted(async () => {
 });
 
 const filteredCategories = computed(() => {
-  const filteredCategories3 = categories.slice(3);
+  const filteredCategories3 = getCategories.value.slice(3);
   const searchValue = searchText.value.trim().toLowerCase();
 
   if (searchValue !== '') {
-    return filteredCategories3.filter(category =>
+    return filteredCategories3.filter((category : CategoryType) =>
       category.name.toLowerCase().includes(searchValue)
     );
   }

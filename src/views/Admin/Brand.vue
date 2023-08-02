@@ -7,7 +7,7 @@
     </div>
 
     <div class="brand-list__table">
-      <DataTable :value="brands" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]" :key="tableKey">
+      <DataTable :value="getBrands" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]" :key="tableKey">
         <Column field="brandId" header="ID"></Column>
         <Column field="name" header="Tên"></Column>
         <Column header="Thao tác">
@@ -25,10 +25,6 @@
 
     <Dialog v-model="dialogVisible" :visible="dialogVisible" :header="dialogHeader" class="brand-list__dialog">
       <div class="p-fluid">
-        <div class="p-field">
-          <label for="brandId">ID</label>
-          <InputText id="brandId" v-model="currentBrand.brandId" :disabled="isEditing"></InputText>
-        </div>
         <div class="p-field">
           <label for="brandName">Tên</label>
           <InputText id="brandName" v-model="currentBrand.name"></InputText>
@@ -68,7 +64,6 @@ import useBrandStore from '@/store/BrandStore';
 import { BrandType, CreationParams, UpdateParams } from '@/types/brand';
 
 const { 
-    brands,
     getBrands,
     fetchBrands,
     addBrand,
@@ -91,8 +86,8 @@ onMounted(async () => {
 });
 
 
-const showAddDialog = () => {
-  currentBrand.value = {};
+const showAddDialog = (brand: BrandType) => {
+  currentBrand.value = { ...brand};
   isEditing.value = false;
   dialogVisible.value = true;
 };

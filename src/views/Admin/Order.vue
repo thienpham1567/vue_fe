@@ -17,18 +17,26 @@
       <Column field="orderTotalPrice" header="Tổng số tiền" sortable="custom" :sort-function="customSort"></Column>
       <Column field="ordersStatus" header="Trạng thái" :body="statusBodyTemplate" sortable="custom"
         :sort-function="customSort">
+        <template #body="rowData">
+          <span :class="getStatusBadgeClass(rowData.data.ordersStatus)">
+            {{ rowData.data.ordersStatus }}
+          </span>
+        </template>
       </Column>
       <Column header="Xem đơn hàng" :body="viewOrderTemplate">
         <template #body="rowData">
-            <div class="category-list__actions">
-              <Button icon="pi pi-pencil" class="p-button-rounded p-button-success"
-                @click="openOrderDialog(rowData.data)"></Button>
-            </div>
-          </template>
+          <div class="category-list__actions">
+            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success"
+              @click="openOrderDialog(rowData.data)"></Button>
+          </div>
+        </template>
       </Column>
     </DataTable>
 
-    <Dialog v-model="dialogVisible" :visible="dialogVisible" :header="dialogHeader" class="order-list__dialog">
+    <Dialog v-model="dialogVisible" :visible="dialogVisible" class="order-list__dialog">
+      <div class="centered-text">
+        <h1>{{ dialogHeader }}</h1>
+      </div>
       <div class="p-fluid">
         <div class="p-field">
           <label for="orderId">ID đơn hàng</label>
@@ -36,28 +44,35 @@
         </div>
         <div class="p-field">
           <label for="customerName">Tên khách hàng</label>
-          <InputText id="customerName" v-model="formattedName"></InputText>
+          <InputText id="customerName" v-model="formattedName" :disabled="isEditing"></InputText>
         </div>
         <div class="p-field">
           <label for="customerAddress">Địa chỉ khách hàng</label>
-          <InputText id="customerAddress" v-model="currentOrder.denormalizedAddress"></InputText>
+          <InputText id="customerAddress" v-model="currentOrder.denormalizedAddress" :disabled="isEditing"></InputText>
         </div>
         <div class="p-field">
           <label for="customerPhone">Số điện thoại</label>
-          <InputText id="customerPhone" v-model="currentOrder.user.phoneNumber"></InputText>
+          <InputText id="customerPhone" v-model="currentOrder.user.phoneNumber" :disabled="isEditing"></InputText>
         </div>
         <div class="p-field">
           <label for="orderDate">Ngày đặt hàng</label>
-          <Calendar id="orderDate" v-model="formattedDate"></Calendar>
+          <Calendar id="orderDate" v-model="formattedDate" :disabled="isEditing"></Calendar>
+        </div>
+        <div class="p-field">
+          <label for="customerStatus">Trạng thái</label>
+          <InputText id="customerStatus" v-model="currentOrder.ordersStatus"></InputText>
         </div>
         <div class="p-field">
           <label for="products">Danh sách sản phẩm</label>
-          <DataTable :value="currentOrder.orderLines">
-            <Column field="productVariationSize.productName" header="Tên sản phẩm"></Column>
-            <Column field="image" header="Hình"></Column>
+          <DataTable :value="currentOrder?.orderLines">
+            <Column field="productVariationSize.productVariation.product.name" header="Tên sản phẩm"></Column>
+            <Column field="imageUrl" header="Hình">
+              <template #body="Props">
+                <img :src="Props.data.imageUrl" style="width: 100px; height: 100px;" alt="image">
+              </template>
+            </Column>
             <Column field="price" header="Giá"></Column>
-            <Column field="category" header="Loại sản phẩm"></Column>
-            <Column field="review" header="Đánh giá"></Column>
+            <Column field="quantity" header="Số lượng"></Column>
           </DataTable>
         </div>
       </div>
@@ -100,6 +115,8 @@ onMounted(async () => {
   }
 });
 
+
+// xử lí hiển thị cho TRẠNG THÁI
 const filterKeyword = ref('');
 const filterStatus = ref('');
 const statusOptions = [
@@ -107,10 +124,23 @@ const statusOptions = [
   { label: 'Đang xử lý', value: 'Đang xử lý' },
   { label: 'Hoàn thành', value: 'Hoàn thành' },
 ];
+function getStatusBadgeClass(status) {
+  switch (status) {
+    case 'Chưa xử lý':
+      return 'status-pending';
+    case 'Đang xử lý':
+      return 'status-processing';
+    case 'Hoàn thành':
+      return 'status-completed';
+    default:
+      return '';
+  }
+}
+
 
 const dialogVisible = ref(false);
 const currentOrder = ref<OrderType | null>(null);
-const isEditing = ref(false);
+const isEditing = ref(true);
 
 
 const formattedDate = computed(() => {
@@ -181,7 +211,7 @@ const filteredOrders = computed(() => {
   let filtered = orders.value;
   if (filterKeyword.value) {
     const keyword = filterKeyword.value.toLowerCase();
-    filtered = filtered.filter((order) => order.user.username.toLowerCase().includes(keyword));
+    filtered = filtered.filter((order) => order.user?.lastName.toLowerCase().includes(keyword));
   }
   if (filterStatus.value) {
     filtered = filtered.filter((order) => order.ordersStatus === filterStatus.value);
@@ -243,6 +273,27 @@ const cancelEdit = () => {
 </script>
 
 <style scoped>
+.status-pending {
+  background-color: #ffc107;
+  color: #000;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.status-processing {
+  background-color: #007bff;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.status-completed {
+  background-color: #28a745;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
 .order-list {
   padding: 20px;
 }
@@ -288,5 +339,26 @@ const cancelEdit = () => {
 
 .status-completed {
   background-color: #28a745;
+}
+
+.order-list__dialog {
+  /* Căn giữa dialog */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog-header {
+  /* Căn giữa nội dung của header */
+  text-align: center;
+}
+
+.centered-text {
+  /* Căn giữa và làm đậm phần hiển thị dialogHeader */
+  text-align: center;
+  font-weight: bold;
+  color: black;
+  font-size: 24px;
+  /* Tăng kích thước của thẻ div */
 }
 </style>
