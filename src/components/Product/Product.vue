@@ -13,8 +13,8 @@
         </template>
         <template #content>${{ product?.product?.price }}</template>
         <template #footer>
-            <i class="pi pi-heart"></i>
-            <p>10</p>
+           
+          
         </template>
     </Card>
 </template>
