@@ -31,7 +31,7 @@
             </div>
             <div class="w-full px-2 py-2">
               <label for="State" class="text-gray-700">Phường (Xã)</label>
-							<Dropdown :v-model="ward" :options="wardsByName" placeholder="Chọn Xã(Phường)" class="w-full" />
+							<Dropdown v-model="ward" :options="getWards" optionLabel="name" placeholder="Chọn Xã(Phường)" class="w-full" />
             </div>
             <div class="w-full lg:w-1/2 px-2 py-2">
               <label
@@ -39,7 +39,7 @@
                 class="text-gray-700"
                 >Chọn Quận(Huyện)</label
               >
-							<Dropdown :v-model="district" :options="districtsByName" placeholder="Chọn Quận(Huyện)" class="w-full" />
+							<Dropdown v-model="district" :options="getDistricts" optionLabel="name" placeholder="Chọn Quận(Huyện)" class="w-full" />
               <!-- <CoreDropdown
                 v-model="district"
                 :options="districtsByName"
@@ -49,7 +49,7 @@
             </div>
 						<div class="w-full lg:w-1/2 px-2 py-2">
               <label for="City" class="text-gray-700">Tỉnh(Thành Phố)</label>
-							<Dropdown :v-model="province" :options="provincesByName" placeholder="Chọn Tỉnh(Thành Phố)" class="w-full" />
+							<Dropdown v-model="province" :options="getProvinces" optionLabel="name" placeholder="Chọn Tỉnh(Thành Phố)" class="w-full" />
             </div>
           </div>
         </div>
@@ -196,10 +196,6 @@ const { fetchWards, getWards } = useWardStore();
 const { fetchDistricts, getDistricts } = useDistrictStore();
 const { fetchProvinces, getProvinces } = useProvinceStore();
 
-let wardsByName: Ref<string[]> = ref([]);
-let districtsByName: Ref<string[]> = ref([]);
-let provincesByName: Ref<string[]> = ref([]);
-
 let address = ref();
 let ward = ref();
 let district = ref();
@@ -207,11 +203,7 @@ let province = ref();
 let fullAddress = ref();
 
 const fetchData = () => {
-  Promise.all([fetchWards(), fetchDistricts(), fetchProvinces()]).then(() => {
-		wardsByName.value = getWards.value.map(w => w.name);
-		districtsByName.value = getDistricts.value.map(d => d.name);
-		provincesByName.value = getProvinces.value.map(p => p.name)
-	})
+  Promise.all([fetchWards(), fetchDistricts(), fetchProvinces()]);
 }
 
 onMounted(fetchData)
