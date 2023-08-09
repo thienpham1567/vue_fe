@@ -1,8 +1,18 @@
-import type { ProvinceType } from "./province";
-
 export interface DistrictType {
     districtId?: number;
-    province?: ProvinceType;
+    provinceId?: number;
     name?: string;
     prefix?: string;
+}
+
+export interface DistrictResponse {
+    status: boolean;
+    data?: DistrictType;
+    message?: string;
+}
+
+export interface ListResponse {
+    status: boolean;
+    data: DistrictType[];
+    message?: string;
 }
