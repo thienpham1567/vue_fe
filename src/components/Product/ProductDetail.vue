@@ -16,7 +16,7 @@
                 <label class="text-xl">{{ selectedProduct.product?.name }}</label>
             </div>
             <div class="mt-2">
-                <label class="text-4xl">${{ selectedProduct.product?.price }}</label>
+                <label class="text-4xl">{{ priceInVND }} VND</label>
             </div>
             <div class="mt-4">
                 <label class="text-l font-semibold">Color: <span class="inline font-normal">{{ selectedProduct.color?.value
@@ -69,7 +69,7 @@
 
 
             <div class="mt-5">
-                <Button  icon="pi pi-heart-fill"  size="small"  @click="toggleLike"/>
+                <Button icon="pi pi-heart-fill" size="small" @click="toggleLike" />
                 <!-- :icon="isLiked ? 'pi pi-heart' : 'pi pi-heart-o'" -->
             </div>
 
@@ -89,6 +89,11 @@
             </div>
         </div>
     </div>
+
+    <!-- Product like Detail Brand -->
+
+
+
 
     <!-- Review Product -->
     <div class="font-semibold text-2xl">ĐÁNH GIÁ SẢN PHẨM</div>
@@ -124,17 +129,6 @@
             </button>
         </div>
     </div>
-    <!-- <div class="font-semibold text-2xl">ĐÁNH GIÁ CỦA BẠN</div>
-    <div class="border-b border-gray-400 mb-4"></div>
-    <div class="flex justify-center">
-        <Rating v-model="ratingSubmitValue" class="mb-2" />
-    </div>
-    <div class="w-full mt-2">
-        <Textarea v-model="commentsValue" rows="5" class="w-full" />
-    </div>
-    <div class="mt-2">
-        <Button label="GỬI ĐÁNH GIÁ CỦA BẠN" class="btn w-full" size="small" @click="" />
-    </div> -->
 </template>
 
 <script setup lang="ts">
@@ -254,7 +248,7 @@ const orderImages = computed(() => selectedProduct.value.productImages?.filter(p
 //LIKE - UNLIKE FAVORITE
 // const toggleLike = async () => {
 //     try {
-        
+
 //         await favoriteStore.check();
 //     console.log('Thao tác yêu thích thành công!');
 //   } catch (error) {
@@ -262,18 +256,18 @@ const orderImages = computed(() => selectedProduct.value.productImages?.filter(p
 //   }
 // }
 const toggleLike = async () => {
-  try {
-    const fav = favoriteStore.check();
-    if(fav.isLiked){
-        alert("da like")
-    }else{
-        alert("chua like")
+    try {
+        const fav = favoriteStore.check();
+        if (fav.isLiked) {
+            alert("da like")
+        } else {
+            alert("chua like")
+        }
+        console.log('Thao tác yêu thích thành công!');
+        console.log('Kết quả kiểm tra yêu thích:', response);
+    } catch (error) {
+        console.error('Có lỗi xảy ra khi thao tác yêu thích:', error);
     }
-    console.log('Thao tác yêu thích thành công!');
-    console.log('Kết quả kiểm tra yêu thích:', response);
-  } catch (error) {
-    console.error('Có lỗi xảy ra khi thao tác yêu thích:', error);
-  }
 };
 
 
@@ -361,6 +355,19 @@ const collapseReviews = () => {
     const newLength = currentLength - 2;
     displayedReviews.value = displayedReviews.value.slice(0, newLength);
 };
+
+const priceInVND = computed(() => {
+    const usdPrice = selectedProduct?.value?.product?.price;
+    const exchangeRate = 24000; // Tỷ giá: 1 USD = 23000 VND
+
+    if (usdPrice) {
+        const vndPrice = usdPrice * exchangeRate;
+        return vndPrice.toLocaleString('en-US'); // Định dạng số với dấu phẩy
+    }
+
+    return null;
+});
+
 
 onMounted(fetchData);
 </script>

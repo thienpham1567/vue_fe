@@ -13,7 +13,7 @@
                     {{ product?.product?.name }}
                 </div>
             </template>
-            <template #content>${{ product?.product?.price }}</template>
+            <template #content>{{ priceInVND }} VND</template>
         </Card>
     </div>
 </template>
@@ -37,5 +37,17 @@ const primaryImage = computed(() => props.product?.productImages?.find(productIm
 const gotoProductDetail = () => {
     router.push({ name: "Product", params: { productId: props.product?.productVariationId } });
 }
+
+const priceInVND = computed(() => {
+    const usdPrice = props.product?.product?.price;
+    const exchangeRate = 24000; // Tỷ giá: 1 USD = 23000 VND
+
+    if (usdPrice) {
+        const vndPrice = usdPrice * exchangeRate;
+        return vndPrice.toLocaleString('en-US'); // Định dạng số với dấu phẩy
+    }
+
+    return null;
+});
 
 </script>

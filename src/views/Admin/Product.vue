@@ -94,7 +94,7 @@
                     <!-- ngày tháng năm chưa format -->
                     <Column field="price" header="Price">
                         <template #body="rowData">
-                            ${{ rowData.data.price }}
+                            <div class="vnd">{{ priceInVND(rowData.data.price) }} VND</div>
                         </template>
                     </Column>
 
@@ -298,6 +298,14 @@ const editData = (rowData: { data: ProductType }) => {
     currentProduct.value = { ...selectedProduct.value };
 };
 
+const priceInVND = computed(() => {
+    const exchangeRate = 24000; // Tỷ giá: 1 USD = 24000 VND
+
+    return (usdPrice) => {
+        const vndPrice = usdPrice * exchangeRate;
+        return vndPrice.toLocaleString('en-US'); // Định dạng số với dấu phẩy
+    };
+});
 </script>
 
 <style>
@@ -324,5 +332,9 @@ const editData = (rowData: { data: ProductType }) => {
 .product-list__dialog-buttons {
     display: flex;
     justify-content: flex-end;
+}
+
+.p-datatable tbody td .vnd {
+    white-space: nowrap;
 }
 </style>
