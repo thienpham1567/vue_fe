@@ -1,4 +1,5 @@
 <template>
+	<Steps :model="items" aria-label="Form Steps" />
 	<div class="flex flex-col lg:flex-row">
 		<div class="w-full lg:w-8/12 mb-4 mt-4 border shadow rounded">
 			<div class="mb-4">
@@ -56,8 +57,9 @@
 		<Order />
 	</div>
 </template>
-  
+
 <script setup lang="ts">
+import Steps from 'primevue/steps';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
@@ -68,6 +70,21 @@ import * as yup from 'yup';
 import { useDistrictStore, useWardStore, useProvinceStore } from '@/store';
 import { onMounted } from 'vue';
 import { ref } from 'vue';
+
+const items = ref([
+    {
+        label: 'Information and Address',
+        to: "/checkout/address"
+    },
+    {
+        label: 'Payment Information',
+        to: "/checkout/payment",
+    },
+    {
+        label: 'Order Confirmation',
+        to: "/checkout/confirmation",
+    },
+]);
 
 const { fetchWards, getWards } = useWardStore();
 const { fetchDistricts, getDistricts } = useDistrictStore();
@@ -110,4 +127,3 @@ const fetchData = () => {
 
 onMounted(fetchData)
 </script>
-  
