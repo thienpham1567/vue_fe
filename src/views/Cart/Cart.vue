@@ -42,7 +42,7 @@ const $t = translate;
 const { getCart, getCartItems, fetchCart } = useCartStore();
 
 function goToCheckout() {
-    router.push('/checkout');
+    router.push('/checkout/address');
 }
 
 onMounted(fetchCart);

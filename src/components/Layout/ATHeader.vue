@@ -268,7 +268,7 @@ const gotoProductList = (brand?: number, category?: number) => {
 
 function goToCheckout() {
   dialogCartVisible.value = false;
-  router.push('/checkout');
+  router.push('/checkout/address');
 }
 
 function goToMyAccount() {

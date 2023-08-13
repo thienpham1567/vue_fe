@@ -1,14 +1,12 @@
 <template>
     <div class="flex flex-wrap">
         <div class="rounded-lg flex w-full gap-1">
-            <div>
-                <Image :src="item.imageUrl" alt="Image" width="150" />
-            </div>
+            <Image :src="item.imageUrl" alt="Image" width="150" />
             <div class="w-3/4 ml-4">
-                <div class="text-base font-normal">{{ item.productVariationSize?.productVariation.product?.name }}</div>
-                <div class="text-l font-medium">{{ item.productVariationSize?.productVariation.product?.brand?.name
+                <div class="text-base font-normal">{{ item.productVariationSize?.productVariation?.product?.name }}</div>
+                <div class="text-l font-medium">{{ item.productVariationSize?.productVariation?.product?.brand?.name
                 }}</div>
-                <div class="text-sm text-base font-light">Màu: {{ item.color.value }}</div>
+                <div class="text-sm font-light">Màu: {{ item.color.value }}</div>
                 <div class="text-sm font-light">Kích cỡ: {{ item.productVariationSize?.size?.value }}</div>
             </div>
             <div class="flex flex-col justify-between">

@@ -1,14 +1,14 @@
-import Layout from '@/layout/CustomerLayout.vue';
+import Layout from "@/layout/CustomerLayout.vue";
 // import { useUserStore } from "@/store";
-import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
+// import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 
 export const checkout = {
   path: "/checkout",
   component: Layout,
   children: [
     {
-      path: "",
-      name: "Checkout",
+      path: "address",
+      name: "AddressInformation",
       component: () => import("@/views/Checkout/Checkout.vue"),
       meta: {
         requiresGuest: true,
@@ -25,6 +25,22 @@ export const checkout = {
       //     next();
       //   }
       // },
+    },
+    {
+      path: "/payment",
+      name: "PaymentInformation",
+      component: () => import("@/views/Checkout/PaymentInformation.vue"),
+      meta: {
+        requiresGuest: true,
+      },
+    },
+    {
+      path: "/confirmation",
+      name: "Confirmation",
+      component: () => import("@/views/Checkout/Confirmation.vue"),
+      meta: {
+        requiresGuest: true,
+      },
     },
   ],
 };
