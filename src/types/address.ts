@@ -1,16 +1,20 @@
+import { DistrictType } from "./district";
+import { ProvinceType } from "./province";
+import { WardType } from "./ward";
+
 export interface AddressType {
   addressId?: number;
   address?: string;
-  ward?: string;
-  district?: string;
-  province?: string;
+  ward?: WardType;
+  district?: DistrictType;
+  province?: ProvinceType;
 }
 
 export interface CreationParams {
   address: string;
-  ward: string;
-  district: string;
-  province: string;
+  wardId: number;
+  districtId: number;
+  provinceId: number;
 }
 
 export type UpdateParams = Omit<AddressType, "addressId">;

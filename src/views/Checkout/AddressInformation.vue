@@ -1,6 +1,8 @@
 <template>
-	<Steps :model="items" aria-label="Form Steps" />
-	<div class="flex flex-col lg:flex-row">
+	<div class="py-10">
+		<Steps :model="items" aria-label="Form Steps" />
+	</div>
+	<div class="flex flex-col lg:flex-row mt-4">
 		<div class="w-full lg:w-8/12 mb-4 mt-4 border shadow rounded">
 			<div class="mb-4">
 				<div class="text-2xl m-4">Thông tin và địa chỉ</div>
@@ -38,11 +40,13 @@
 								<label for="district" class="text-gray-600 mb-1">Chọn Quận(Huyện)</label>
 								<Dropdown v-bind="district" :options="getDistricts" optionLabel="name" placeholder="Chọn Quận(Huyện)"
 									class="w-full" />
+								<span class="errorMessage">{{ errors.district }}</span>
 							</div>
 							<div class="w-full lg:w-1/2 p-3">
 								<label for="City" class="text-gray-600 mb-1">Tỉnh(Thành Phố)</label>
 								<Dropdown v-bind="province" :options="getProvinces" optionLabel="name" placeholder="Chọn Tỉnh(Thành Phố)"
 									class="w-full" />
+								<span class="errorMessage">{{ errors.province }}</span>
 							</div>
 						</div>
 						<div class="text-right">
@@ -67,33 +71,33 @@ import Order from '@/components/Checkout/Order.vue'
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/yup';
 import * as yup from 'yup';
-import { useDistrictStore, useWardStore, useProvinceStore } from '@/store';
+import { useDistrictStore, useWardStore, useProvinceStore, useAddressStore } from '@/store';
 import { onMounted } from 'vue';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const items = ref([
     {
-        label: 'Information and Address',
+        label: 'Thông tin và địa chỉ',
         to: "/checkout/address"
     },
     {
-        label: 'Payment Information',
+        label: 'Phương thức thanh toán',
         to: "/checkout/payment",
     },
     {
-        label: 'Order Confirmation',
+        label: 'Xác nhận đơn hàng',
         to: "/checkout/confirmation",
     },
 ]);
 
+const router = useRouter();
 const { fetchWards, getWards } = useWardStore();
 const { fetchDistricts, getDistricts } = useDistrictStore();
 const { fetchProvinces, getProvinces } = useProvinceStore();
+const { getAddress, setData } = useAddressStore();
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-let fullAddress = ref();
 
-
-// Creates a typed schema for vee-validate
 const schema = toTypedSchema(
 	yup.object({
 		fullName: yup.string().required("Họ và tên không được bỏ trống"),
@@ -101,11 +105,11 @@ const schema = toTypedSchema(
 		phoneNumber: yup.string().required("Số điện thoại không được bỏ trống").matches(phoneRegExp, "Số điện thoại không đúng dịnh dạng").min(10, "Số điện thoại không được dưới 10 chữ số").max(10, "Số điện thoại không được quá 10 chữ số"),
 		address: yup.string().required("Địa chỉ không được để trống"),
 		ward: yup.object().required("Xã (phường) không được để trống"),
-		district: yup.object(),
-		province: yup.object(),
+		district: yup.object().required("Quận (huyện) không được để trống"),
+		province: yup.object().required("Tỉnh (thành phố) không được để trống"),
 	}),
 );
-const { errors, values, defineInputBinds, handleSubmit, defineComponentBinds } = useForm({
+const { errors, values, defineInputBinds, handleSubmit, defineComponentBinds, setValues } = useForm({
 	validationSchema: schema,
 });
 
@@ -118,10 +122,20 @@ let district = defineComponentBinds("district");
 let province = defineComponentBinds("province");
 
 const onSubmit = handleSubmit(values => {
-	console.log(values);
+	const { address, ward, district, province } = values;
+	setData(address, ward, district, province);
+	router.push("/checkout/payment");
 });
 
 const fetchData = () => {
+	if (getAddress.value?.address) {
+		setValues({
+			address: getAddress.value?.address,
+			ward: getAddress.value?.ward,
+			district: getAddress.value?.district,
+			province: getAddress.value?.province,
+		});
+	}
 	Promise.all([fetchWards(), fetchDistricts(), fetchProvinces()]);
 }
 

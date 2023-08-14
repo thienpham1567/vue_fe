@@ -1,5 +1,5 @@
 <template>
-	<div class="lg:w-4/12 mx-4 mt-4 border h-full shadow rounded">
+	<div class="lg:w-4/12 mx-4 border h-full shadow rounded">
 		<div class="text-2xl m-4">Đơn Hàng</div>
 		<div class=" mb-0">
 			<div class="px-4 py-2 justify-items-center mt-2 mb-2">

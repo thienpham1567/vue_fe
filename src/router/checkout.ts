@@ -1,6 +1,4 @@
 import Layout from "@/layout/CustomerLayout.vue";
-// import { useUserStore } from "@/store";
-// import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 
 export const checkout = {
   path: "/checkout",
@@ -9,25 +7,13 @@ export const checkout = {
     {
       path: "address",
       name: "AddressInformation",
-      component: () => import("@/views/Checkout/Checkout.vue"),
+      component: () => import("@/views/Checkout/AddressInformation.vue"),
       meta: {
         requiresGuest: true,
       },
-      // beforeEnter: (
-      //   _to: RouteLocationNormalized,
-      //   _from: RouteLocationNormalized,
-      //   next: NavigationGuardNext
-      // ) => {
-      //   const userStore = useUserStore();
-      //   if (_to.meta.requiresGuest && !userStore.getToken.value) {
-      //     next({ name: "Login" });
-      //   } else {
-      //     next();
-      //   }
-      // },
     },
     {
-      path: "/payment",
+      path: "payment",
       name: "PaymentInformation",
       component: () => import("@/views/Checkout/PaymentInformation.vue"),
       meta: {
@@ -35,7 +21,7 @@ export const checkout = {
       },
     },
     {
-      path: "/confirmation",
+      path: "confirmation",
       name: "Confirmation",
       component: () => import("@/views/Checkout/Confirmation.vue"),
       meta: {
