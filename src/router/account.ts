@@ -17,4 +17,17 @@ export const account = {
       component: () => import("@/views/MyAccount/FogotPassword.vue"),
     },
   ],
+  beforeEnter: (
+    _to: RouteLocationNormalized,
+    _from: RouteLocationNormalized,
+    next: NavigationGuardNext
+  ) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      next();
+
+    } else {
+      next({ name: 'Home' });
+    }
+  },
 };

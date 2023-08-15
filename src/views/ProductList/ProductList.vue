@@ -1,9 +1,30 @@
 <template>
     <div class="flex">
-        <div class="flex flex-col h-full p-4">
-            <aside class="p-4  flex-grow rounded-lg md:w-64 lg:w-60">
+        <div class="flex flex-col h-full mt-4">
+            <aside class="  flex-grow rounded-lg md:w-20 lg:w-40">
+                <div class="mb-4" v-if="checkBrand">
+                    <button class="text-xl font-bold ml-0 block" @click="toggleSection('category')">
+                        <span v-if="showCategorySection">
+                            <i class="pi pi-chevron-down"></i>
+                        </span>
+                        <span v-else>
+                            <i class="pi pi-chevron-up"></i>
+                        </span>
+                        Phân loại
+                    </button>
+                </div>
+                <div v-show="!showCategorySection" v-if="checkBrand">
+                    <div class="flex flex-col">
+                        <div v-for="category of categoryObject" :key="category.key"
+                            class="flex align-items-center mb-3 ml-5">
+                            <Checkbox v-model="selectedCategorys" :inputId="category.key" name="category"
+                                :value="category.value" @update:modelValue="filterProduct" />
+                            <label :for="category.key" class="ml-1">{{ category.name }}</label>
+                        </div>
+                    </div>
+                </div>
                 <div class="mb-4" v-if="!checkBrand">
-                    <button class="text-xl font-bold mx-auto block" @click="toggleSection('brand')">
+                    <button class="text-xl font-bold ml-0 block" @click="toggleSection('brand')">
                         <span v-if="showBrandSection">
                             <i class="pi pi-chevron-down"></i>
                         </span>
@@ -15,16 +36,16 @@
                 </div>
                 <div v-show="!showBrandSection" v-if="!checkBrand">
                     <div class="flex flex-col">
-                        <div v-for="brand of brandObject" :key="brand.key" class="flex align-items-center">
+                        <div v-for="brand of brandObject" :key="brand.key" class="flex align-items-center mb-3 ml-5">
                             <Checkbox v-model="selectedBrands" :inputId="brand.key" name="brand" :value="brand.value"
                                 @update:modelValue="filterProduct" />
-                            <label :for="brand.key">{{ brand.value }}</label>
+                            <label :for="brand.key" class="ml-1">{{ brand.value }}</label>
                         </div>
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <button class="text-xl font-bold mx-auto block" @click="toggleSection('price')">
+                    <button class="text-xl font-bold ml-0 block" @click="toggleSection('price')">
                         <span v-if="showPriceSection">
                             <i class="pi pi-chevron-down"></i>
                         </span>
@@ -36,17 +57,17 @@
                 </div>
                 <div v-show="!showPriceSection">
                     <div class="flex flex-col">
-                        <div v-for="price of priceObject" :key="price.key" class="flex align-items-center">
+                        <div v-for="price of priceObject" :key="price.key" class="flex align-items-center mb-3 ml-5">
                             <Checkbox v-model="selectedPrices" :inputId="price.key" name="price" :value="price.value"
                                 @update:modelValue="filterProduct" />
-                            <label :for="price.key">{{ price.name }}</label>
+                            <label :for="price.key" class="ml-1">{{ price.name }}</label>
                         </div>
                         <!-- Thêm các checkbox khoảng giá khác nếu cần -->
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <button class="text-xl font-bold mx-auto block" @click="toggleSection('size')">
+                    <button class="text-xl font-bold ml-0 block" @click="toggleSection('size')">
                         <span v-if="showSizeSection">
                             <i class="pi pi-chevron-down"></i>
                         </span>
@@ -58,10 +79,10 @@
                 </div>
                 <div class="mb-2" v-show="!showSizeSection">
                     <div class="flex flex-col">
-                        <div v-for="size of sizeObject" :key="size.key" class="flex align-items-center">
+                        <div v-for="size of sizeObject" :key="size.key" class="flex align-items-center mb-3 ml-5">
                             <Checkbox v-model="selectedSizes" :inputId="size.key" name="size" :value="size.value"
                                 @update:modelValue="filterProduct" />
-                            <label :for="size.key">Kích cở : {{ size.value }}</label>
+                            <label :for="size.key" class="ml-1">Kích cở : {{ size.value }}</label>
                         </div>
                         <!-- Thêm các checkbox khoảng giá khác nếu cần -->
                     </div>
@@ -69,7 +90,7 @@
             </aside>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 justify-center p-4">
-            <Product v-for="product in c" :product="product" />
+            <Product v-for="product in productAll" :product="product" />
         </div>
     </div>
 </template>
@@ -93,7 +114,7 @@ watch(
             fetchAllProducts(toParams.brand, toParams.category).then(() => {
                 check();
                 if (selectedPrices.value && selectedSizes.value && selectedBrands.value) {
-                    c.value = getProducts.value;
+                    productAll.value = getProducts.value;
                 }
             });;
         }
@@ -104,13 +125,14 @@ onMounted(() => {
     fetchAllProducts(route.query.brand, route.query.category).then(() => {
         check();
         if (selectedPrices.value && selectedSizes.value && selectedBrands.value) {
-            c.value = getProducts.value;
+            productAll.value = getProducts.value;
         }
     });
 });
 
 
 const showBrandSection = ref(true);
+const showCategorySection = ref(true);
 const showPriceSection = ref(true);
 const showSizeSection = ref(true);
 
@@ -121,6 +143,8 @@ const toggleSection = (section: string) => {
         showPriceSection.value = !showPriceSection.value;
     } else if (section === 'size') {
         showSizeSection.value = !showSizeSection.value;
+    } else if (section === 'category') {
+        showCategorySection.value = !showCategorySection.value;
     }
 };
 
@@ -168,107 +192,211 @@ const priceObject = ref([
     { name: "300 - 400", key: "4", value: [300, 400] }
 ]);
 
+const categoryObject = ref([
+    { key: "1", value: 'Men', name: 'Nam' },
+    { key: "2", value: 'Women', name: 'Nữ' },
+    { key: "3", value: 'Kid', name: 'Trẻ em' }
+]);
+
 const selectedSizes = ref<String[][]>([]);
 const selectedPrices = ref<number[][]>([]);
 const selectedBrands = ref<string[][]>([]);
-let c = ref([]);
+const selectedCategorys = ref<string[][]>([]);
+let productAll = ref([]);
 
 function filterProduct() {
     let a = [];
-    if (selectedSizes.value.length === 0 && selectedPrices.value.length === 0 && selectedBrands.value.length === 0) {
-        c.value = getProducts.value;
-    } else if (selectedSizes.value.length === 0 && selectedBrands.value.length === 0) {
 
-        selectedPrices.value.forEach(i => {
-            let b = getProducts.value.filter(product => product.product?.price! >= i[0] && product.product?.price! <= i[1]);
-            a.push(b);
-        });
-        c.value = [].concat(...a);
-    } else if (selectedPrices.value.length === 0 && selectedBrands.value.length === 0) {
+    if (!route.query.brand) {
+        if (selectedSizes.value.length === 0 && selectedPrices.value.length === 0 && selectedBrands.value.length === 0) {
+            productAll.value = getProducts.value;
+        } else if (selectedSizes.value.length === 0 && selectedBrands.value.length === 0) {
 
-        selectedSizes.value.forEach(i => {
+            selectedPrices.value.forEach(i => {
+                let productPrice = getProducts.value.filter(product => product.product?.price! >= i[0] && product.product?.price! <= i[1]);
+                a.push(productPrice);
+            });
+            productAll.value = [].concat(...a);
+        } else if (selectedPrices.value.length === 0 && selectedBrands.value.length === 0) {
 
-            let d = getProducts.value.filter(product => product.productVariationSizes?.find(size => size.size?.value === i));
-            a.push(d);
+            selectedSizes.value.forEach(i => {
 
-        });
-        c.value = [].concat(...a);
-    } else if (selectedSizes.value.length === 0 && selectedPrices.value.length === 0) {
-        console.log(selectedBrands.value);
+                let productSize = getProducts.value.filter(product => product.productVariationSizes?.find(size => size.size?.value === i));
+                a.push(productSize);
 
-        selectedBrands.value.forEach(i => {
-            let g = getProducts.value.filter(product => product.product?.brand?.name === i);
-            a.push(g);
-        });
-        c.value = [].concat(...a);
-    } else if (selectedPrices.value.length !== 0 && selectedSizes.value.length !== 0) {
-        selectedPrices.value.forEach(i => {
-            let b = getProducts.value.filter(product => product.product?.price! >= i[0] && product.product?.price! <= i[1]);
-            a = a.concat(b);
-        });
+            });
+            productAll.value = [].concat(...a);
+        } else if (selectedSizes.value.length === 0 && selectedPrices.value.length === 0) {
+            console.log(selectedBrands.value);
 
-        let e = [];
-        selectedSizes.value.forEach(i => {
-            let d = a.filter(product => product.productVariationSizes?.find(size => size.size?.value === i));
-            e = e.concat(d);
-        });
+            selectedBrands.value.forEach(i => {
+                let productBrand = getProducts.value.filter(product => product.product?.brand?.name === i);
+                a.push(productBrand);
+            });
+            productAll.value = [].concat(...a);
+        } else if (selectedPrices.value.length !== 0 && selectedSizes.value.length !== 0) {
+            selectedPrices.value.forEach(i => {
+                let productPrice = getProducts.value.filter(product => product.product?.price! >= i[0] && product.product?.price! <= i[1]);
+                a = a.concat(productPrice);
+            });
 
-        c.value = [...e];
-    } else if (selectedPrices.value.length !== 0 && selectedBrands.value.length !== 0) {
-        selectedPrices.value.forEach(i => {
-            let b = getProducts.value.filter(product => product.product?.price! >= i[0] && product.product?.price! <= i[1]);
-            a = a.concat(b);
-        });
+            let e = [];
+            selectedSizes.value.forEach(i => {
+                let productSize = a.filter(product => product.productVariationSizes?.find(size => size.size?.value === i));
+                e = e.concat(productSize);
+            });
 
-
-
-        let h = [];
-        selectedBrands.value.forEach(i => {
-            let g = a.filter(product => product.product?.brand?.name === i);
-
-            h = h.concat(g);
-        });
-
-        c.value = [...h];
-    } else if (selectedSizes.value.length !== 0 && selectedBrands.value.length !== 0) {
+            productAll.value = [...e];
+        } else if (selectedPrices.value.length !== 0 && selectedBrands.value.length !== 0) {
+            selectedPrices.value.forEach(i => {
+                let b = getProducts.value.filter(product => product.product?.price! >= i[0] && product.product?.price! <= i[1]);
+                a = a.concat(b);
+            });
 
 
-        let e = [];
-        selectedSizes.value.forEach(i => {
-            let d = getProducts.value.filter(product => product.productVariationSizes?.find(size => size.size?.value === i));
-            e = e.concat(d);
-        });
 
-        let h = [];
-        selectedBrands.value.forEach(i => {
-            let g = e.filter(product => product.product?.brand?.name === i);
+            let h = [];
+            selectedBrands.value.forEach(i => {
+                let g = a.filter(product => product.product?.brand?.name === i);
 
-            h = h.concat(g);
-        });
+                h = h.concat(g);
+            });
 
-        c.value = [...h];
-    } else if (selectedPrices.value.length !== 0 && selectedSizes.value.length !== 0 && selectedBrands.value.length !== 0) {
-        selectedPrices.value.forEach(i => {
-            let b = getProducts.value.filter(product => product.product?.price! >= i[0] && product.product?.price! <= i[1]);
-            a = a.concat(b);
-        });
+            productAll.value = [...h];
+        } else if (selectedSizes.value.length !== 0 && selectedBrands.value.length !== 0) {
 
-        let e = [];
-        selectedSizes.value.forEach(i => {
-            let d = a.filter(product => product.productVariationSizes?.find(size => size.size?.value === i));
-            e = e.concat(d);
-        });
 
-        let h = [];
-        selectedBrands.value.forEach(i => {
-            let g = e.filter(product => product.product?.brand?.name === i);
+            let e = [];
+            selectedSizes.value.forEach(i => {
+                let d = getProducts.value.filter(product => product.productVariationSizes?.find(size => size.size?.value === i));
+                e = e.concat(d);
+            });
 
-            h = h.concat(g);
-        });
+            let h = [];
+            selectedBrands.value.forEach(i => {
+                let g = e.filter(product => product.product?.brand?.name === i);
 
-        c.value = [...h];
-    }
+                h = h.concat(g);
+            });
 
+            productAll.value = [...h];
+        } else if (selectedPrices.value.length !== 0 && selectedSizes.value.length !== 0 && selectedBrands.value.length !== 0) {
+            selectedPrices.value.forEach(i => {
+                let b = getProducts.value.filter(product => product.product?.price! >= i[0] && product.product?.price! <= i[1]);
+                a = a.concat(b);
+            });
+
+            let e = [];
+            selectedSizes.value.forEach(i => {
+                let d = a.filter(product => product.productVariationSizes?.find(size => size.size?.value === i));
+                e = e.concat(d);
+            });
+
+            let h = [];
+            selectedBrands.value.forEach(i => {
+                let g = e.filter(product => product.product?.brand?.name === i);
+
+                h = h.concat(g);
+            });
+
+            productAll.value = [...h];
+        }
+    } else if (!route.query.category) {
+        if (selectedSizes.value.length === 0 && selectedPrices.value.length === 0 && selectedCategorys.value.length === 0) {
+            productAll.value = getProducts.value;
+        } else if (selectedSizes.value.length === 0 && selectedCategorys.value.length === 0) {
+
+            selectedPrices.value.forEach(i => {
+                let productPrice = getProducts.value.filter(product => product.product?.price! >= i[0] && product.product?.price! <= i[1]);
+                a.push(productPrice);
+            });
+            productAll.value = [].concat(...a);
+        } else if (selectedPrices.value.length === 0 && selectedCategorys.value.length === 0) {
+
+            selectedSizes.value.forEach(i => {
+
+                let productSize = getProducts.value.filter(product => product.productVariationSizes?.find(size => size.size?.value === i));
+                a.push(productSize);
+
+            });
+            productAll.value = [].concat(...a);
+        } else if (selectedSizes.value.length === 0 && selectedPrices.value.length === 0) {
+            console.log(selectedCategorys.value);
+
+            selectedCategorys.value.forEach(i => {
+                let productCategory = getProducts.value.filter(product => product.product?.category?.parentCategory?.name === i);
+                a.push(productCategory);
+            });
+            productAll.value = [].concat(...a);
+        } else if (selectedPrices.value.length !== 0 && selectedSizes.value.length !== 0) {
+            selectedPrices.value.forEach(i => {
+                let productPrice = getProducts.value.filter(product => product.product?.price! >= i[0] && product.product?.price! <= i[1]);
+                a = a.concat(productPrice);
+            });
+
+            let e = [];
+            selectedSizes.value.forEach(i => {
+                let productSize = a.filter(product => product.productVariationSizes?.find(size => size.size?.value === i));
+                e = e.concat(productSize);
+            });
+
+            productAll.value = [...e];
+        } else if (selectedPrices.value.length !== 0 && selectedCategorys.value.length !== 0) {
+            console.log(selectedCategorys.value)
+            selectedPrices.value.forEach(i => {
+                let b = getProducts.value.filter(product => product.product?.price! >= i[0] && product.product?.price! <= i[1]);
+                a = a.concat(b);
+            });
+
+
+
+            let h = [];
+            selectedCategorys.value.forEach(i => {
+                let g = a.filter(product => product.product?.category?.parentCategory?.name === i);
+
+                h = h.concat(g);
+            });
+
+            productAll.value = [...h];
+        } else if (selectedSizes.value.length !== 0 && selectedCategorys.value.length !== 0) {
+
+
+            let e = [];
+            selectedSizes.value.forEach(i => {
+                let d = getProducts.value.filter(product => product.productVariationSizes?.find(size => size.size?.value === i));
+                e = e.concat(d);
+            });
+
+            let h = [];
+            selectedCategorys.value.forEach(i => {
+                let productBrand = e.filter(product => product.product?.category?.parentCategory?.name === i);
+                h = h.concat(productBrand);
+            });
+
+
+            productAll.value = [...h];
+        } else if (selectedPrices.value.length !== 0 && selectedSizes.value.length !== 0 && selectedCategorys.value.length !== 0) {
+            selectedPrices.value.forEach(i => {
+                let b = getProducts.value.filter(product => product.product?.price! >= i[0] && product.product?.price! <= i[1]);
+                a = a.concat(b);
+            });
+
+            let e = [];
+            selectedSizes.value.forEach(i => {
+                let d = a.filter(product => product.productVariationSizes?.find(size => size.size?.value === i));
+                e = e.concat(d);
+            });
+
+            let productCategory = [];
+            selectedCategorys.value.forEach(i => {
+                let g = e.filter(product => product.product?.category?.parentCategory?.name === i);
+
+                productCategory = productCategory.concat(g);
+            });
+
+            productAll.value = [...productCategory];
+        }
+    };
 }
 const checkBrand = ref(false);
 function check() {

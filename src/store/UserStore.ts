@@ -12,6 +12,9 @@ const useUserStore = defineStore("user", () => {
     const getUsers = computed(() => users);
     const getUser = computed(() => user);
 
+    //
+    const createErrorMessage = ref("");
+    const getCreateErrorMessage = computed(() => createErrorMessage);
     //Get User
     const fetchUsers = async () => {
         const { data } = await new User().list();
@@ -23,8 +26,15 @@ const useUserStore = defineStore("user", () => {
     };
     //add
     const addUser = async (user: CreationParams) => {
-        const { data } = await new User().create(user);
-        users.value.push(data);
+        try {
+            const { data } = await new User().create(user);
+            users.value.push(data);
+        } catch (error) {
+            if (error.response.status === 400) {
+                createErrorMessage.value = "Đăng ký thất bại";
+                console.log(createErrorMessage.value);
+            }
+        }
     }
     //
     const fetchByEmail = async (email: String) => {
@@ -73,7 +83,8 @@ const useUserStore = defineStore("user", () => {
         fetchWithUsers,
         fetchByKey,
         fetchByEmail,
-        changePass
+        changePass,
+        getCreateErrorMessage
     }
 });
 

@@ -94,6 +94,7 @@
                     <InputText type="password" id="newPassword" v-model="newPasswordValue" placeholder="Mật khẩu mới" />
                     <span v-if="newPasswordError" class="text-red-500">{{ newPasswordError }}</span>
                 </span>
+                <div v-if="changeError">Mật khẩu mới không trùng nhau</div>
             </div>
             <template #footer>
                 <Button label="Huỷ" icon="pi pi-times" @click="visiblePass = false" text
@@ -132,6 +133,7 @@ const oldPasswordValue = ref(null);
 const newPasswordValue1 = ref(null);
 const newPasswordValue = ref(null);
 
+const changeError = ref(false);
 
 
 const lastNameError = ref('');
@@ -140,7 +142,7 @@ const phoneNumberError = ref('');
 
 const updatePass = async () => {
     validateChangePass();
-    if (newPasswordValue.value === newPasswordValue1.value || validateChangePass()) {
+    if (newPasswordValue.value === newPasswordValue1.value && validateChangePass()) {
         const pass: PasswordChangeParams = {
             oldPassword: oldPasswordValue.value!,
             newPassword: newPasswordValue.value!
@@ -151,10 +153,11 @@ const updatePass = async () => {
         currentUser.value = userStore.getUser.value;
         window.location.reload();
         visiblePass.value = false;
-
+        changeError.value = false;
 
     } else {
         console.log("Sai mật khẩu mới")
+        changeError.value = true;
     };
 
 };
@@ -227,6 +230,7 @@ function validateChangePass() {
     ) {
         return false;
     }
+
     return true;
 }
 </script>
