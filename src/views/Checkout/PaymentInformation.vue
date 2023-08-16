@@ -30,6 +30,11 @@
 		</div>
 		<Order />
 	</div>
+	<div class="text-left">
+		<button class="btn-color-light text-white font-semibold p-2 rounded w-1/3 mt-2" type="submit" @click="back">
+			Trở lại
+		</button>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -40,8 +45,11 @@ import { ref } from 'vue';
 import Order from '@/components/Checkout/Order.vue'
 import { useAddressStore } from '@/store';
 import PayPalImg from "@/assets/images/paypal.png";
+import { useRouter } from 'vue-router';
+
 
 const { getAddress } = useAddressStore();
+const router = useRouter();
 
 const items = ref([
     {
@@ -61,7 +69,16 @@ const items = ref([
 let isPaypal = ref();
 
 const payWithPaypal = () => {
+	const token = localStorage.getItem("token");
+	if (token) {
 
+	} else {
+		router.push({name: "Login"})
+	}
+}
+
+const back = () => {
+	router.back();
 }
 
 </script>

@@ -128,7 +128,8 @@ const onSubmit = handleSubmit(values => {
 });
 
 const fetchData = () => {
-	if (getAddress.value?.address) {
+	Promise.all([fetchWards(), fetchDistricts(), fetchProvinces()]).then(() => {
+		if (getAddress.value?.address) {
 		setValues({
 			address: getAddress.value?.address,
 			ward: getAddress.value?.ward,
@@ -136,7 +137,7 @@ const fetchData = () => {
 			province: getAddress.value?.province,
 		});
 	}
-	Promise.all([fetchWards(), fetchDistricts(), fetchProvinces()]);
+	});
 }
 
 onMounted(fetchData)
