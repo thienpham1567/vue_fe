@@ -20,11 +20,11 @@
       </Column>
       <Column header="Xem đơn hàng" :body="viewOrderTemplate">
         <template #body="rowData">
-            <div class="category-list__actions">
-              <Button icon="pi pi-pencil" class="p-button-rounded p-button-success"
-                @click="openOrderDialog(rowData.data)"></Button>
-            </div>
-          </template>
+          <div class="category-list__actions">
+            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success"
+              @click="openOrderDialog(rowData.data)"></Button>
+          </div>
+        </template>
       </Column>
     </DataTable>
 

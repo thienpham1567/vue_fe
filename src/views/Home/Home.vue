@@ -13,6 +13,7 @@
       </div>
     </template>
   </Carousel>
+
   <!-- Hot Product -->
   <div class="ml-4 mt-4 mb-4 mr-4 ">
     <div class="font-semibold text-2xl">SẢN PHẨM HOT</div>

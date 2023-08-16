@@ -33,10 +33,10 @@
             :to="{ name: 'ProductsVariation' }">
             <span class="mx-4">Products Variation</span>
           </router-link>
-          <router-link class="block px-4 py-2 text-gray-500 "
+          <router-link class="block px-4 py-2 text-gray-500 pr-0"
             :class="[route.name === 'ProductsVariationSize' ? activeClass : inactiveClass]"
             :to="{ name: 'ProductsVariationSize' }">
-            <span class="mx-4">Products Variation Size</span>
+            <span class="mx-4 ">Products Variation Size</span>
           </router-link>
           <router-link class="block px-4 py-2 text-gray-500 "
             :class="[route.name === 'ProductsImage' ? activeClass : inactiveClass]" :to="{ name: 'ProductsImage' }">
@@ -68,15 +68,15 @@
           <span class="mx-4">Reviews</span>
         </router-link>
 
-        <button @click="toggleDropdown" class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4 w-full"
+        <button @click="toggleDropdownReport" class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4 w-full"
           :class="[route.name === 'Dashboard' ? activeClass : inactiveClass]">
-          <i class="pi pi-box" style="font-size: 2rem"></i>
+          <i class="pi pi-book" style="font-size: 2rem"></i>
           <span class="mx-4">Thống kế</span>
           <i class="pi pi-chevron-down ml-auto"></i>
         </button>
-        <div v-if="open" @click.away="closeDropdown"
+        <div v-if="openReport" @click.away="closeDropdownReport"
           class="right-0 mt-2 py-2 bg-gray-900 rounded-md shadow-xl w-full transition-opacity ease-out duration-300"
-          :class="{ 'opacity-100': open, 'opacity-0': !open }">
+          :class="{ 'opacity-100': openReport, 'opacity-0': !openReport }">
           <router-link class="block px-4 py-2 text-gray-500 "
             :class="[route.name === 'Products' ? activeClass : inactiveClass]" :to="{ name: 'report-revenue' }">
             <span class="mx-4">Doanh thu</span>
@@ -109,6 +109,7 @@ import jwt_decode from "jwt-decode";
 const route = useRoute();
 const { isOpen } = useSidebar();
 const open = ref(false);
+const openReport = ref(false);
 const activeClass = ref(
   'bg-gray-600 bg-opacity-25 text-gray-100 border-gray-100'
 );
@@ -119,11 +120,16 @@ const inactiveClass = ref(
 const toggleDropdown = () => {
   open.value = !open.value;
 };
+const toggleDropdownReport = () => {
+  openReport.value = !openReport.value;
+};
 
 const closeDropdown = () => {
   open.value = false;
 };
-
+const closeDropdownReport = () => {
+  openReport.value = false;
+};
 
 let isAdmin = ref(false);
 const token = localStorage.getItem('token');

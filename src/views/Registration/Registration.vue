@@ -56,11 +56,15 @@
                         <span class="mx-2 text-sm text-gray-600">{{ $t('term') }}</span>
                     </label>
                     <div>
-                        <a class="block text-sm text-indigo-700 fontme hover:underline" href="#">{{ $t('alreadyhave') }}</a>
+                        <div class="block text-sm text-indigo-700 fontme cursor-pointer hover:underline" @click="goToLogin">
+                            {{
+                                $t('alreadyhave') }}</div>
                     </div>
                     <span v-if="termsError" class="text-red-500">{{ termsError }}</span>
                 </div>
-                <label v-if="check === true" class="italic text-rose-500">Đăng ký thành công</label>
+                <label class="errorMessage" v-if="getCreateErrorMessage !== '' || getCreateErrorMessage !== undefined">{{
+                    getCreateErrorMessage }}</label>
+
             </template>
             <template #footer>
                 <Button type="submit" :label="$t('create')" @click="validateForm()"
@@ -106,10 +110,14 @@ const rePasswordError = ref('');
 const termsError = ref('');
 
 
-const { addUser } = useUserStore();
+const { addUser, getCreateErrorMessage } = useUserStore();
 
 
 const check = ref(false);
+
+const goToLogin = () => {
+    router.push('/account/login');
+}
 
 // Kiểm tra các điều kiện bổ sung (ví dụ: định dạng phone)
 function validatePhoneNumber() {
@@ -133,6 +141,17 @@ function validateForm() {
     termsError.value = termsAccepted.value ? '' : 'You must accept the terms and conditions.';
 
     validatePhoneNumber();
+
+    // Kiểm tra độ dài mật khẩu tối thiểu là 8 và tối đa là 20
+    if (passwordValue.value) {
+        if (passwordValue.value.length < 8) {
+            passwordError.value = 'Password must be at least 8 characters long.';
+        } else if (passwordValue.value.length > 20) {
+            passwordError.value = 'Password must not exceed 20 characters.';
+        } else {
+            passwordError.value = '';
+        }
+    }
 
     // Kiểm tra các điều kiện bổ sung (ví dụ: định dạng email)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -168,6 +187,7 @@ function validateForm() {
     };
 
     addUser(creationParams);
+    goToLogin();
 
     check.value = true;
     return true;

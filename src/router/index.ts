@@ -13,8 +13,9 @@ import { checkout } from "./checkout";
 import { account } from "./account";
 import { admin } from "./admin";
 import { myaccount } from "./myaccount";
+import { favorite } from "./favorite";
 
-const routes: Array<RouteRecordRaw> = [home, product, account, cart, checkout, admin, myaccount];
+const routes: Array<RouteRecordRaw> = [home, product, account, cart, checkout, admin, myaccount, favorite];
 
 const router: Router = createRouter({
   history: createWebHistory(),

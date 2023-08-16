@@ -64,6 +64,9 @@
                 <Button label="Quản lý sản phẩm" class="sign-in-register-btn w-full" text @click="goToViewAdmin" />
               </div>
               <div class="mb-2 flex justify-start">
+                <Button label="Favorite" class="sign-in-register-btn w-full" text @click="goToFavorite" />
+              </div>
+              <div class="mb-2 flex justify-start">
                 <Button :label="$t('logout')" class="sign-in-register-btn w-full" text @click="logout" />
               </div>
             </div>
@@ -279,6 +282,11 @@ function goToMyAccount() {
 function goToViewOrders() {
   dialogCartVisible.value = false;
   router.push('/myaccount/view-order');
+}
+
+function goToFavorite(){
+  dialogCartVisible.value = false;
+  router.push('/favorite');
 }
 
 const languageStore = useLanguageStore();

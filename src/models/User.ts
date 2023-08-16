@@ -28,7 +28,11 @@ class User extends HTTPBaseService {
   }
 
   async create(params: CreationParams): Promise<CreationResponse> {
-    return await this.instance.post("/users", params);
+    try {
+      return await this.instance.post("/users", params);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async update(id: number, params: UpdateParams): Promise<UserResponse> {

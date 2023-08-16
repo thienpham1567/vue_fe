@@ -16,7 +16,7 @@
                 <label class="text-xl">{{ selectedProduct.product?.name }}</label>
             </div>
             <div class="mt-2">
-                <label class="text-4xl">${{ selectedProduct.product?.price }}</label>
+                <label class="text-4xl">{{ priceInVND }} VND</label>
             </div>
             <div class="mt-4">
                 <label class="text-l font-semibold">Color: <span class="inline font-normal">{{ selectedProduct.color?.value
@@ -63,9 +63,17 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-5">
+            <div class="mt-3">
                 <Button label="Add to cart" class="btn w-full" size="small" @click="addCart" />
             </div>
+
+
+            <div class="mt-5">
+                <Button icon="pi pi-heart-fill" size="small" @click="toggleLike" />
+                <!-- :icon="isLiked ? 'pi pi-heart' : 'pi pi-heart-o'" -->
+            </div>
+
+
             <div class="mt-4">
                 <div class="font-semibold text-2xl">ĐÁNH GIÁ CỦA BẠN</div>
                 <div class="border-b border-gray-400 mb-4"></div>
@@ -81,6 +89,11 @@
             </div>
         </div>
     </div>
+
+    <!-- Product like Detail Brand -->
+
+
+
 
     <!-- Review Product -->
     <div class="font-semibold text-2xl">ĐÁNH GIÁ SẢN PHẨM</div>
@@ -116,17 +129,6 @@
             </button>
         </div>
     </div>
-    <!-- <div class="font-semibold text-2xl">ĐÁNH GIÁ CỦA BẠN</div>
-    <div class="border-b border-gray-400 mb-4"></div>
-    <div class="flex justify-center">
-        <Rating v-model="ratingSubmitValue" class="mb-2" />
-    </div>
-    <div class="w-full mt-2">
-        <Textarea v-model="commentsValue" rows="5" class="w-full" />
-    </div>
-    <div class="mt-2">
-        <Button label="GỬI ĐÁNH GIÁ CỦA BẠN" class="btn w-full" size="small" @click="" />
-    </div> -->
 </template>
 
 <script setup lang="ts">
@@ -142,12 +144,20 @@ import { useProductStore, useSizeStore, useCartStore } from "@/store";
 import { ref, onMounted, computed, Ref } from "vue";
 import { ProductVariationSizeType } from '@/types/productVariationSize';
 import useReviewStore from '@/store/ReviewStore';
+import useFavoriteStore from '@/store/FavoriteStore';
 import { product } from '@/router/product';
 import ProductVariation from '@/models/ProductVariation';
 import Review from '@/models/Review';
-import { ReviewType, CreationParams } from '@/types/review';
+import Favorite from '@/models/Favorite';
+
+import { ReviewType, CreationParams as ReviewCreationParams } from '@/types/review';
+import { FavoriteType, CreationParams as FavoriteCreationParams } from '@/types/favorite';
+
 import { UserType } from '@/types/user';
 import jwt_decode from "jwt-decode";
+import { favorite } from '@/router/favorite';
+import type { FavoriteResponse } from '@/types/favorite';
+
 
 
 const ratingSubmitValue = ref('');
@@ -159,12 +169,15 @@ const { fetchReviews, getAllReviews } = useReviewStore();
 const { fetchSizes, getSizes } = useSizeStore();
 const { addUpdateToCart } = useCartStore();
 const reviewStore = useReviewStore();
+const { fetchFavorites, getAllFavorites } = useFavoriteStore();
+const favoriteStore = useFavoriteStore();
 let displayedReviews = ref([]);
 const reviewsPerLoad = 2;
 
 let selectedProduct: Ref<ProductVariationType> = ref({});
 let selectedSize: Ref<ProductVariationSizeType> = ref({});
 let filteredReviews = ref([]);
+
 const currentReview = ref<ReviewType>({});
 
 
@@ -232,6 +245,35 @@ const clothingSizes = computed(() => {
 const primaryImage = computed(() => selectedProduct.value.productImages?.find(productImage => productImage.isPrimary));
 const orderImages = computed(() => selectedProduct.value.productImages?.filter(productImage => !productImage.isPrimary));
 
+//LIKE - UNLIKE FAVORITE
+// const toggleLike = async () => {
+//     try {
+
+//         await favoriteStore.check();
+//     console.log('Thao tác yêu thích thành công!');
+//   } catch (error) {
+//     console.error('Có lỗi xảy ra khi thao tác yêu thích:', error);
+//   }
+// }
+const toggleLike = async () => {
+    try {
+        const fav = favoriteStore.check();
+        if (fav.isLiked) {
+            alert("da like")
+        } else {
+            alert("chua like")
+        }
+        console.log('Thao tác yêu thích thành công!');
+        console.log('Kết quả kiểm tra yêu thích:', response);
+    } catch (error) {
+        console.error('Có lỗi xảy ra khi thao tác yêu thích:', error);
+    }
+};
+
+
+
+
+
 const handleSaveReview = async () => {
     try {
         const token = localStorage.getItem("token");
@@ -290,6 +332,14 @@ const filterReviews = () => {
     });
 };
 
+const filterFavorites = () => {
+    // Lọc
+    filteredFavorites.value = getAllFavorites.value.filter((favorite) => {
+        return favorite.productVariationId === selectedProduct.value.productVariationId;
+        // check
+    });
+}
+
 const loadInitialReviews = () => {
     displayedReviews.value = filteredReviews.value.slice(0, reviewsPerLoad);
 };
@@ -305,6 +355,19 @@ const collapseReviews = () => {
     const newLength = currentLength - 2;
     displayedReviews.value = displayedReviews.value.slice(0, newLength);
 };
+
+const priceInVND = computed(() => {
+    const usdPrice = selectedProduct?.value?.product?.price;
+    const exchangeRate = 24000; // Tỷ giá: 1 USD = 23000 VND
+
+    if (usdPrice) {
+        const vndPrice = usdPrice * exchangeRate;
+        return vndPrice.toLocaleString('en-US'); // Định dạng số với dấu phẩy
+    }
+
+    return null;
+});
+
 
 onMounted(fetchData);
 </script>
