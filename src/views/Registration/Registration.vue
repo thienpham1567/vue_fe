@@ -62,7 +62,9 @@
                     </div>
                     <span v-if="termsError" class="text-red-500">{{ termsError }}</span>
                 </div>
-                <label v-if="check === true" class="italic text-rose-500">Đăng ký thành công</label>
+                <label class="errorMessage" v-if="getCreateErrorMessage !== '' || getCreateErrorMessage !== undefined">{{
+                    getCreateErrorMessage }}</label>
+
             </template>
             <template #footer>
                 <Button type="submit" :label="$t('create')" @click="validateForm()"
@@ -108,7 +110,7 @@ const rePasswordError = ref('');
 const termsError = ref('');
 
 
-const { addUser } = useUserStore();
+const { addUser, getCreateErrorMessage } = useUserStore();
 
 
 const check = ref(false);

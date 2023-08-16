@@ -72,6 +72,7 @@ const isLogin = ref(false);
 
 const { login, getErrorMessage } = useAccountStore();
 
+
 async function validateForm() {
     emailError.value = emailValue.value ? '' : 'Email is required.';
     passwordError.value = passwordValue.value ? '' : 'Password is required.';
@@ -86,6 +87,7 @@ async function validateForm() {
     if (emailError.value || passwordError.value) {
         return false;
     }
+
     await login(emailValue.value, passwordValue.value);
 
     isLogin.value = true;
