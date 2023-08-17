@@ -49,7 +49,11 @@
 								<span class="errorMessage">{{ errors.province }}</span>
 							</div>
 						</div>
-						<div class="text-right">
+						<div class="flex content-between items-center">
+							<div class="flex items-center gap-2" @click="backToCart">
+								<i class="pi pi-chevron-left" style="font-size: 1.5rem"></i>
+								<p>Quay lại giỏ hàng</p>
+							</div>
 							<button class="btn-color-medium text-white font-semibold p-2 rounded w-1/3 mt-4" type="submit">
 								Tiếp tục thanh toán
 							</button>
@@ -71,10 +75,12 @@ import Order from '@/components/Checkout/Order.vue'
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/yup';
 import * as yup from 'yup';
-import { useDistrictStore, useWardStore, useProvinceStore, useAddressStore } from '@/store';
+import { useDistrictStore, useWardStore, useProvinceStore, useAddressStore, useAccountStore, useUserAddressStore} from '@/store';
 import { onMounted } from 'vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import jwt_decode from "jwt-decode";
+import { get } from 'http';
 
 const items = ref([
     {
@@ -96,6 +102,8 @@ const { fetchWards, getWards } = useWardStore();
 const { fetchDistricts, getDistricts } = useDistrictStore();
 const { fetchProvinces, getProvinces } = useProvinceStore();
 const { getAddress, setData } = useAddressStore();
+const { getCurrentToken } = useAccountStore();
+const { fetchUserAddresses, getUserAddresses } = useUserAddressStore();
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const schema = toTypedSchema(
@@ -127,16 +135,32 @@ const onSubmit = handleSubmit(values => {
 	router.push("/checkout/payment");
 });
 
+const backToCart = () => {
+	router.push({name: "Cart"});
+}
+
 const fetchData = () => {
 	Promise.all([fetchWards(), fetchDistricts(), fetchProvinces()]).then(() => {
-		if (getAddress.value?.address) {
-		setValues({
-			address: getAddress.value?.address,
-			ward: getAddress.value?.ward,
-			district: getAddress.value?.district,
-			province: getAddress.value?.province,
-		});
-	}
+		const token = getCurrentToken();
+		if (token) {
+			const userDecode = jwt_decode(token)
+			fetchUserAddresses({userId: userDecode.userId, isDefault: true}).then(() => {
+				const userAddress = getUserAddresses.value[0];
+				setValues({
+					address: getAddress.value?.address,
+					ward: getAddress.value?.ward,
+					district: getAddress.value?.district,
+					province: getAddress.value?.province,
+				});
+			});
+		} else {
+			setValues({
+				address: getAddress.value?.address,
+				ward: getAddress.value?.ward,
+				district: getAddress.value?.district,
+				province: getAddress.value?.province,
+			});
+		}
 	});
 }
 

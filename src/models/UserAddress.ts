@@ -5,6 +5,7 @@ import type {
     ListResponse,
     UserAddressResponse,
     UpdateParams,
+    QueryUserAddressParams
 } from "@/types/userAddress";
 
 class UserAddress extends HTTPBaseService {
@@ -12,8 +13,8 @@ class UserAddress extends HTTPBaseService {
         super();
     }
 
-    async list(): Promise<ListResponse> {
-        return await this.instance.get("/userAddresses");
+    async list(params: QueryUserAddressParams): Promise<ListResponse> {
+        return await this.instance.get("/userAddresses", { params });
     }
 
     async detail(id: number): Promise<UserAddressResponse> {

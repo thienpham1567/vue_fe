@@ -33,3 +33,8 @@ export interface ListResponse {
     data: UserAddressType[];
     message?: string;
 }
+
+export interface QueryUserAddressParams {
+    userId: number;
+    isDefault: boolean;
+}

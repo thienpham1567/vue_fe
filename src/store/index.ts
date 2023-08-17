@@ -16,6 +16,7 @@ import useDistrictStore from "./DistrictStore";
 import useProvinceStore from "./ProvinceStore";
 import useWardStore from "./WardStore";
 import useUserAddressStore from "./UserAddressStore";
+import useUserStore from "./UserStore";
 
 export {
   useBrandStore,
@@ -29,4 +30,5 @@ export {
   useProvinceStore,
   useWardStore,
   useUserAddressStore,
+  useUserStore,
 };

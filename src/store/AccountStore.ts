@@ -5,7 +5,6 @@ import { ref, type Ref } from "vue";
 import jwt_decode from "jwt-decode";
 import { computed } from "vue";
 import router from "@/router";
-import { useToast } from 'primevue/usetoast';
 
 const useAccountStore = defineStore("account", () => {
     // State
@@ -79,7 +78,11 @@ const useAccountStore = defineStore("account", () => {
             roles: userRoles,
         };
     };
-    return { getUser, getToken, login, logout, setToken, setUser, getErrorMessage };
+
+    const getCurrentToken = ():string | null | undefined => {
+        return localStorage.getItem("token");
+    }
+    return { getUser, getToken, login, logout, setToken, setUser, getErrorMessage, getCurrentToken };
 });
 
 export default useAccountStore;

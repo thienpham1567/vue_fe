@@ -43,12 +43,13 @@ import Checkbox from 'primevue/checkbox';
 import Steps from 'primevue/steps';
 import { ref } from 'vue';
 import Order from '@/components/Checkout/Order.vue'
-import { useAddressStore } from '@/store';
+import { useAddressStore, useAccountStore } from '@/store';
 import PayPalImg from "@/assets/images/paypal.png";
 import { useRouter } from 'vue-router';
 
 
 const { getAddress } = useAddressStore();
+const { getCurrentToken } = useAccountStore();
 const router = useRouter();
 
 const items = ref([
@@ -69,7 +70,7 @@ const items = ref([
 let isPaypal = ref();
 
 const payWithPaypal = () => {
-	const token = localStorage.getItem("token");
+	const token = getCurrentToken();
 	if (token) {
 
 	} else {
