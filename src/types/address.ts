@@ -5,12 +5,18 @@ import { WardType } from "./ward";
 export interface AddressType {
   addressId?: number;
   address?: string;
+  fullName?:string;
+  phoneNumber?:string;
+  email?:string;
   ward?: WardType;
   district?: DistrictType;
   province?: ProvinceType;
 }
 
 export interface CreationParams {
+  fullName?:string;
+  phoneNumber?:string;
+  email?:string;
   address: string;
   wardId: number;
   districtId: number;

@@ -11,6 +11,9 @@ const useAddressStore = defineStore("address", () => {
     // State
     const addresses: Ref<AddressType[]> = ref([]);
     const address: Ref<AddressType | undefined> = ref();
+    let fullName: Ref<string> = ref("");
+    let phoneNumber: Ref<string> = ref("");
+    let email: Ref<string> = ref("");
     let addressString: Ref<string> = ref("");
     let ward: Ref<WardType | undefined> = ref();
     let district: Ref<DistrictType | undefined> = ref();
@@ -35,8 +38,11 @@ const useAddressStore = defineStore("address", () => {
         setAddress(data!);
     };
 
-    const setData = (newAddress: string, newWard: WardType, newDistrict: DistrictType, newProvince: ProvinceType) => {
+    const setData = (newFullName:string, newPhoneNumber:string, newEmail:string, newAddress: string, newWard: WardType, newDistrict: DistrictType, newProvince: ProvinceType) => {
         address.value = {
+            fullName: newFullName,
+            phoneNumber: newPhoneNumber,
+            email: newEmail,
             address: newAddress,
             ward: newWard,
             district: newDistrict,

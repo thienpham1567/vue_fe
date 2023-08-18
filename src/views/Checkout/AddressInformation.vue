@@ -1,4 +1,4 @@
-<template>
+ß<template>
 	<div class="py-10">
 		<Steps :model="items" aria-label="Form Steps" />
 	</div>
@@ -80,7 +80,6 @@ import { onMounted } from 'vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import jwt_decode from "jwt-decode";
-import { get } from 'http';
 
 const items = ref([
     {
@@ -130,9 +129,14 @@ let district = defineComponentBinds("district");
 let province = defineComponentBinds("province");
 
 const onSubmit = handleSubmit(values => {
-	const { address, ward, district, province } = values;
-	setData(address, ward, district, province);
-	router.push("/checkout/payment");
+	const token = getCurrentToken();
+	if (!token) {
+		router.push({ name: "Login" })
+	} else {
+		const { address, ward, district, province } = values;
+		setData(address, ward, district, province);
+		router.push("/checkout/payment");
+	}
 });
 
 const backToCart = () => {
