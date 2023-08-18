@@ -6,6 +6,13 @@
 		<div class="w-full">
 			<div class="border shadow rounded py-4 px-2 max-h-60">
 				<div class="text-xl px-4">Thông tin địa chỉ</div>
+				<div class="info">
+					<p>{{ getAddress?.fullName }}</p>
+					<p>{{ getAddress?.phoneNumber }}</p>
+					<p>{{ getAddress?.email }}</p>
+					<p>{{ getAddress?.address }}</p>
+					<p>{{ getWard?.name, getDistrict?.name, getProvince?.name }}</p>
+				</div>
 			</div>
 			<div class="mt-2 border shadow rounded py-4 px-2">
 				<div class="text-xl px-4">Phương thức thanh toán</div>
@@ -41,9 +48,9 @@
 import Image from 'primevue/image';
 import Checkbox from 'primevue/checkbox';
 import Steps from 'primevue/steps';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import Order from '@/components/Checkout/Order.vue'
-import { useAddressStore, useAccountStore } from '@/store';
+import { useAddressStore, useAccountStore, useWardStore, useDistrictStore, useProvinceStore } from '@/store';
 import PayPalImg from "@/assets/images/paypal.png";
 import { useRouter } from 'vue-router';
 
@@ -51,6 +58,9 @@ import { useRouter } from 'vue-router';
 const { getAddress } = useAddressStore();
 const { getCurrentToken } = useAccountStore();
 const router = useRouter();
+const { fetchWard, getWard } = useWardStore();
+const { fetchDistrict, getDistrict } = useDistrictStore();
+const { fetchProvince, getProvince } = useProvinceStore();
 
 const items = ref([
     {
@@ -82,4 +92,7 @@ const back = () => {
 	router.back();
 }
 
+onMounted(() => {
+	Promise.all([fetchWard(getAddress.value?.wardId!), fetchDistrict(getAddress.value?.districtId!), fetchProvince(getAddress.value?.provinceId!)])
+})
 </script>

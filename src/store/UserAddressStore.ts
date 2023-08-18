@@ -18,17 +18,25 @@ const useUserAddressStore = defineStore("userAddress", () => {
     // Action
     const fetchUserAddresses = async (params: QueryUserAddressParams) => {
         const { data } = await new UserAddress().list(params);
+        userAddresses.value = data;
     };
 
-    const fetchUserAddress = async (id: number) => {
-        const { data } = await new UserAddress().detail(id);
+    const fetchUserDefaultAddress = async (params: QueryUserAddressParams) => {
+        const { data } = await new UserAddress().list(params);
+        userAddressDefault.value = data[0];
     };
+
+    const addUserAddress = async (newUserAddress: UserAddressType) => {
+        const { data } = await new UserAddress().create(newUserAddress);
+        userAddressDefault.value = data;
+    }
 
     return {
         fetchUserAddresses,
-        fetchUserAddress,
+        fetchUserDefaultAddress,
         getUserAddresses,
         getUserAddress,
+        addUserAddress,
     };
 });
 

@@ -1,16 +1,12 @@
-import { DistrictType } from "./district";
-import { ProvinceType } from "./province";
-import { WardType } from "./ward";
-
 export interface AddressType {
   addressId?: number;
   address?: string;
   fullName?:string;
   phoneNumber?:string;
   email?:string;
-  ward?: WardType;
-  district?: DistrictType;
-  province?: ProvinceType;
+  wardId?: number;
+  districtId?: number;
+  provinceId?: number;
 }
 
 export interface CreationParams {

@@ -1,5 +1,5 @@
 import Address from "@/models/Address";
-import type { AddressType } from "@/types/address";
+import type { AddressType, CreationParams } from "@/types/address";
 import { DistrictType } from "@/types/district";
 import { ProvinceType } from "@/types/province";
 import { WardType } from "@/types/ward";
@@ -15,9 +15,9 @@ const useAddressStore = defineStore("address", () => {
     let phoneNumber: Ref<string> = ref("");
     let email: Ref<string> = ref("");
     let addressString: Ref<string> = ref("");
-    let ward: Ref<WardType | undefined> = ref();
-    let district: Ref<DistrictType | undefined> = ref();
-    let province: Ref<ProvinceType | undefined> = ref();
+    let wardId: Ref<number | undefined> = ref();
+    let districtId: Ref<number | undefined> = ref();
+    let provinceId: Ref<number | undefined> = ref();
 
     // Getters
     const getAddresses = computed(() => addresses);
@@ -38,16 +38,9 @@ const useAddressStore = defineStore("address", () => {
         setAddress(data!);
     };
 
-    const setData = (newFullName:string, newPhoneNumber:string, newEmail:string, newAddress: string, newWard: WardType, newDistrict: DistrictType, newProvince: ProvinceType) => {
-        address.value = {
-            fullName: newFullName,
-            phoneNumber: newPhoneNumber,
-            email: newEmail,
-            address: newAddress,
-            ward: newWard,
-            district: newDistrict,
-            province: newProvince,
-        }
+    const addAddress = async (newAddress: CreationParams) => {
+        const { data } = await new Address().create(newAddress);
+        setAddress(data!);
     }
 
     return {
@@ -55,7 +48,7 @@ const useAddressStore = defineStore("address", () => {
         fetchAddress,
         getAddresses,
         getAddress,
-        setData,
+        addAddress,
     };
 });
 

@@ -2,8 +2,8 @@
 	<div class="py-10">
 		<Steps :model="items" aria-label="Form Steps" />
 	</div>
-	<div class="flex flex-col lg:flex-row mt-4">
-		<div class="w-full lg:w-8/12 mb-4 mt-4 border shadow rounded">
+	<div class="flex flex-col lg:flex-row mt-6">
+		<div class="w-full lg:w-8/12 mb-4 border shadow rounded">
 			<div class="mb-4">
 				<div class="text-2xl m-4">Thông tin và địa chỉ</div>
 				<div class="border-b mx-4 mb-2"></div>
@@ -49,9 +49,9 @@
 								<span class="errorMessage">{{ errors.province }}</span>
 							</div>
 						</div>
-						<div class="flex content-between items-center">
-							<div class="flex items-center gap-2" @click="backToCart">
-								<i class="pi pi-chevron-left" style="font-size: 1.5rem"></i>
+						<div class="flex items-center justify-between mt-5">
+							<div class="flex items-center" @click="backToCart">
+								<i class="pi pi-chevron-left gap-1" style="font-size: 0.9rem"></i>
 								<p>Quay lại giỏ hàng</p>
 							</div>
 							<button class="btn-color-medium text-white font-semibold p-2 rounded w-1/3 mt-4" type="submit">
@@ -97,12 +97,12 @@ const items = ref([
 ]);
 
 const router = useRouter();
-const { fetchWards, getWards } = useWardStore();
-const { fetchDistricts, getDistricts } = useDistrictStore();
-const { fetchProvinces, getProvinces } = useProvinceStore();
-const { getAddress, setData } = useAddressStore();
+const { fetchWards, fetchWard, getWards,getWard } = useWardStore();
+const { fetchDistricts, fetchDistrict, getDistricts, getDistrict } = useDistrictStore();
+const { fetchProvinces, fetchProvince, getProvinces, getProvince } = useProvinceStore();
+const { getAddress, fetchAddress, addAddress } = useAddressStore();
 const { getCurrentToken } = useAccountStore();
-const { fetchUserAddresses, getUserAddresses } = useUserAddressStore();
+const { fetchUserAddresses, getUserAddresses, addUserAddress } = useUserAddressStore();
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const schema = toTypedSchema(
@@ -133,36 +133,61 @@ const onSubmit = handleSubmit(values => {
 	if (!token) {
 		router.push({ name: "Login" })
 	} else {
-		const { address, ward, district, province } = values;
-		setData(address, ward, district, province);
-		router.push("/checkout/payment");
+		const userDecode = jwt_decode(token);
+		const { fullName, phoneNumber, email, address, ward, district, province } = values;
+		let wardId = ward.wardId;
+		let districtId = district.districtId;
+		let provinceId = province.provinceId;
+		addAddress({
+			fullName,
+			phoneNumber,
+			email,
+			address,
+			wardId,
+			districtId,
+			provinceId,
+		}).then(async () => {
+			const addressId = getAddress.value?.addressId;
+			await addUserAddress({
+				userId: userDecode.user.userId,
+				addressId: getAddress.value?.addressId,
+				isDefault: true,
+			});
+			router.push("/checkout/payment");
+		});
+
+		const cartIdFromLocalStorage = localStorage.getItem("cartId");
+		deleteCartItem(cartIdFromLocalStorage).then(() => {
+			delelteCart();
+			localStorage.removeItem("cartId");
+		})
 	}
 });
 
 const backToCart = () => {
 	router.push({name: "Cart"});
+	
 }
 
 const fetchData = () => {
 	Promise.all([fetchWards(), fetchDistricts(), fetchProvinces()]).then(() => {
 		const token = getCurrentToken();
 		if (token) {
-			const userDecode = jwt_decode(token)
-			fetchUserAddresses({userId: userDecode.userId, isDefault: true}).then(() => {
+			const userDecode = jwt_decode(token);
+			fetchUserAddresses({userId: userDecode.userId, isDefault: true}).then(async () => {
 				const userAddress = getUserAddresses.value[0];
-				setValues({
-					address: getAddress.value?.address,
-					ward: getAddress.value?.ward,
-					district: getAddress.value?.district,
-					province: getAddress.value?.province,
+				await fetchAddress(userAddress.addressId!);
+				Promise.all([fetchWard(getAddress.value?.wardId!), fetchDistrict(getAddress.value?.districtId!), fetchProvince(getAddress.value?.provinceId!)]).then(() => {
+					setValues({
+						fullName: getAddress.value?.fullName,
+						phoneNumber:getAddress.value?.phoneNumber,
+						email: getAddress.value?.email,
+						address: getAddress.value?.address,
+						ward: getWard.value,
+						district: getDistrict.value,
+						province: getProvince.value,
+					});
 				});
-			});
-		} else {
-			setValues({
-				address: getAddress.value?.address,
-				ward: getAddress.value?.ward,
-				district: getAddress.value?.district,
-				province: getAddress.value?.province,
 			});
 		}
 	});
