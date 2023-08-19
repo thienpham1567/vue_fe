@@ -103,7 +103,6 @@ onMounted(async () => {
   try {
     console.log(userId);
     await orderStore.fetchOrdersById(userId);
-
     orders.value = orderStore.getOrders.value;
     console.log(orders.value);
   } catch (error) {
@@ -127,8 +126,8 @@ const isEditing = ref(true);
 
 const formattedDate = computed(() => {
   if (currentOrder.value && currentOrder.value.createdAt) {
-    const datetime = moment(currentOrder.value.createdAt);
-    return datetime.format('YYYY-MM-DD');
+    const datetime = moment(currentOrder.value.createdAt, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
+    return datetime.format('YYYY-MM-DD HH:mm:ss');
   }
   return null;
 });
@@ -184,7 +183,7 @@ const formattedName = computed(() => {
 
 const openOrderDialog = (order: OrderType) => {
   currentOrder.value = { ...order };
-  dialogHeader.value = `Thông tin đơn hàng #${order.orderId}`;
+  dialogHeader.value = `Thông tin đơn hàng${order.orderId}`;
   dialogVisible.value = true;
 };
 
@@ -193,7 +192,7 @@ const filteredOrders = computed(() => {
   let filtered = orders.value;
   if (filterKeyword.value) {
     const keyword = filterKeyword.value.toLowerCase();
-    filtered = filtered.filter((order) => order.user.username.toLowerCase().includes(keyword));
+    filtered = filtered.filter((order) => order.user?.userId.toLowerCase().includes(keyword));
   }
   if (filterStatus.value) {
     filtered = filtered.filter((order) => order.ordersStatus === filterStatus.value);

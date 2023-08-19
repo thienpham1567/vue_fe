@@ -14,7 +14,11 @@
       <Column field="orderId" header="ID đơn hàng" sortable="custom" :sort-function="customSort"></Column>
       <Column field="user.firstName" header="Họ" sortable="custom" :sort-function="customSort"></Column>
       <Column field="user.lastName" header="Tên" sortable="custom" :sort-function="customSort"></Column>
-      <Column field="orderTotalPrice" header="Tổng số tiền" sortable="custom" :sort-function="customSort"></Column>
+      <Column field="orderTotalPrice" header="Tổng số tiền" sortable="custom" :sort-function="customSort">
+        <template #body="rowData">
+          {{ priceInVND(rowData.data.orderTotalPrice) }} VND
+        </template>
+      </Column>
       <Column field="ordersStatus" header="Trạng thái" :body="statusBodyTemplate" sortable="custom"
         :sort-function="customSort">
         <template #body="rowData">
@@ -71,7 +75,11 @@
                 <img :src="Props.data.imageUrl" style="width: 100px; height: 100px;" alt="image">
               </template>
             </Column>
-            <Column field="price" header="Giá"></Column>
+            <Column field="price" header="Giá">
+                        <template #body="rowData">
+                            <div class="vnd">{{ priceInVND(rowData.data.price) }} VND</div>
+                        </template>
+                    </Column>
             <Column field="quantity" header="Số lượng"></Column>
           </DataTable>
         </div>
@@ -145,8 +153,8 @@ const isEditing = ref(true);
 
 const formattedDate = computed(() => {
   if (currentOrder.value && currentOrder.value.createdAt) {
-    const datetime = moment(currentOrder.value.createdAt);
-    return datetime.format('YYYY-MM-DD');
+    const datetime = moment(currentOrder.value.createdAt, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
+    return datetime.format('YYYY-MM-DD HH:mm:ss');
   }
   return null;
 });
@@ -270,6 +278,15 @@ const cancelEdit = () => {
   dialogVisible.value = false;
 };
 
+// dola to vnd
+const priceInVND = computed(() => {
+  const exchangeRate = 24000; // Tỷ giá: 1 USD = 24000 VND
+
+  return (usdPrice) => {
+    const vndPrice = usdPrice * exchangeRate;
+    return vndPrice.toLocaleString('en-US'); // Định dạng số với dấu phẩy
+  };
+});
 </script>
 
 <style scoped>
