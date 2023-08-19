@@ -1,14 +1,13 @@
 import Layout from '@/layout/CustomerLayout.vue';
 
 export const favorite = {
-    path: '/favorite',
+    path: "/favorite",
     component: Layout,
     children: [
         {
-            path: 'favorite',
+            path: "",
             name: "favorite",
-            component: () => import("@/views/Favorite.vue"),
-        }
-       
-    ]
-}
+            component: () => import("@/views/Like/Favorite.vue"),
+        },
+    ],
+};

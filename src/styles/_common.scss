@@ -13,6 +13,18 @@
   }
 }
 
+.Likes {
+  transition: color 0.3s ease;
+  border: 1px solid $medium-blue !important;
+  background-color: $medium-blue !important;
+
+  &:hover {
+    background: $light-blue !important;
+    color: white !important;
+    border: 1px solid $light-blue !important;
+  }
+}
+
 .btn {
   min-width: 100%;
   color: white !important;
@@ -61,6 +73,7 @@
   background-color: $light-blue !important;
   border: none !important;
 }
+
 .errorMessage {
   color: red;
 }

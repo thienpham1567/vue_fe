@@ -69,8 +69,10 @@
 
 
             <div class="mt-5">
-                <Button icon="pi pi-heart-fill" size="small" @click="toggleLike" />
-                <!-- :icon="isLiked ? 'pi pi-heart' : 'pi pi-heart-o'" -->
+                <button class="p-button p-button-sm Likes" @click="toggleLikes">
+                    <i v-if="isLiked" class="pi pi-heart-fill text-red-500"></i>
+                    <i v-else class="pi pi-heart "></i>
+                </button>
             </div>
 
 
@@ -177,6 +179,7 @@ const reviewsPerLoad = 2;
 let selectedProduct: Ref<ProductVariationType> = ref({});
 let selectedSize: Ref<ProductVariationSizeType> = ref({});
 let filteredReviews = ref([]);
+const isLiked = ref(false);
 
 const currentReview = ref<ReviewType>({});
 
@@ -255,19 +258,23 @@ const orderImages = computed(() => selectedProduct.value.productImages?.filter(p
 //     console.error('Có lỗi xảy ra khi thao tác yêu thích:', error);
 //   }
 // }
-const toggleLike = async () => {
-    try {
-        const fav = favoriteStore.check();
-        if (fav.isLiked) {
-            alert("da like")
-        } else {
-            alert("chua like")
-        }
-        console.log('Thao tác yêu thích thành công!');
-        console.log('Kết quả kiểm tra yêu thích:', response);
-    } catch (error) {
-        console.error('Có lỗi xảy ra khi thao tác yêu thích:', error);
-    }
+// const toggleLike = async () => {
+//     try {
+//         const fav = favoriteStore.check();
+//         if (fav.isLiked) {
+//             alert("da like")
+//         } else {
+//             alert("chua like")
+//         }
+//         console.log('Thao tác yêu thích thành công!');
+//         console.log('Kết quả kiểm tra yêu thích:', response);
+//     } catch (error) {
+//         console.error('Có lỗi xảy ra khi thao tác yêu thích:', error);
+//     }
+// };
+
+const toggleLikes = () => {
+    isLiked.value = !isLiked.value;
 };
 
 
@@ -332,13 +339,13 @@ const filterReviews = () => {
     });
 };
 
-const filterFavorites = () => {
-    // Lọc
-    filteredFavorites.value = getAllFavorites.value.filter((favorite) => {
-        return favorite.productVariationId === selectedProduct.value.productVariationId;
-        // check
-    });
-}
+// const filterFavorites = () => {
+//     // Lọc
+//     filteredFavorites.value = getAllFavorites.value.filter((favorite) => {
+//         return favorite.productVariationId === selectedProduct.value.productVariationId;
+//         // check
+//     });
+// }
 
 const loadInitialReviews = () => {
     displayedReviews.value = filteredReviews.value.slice(0, reviewsPerLoad);
