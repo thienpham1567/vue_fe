@@ -13,6 +13,7 @@
         :key="tableKey">
         <Column field="categoryId" header="ID"></Column>
         <Column field="name" header="Tên"></Column>
+        <Column field="code" header="Code"></Column>
         <Column field="parentCategory.name" header="Danh mục cha"></Column>
         <Column header="Thao tác">
           <template #body="rowData">
@@ -33,6 +34,10 @@
         <div class="p-field">
           <label for="categoryName">Tên</label>
           <InputText id="categoryName" v-model="currentCategory.name"></InputText>
+        </div>
+        <div class="p-field">
+          <label for="categoryCode">Code</label>
+          <InputText id="categoryCode" v-model="currentCategory.code"></InputText>
         </div>
         <div class="p-field">
           <label for="parentCategoryId">Danh mục cha</label>
@@ -76,14 +81,14 @@ import useCategoryStore from '@/store/CategoryStore';
 import { CategoryType, CreationParams, UpdateParams } from '@/types/category';
 
 const {
-  categories,
+  getCategories,
   getSubCategories,
   fetchCategories,
   addCategory,
   updateCategory,
   deleteCategory,
 } = useCategoryStore();
-const currentCategory = ref<CategoryType>({});
+const currentCategory = reactive<CategoryType>({});
 const dialogVisible = ref(false);
 const deleteDialogVisible = ref(false);
 const isEditing = ref(false);
@@ -100,11 +105,11 @@ onMounted(async () => {
 });
 
 const filteredCategories = computed(() => {
-  const filteredCategories3 = categories.slice(3);
+  const filteredCategories3 = getCategories.value.slice(3);
   const searchValue = searchText.value.trim().toLowerCase();
 
   if (searchValue !== '') {
-    return filteredCategories3.filter(category =>
+    return filteredCategories3.filter((category : CategoryType) =>
       category.name.toLowerCase().includes(searchValue)
     );
   }
@@ -151,6 +156,7 @@ const saveCategory = async () => {
     try {
       const creationParams: CreationParams = {
         name: currentCategory.name,
+        code: currentCategory.code,
         parentCategoryId: currentCategory.parentCategory
       };
       await addCategory(creationParams);

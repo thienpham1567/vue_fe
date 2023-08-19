@@ -70,6 +70,7 @@
                             </div>
                         </template>
                     </Column>
+                    <Column field="createdAt" header="ProductVariationSize Id"></Column>
                 </DataTable>
             </div>
 

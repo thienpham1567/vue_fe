@@ -20,6 +20,11 @@ const useOrderStore = () => {
     setOrders(data);
   };
 
+  const fetchOrdersById = async (userId?: number) => {
+    const { data } = await new Order().listbyid({ userId });
+    setOrders(data);
+  };
+
   const addOrder = async (order: CreationParams) => {
     const { data } = await new Order().create(order);
     orders.value.push(data);
@@ -53,6 +58,7 @@ const useOrderStore = () => {
     updateOrder,
     deleteOrder,
     setOrder,
+    fetchOrdersById
   };
 };
 

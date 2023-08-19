@@ -7,6 +7,7 @@ export interface CategoryType {
 
 export interface CreationParams {
   name?: string;
+  code?: string;
   parentCategoryId?: number | null;
 }
 

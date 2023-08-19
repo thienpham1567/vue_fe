@@ -41,6 +41,10 @@ export interface OrderType {
     message?: string;
   }
   
+  export interface OrderById {
+    userId: number;
+  }
+
   // export interface UserType {
   //   userId?: number;
   //   username?: string;
@@ -48,10 +52,4 @@ export interface OrderType {
   //   password?: string;
   // }
   
-
-  
-  export interface ProductVariationSizeType {
-    productVariationSizeId?: number;
-    // Add other properties as needed
-  }
   
