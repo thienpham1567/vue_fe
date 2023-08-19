@@ -60,6 +60,7 @@ import { useAddressStore, useAccountStore, useWardStore, useDistrictStore, usePr
 import PayPalImg from "@/assets/images/paypal.png";
 import { useRouter } from 'vue-router';
 import jwt_decode from "jwt-decode";
+import Payment from "@/models/Paypal";
 
 
 const { getCurrentToken } = useAccountStore();
@@ -88,7 +89,7 @@ const items = ref([
 
 let isPaypal = ref();
 
-const payWithPaypal = () => {
+const payWithPaypal = async () => {
 	const token = getCurrentToken();
 	const userDecode = jwt_decode(token!);
 	if (token) {
@@ -98,7 +99,7 @@ const payWithPaypal = () => {
 				denormalizedAddress: "",
 				cart: getCart.value,
 			};
-			const redirectUrl = await paymentService.processPayment(paymentData);
+			const redirectUrl = await new Payment().processPayment(paymentData);
 			// Thực hiện chuyển hướng người dùng đến URL thanh toán
 			window.location.href = redirectUrl;
 		} catch (error) {
