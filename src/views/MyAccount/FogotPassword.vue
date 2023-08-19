@@ -23,7 +23,13 @@
 <script setup lang ="ts">
 import { ref } from 'vue'
 import useEmailStore from '@/store/EmailStore'
+import { useRouter } from 'vue-router';
 
+
+const router = useRouter();
+const goToLogin = () => {
+    router.push('/account/login');
+}
 const emailStore = useEmailStore();
 const email = ref('')
 const emailSent = ref(false); // Khởi tạo giá trị ban đầu là false
@@ -31,6 +37,7 @@ const emailSent = ref(false); // Khởi tạo giá trị ban đầu là false
 const sendResetLink = async () => {
     await emailStore.sendEmails(email.value);
     emailSent.value = true; // Cập nhật giá trị emailSent
+    goToLogin
 };
 
 </script>

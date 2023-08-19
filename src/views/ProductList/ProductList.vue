@@ -1,7 +1,7 @@
 <template>
     <div class="flex">
         <div class="flex flex-col h-full mt-4">
-            <aside class="  flex-grow rounded-lg md:w-20 lg:w-40">
+            <aside class="  flex-grow rounded-lg md:w-80 lg:w-80">
                 <div class="mb-4" v-if="checkBrand">
                     <button class="text-xl font-bold ml-0 block" @click="toggleSection('category')">
                         <span v-if="showCategorySection">
@@ -82,7 +82,7 @@
                         <div v-for="size of sizeObject" :key="size.key" class="flex align-items-center mb-3 ml-5">
                             <Checkbox v-model="selectedSizes" :inputId="size.key" name="size" :value="size.value"
                                 @update:modelValue="filterProduct" />
-                            <label :for="size.key" class="ml-1">Kích cở : {{ size.value }}</label>
+                            <label :for="size.key" class="ml-1">{{ size.value }}</label>
                         </div>
                         <!-- Thêm các checkbox khoảng giá khác nếu cần -->
                     </div>
@@ -186,10 +186,10 @@ const sizeObject = ref([
 ]);
 
 const priceObject = ref([
-    { name: "0 - 100", key: "1", value: [0, 100] },
-    { name: "100 - 200", key: "2", value: [100, 200] },
-    { name: "200 - 300", key: "3", value: [200, 300] },
-    { name: "300 - 400", key: "4", value: [300, 400] }
+    { name: "0 VNĐ - 2.400.000 VNĐ", key: "1", value: [0, 100] },
+    { name: "2.400.000 VNĐ - 4.800.000 VNĐ", key: "2", value: [100, 200] },
+    { name: "4.800.000 VNĐ - 9.600.000 VNĐ", key: "3", value: [200, 300] },
+    { name: "9.600.000 VNĐ - 19.200.000 VNĐ", key: "4", value: [300, 400] }
 ]);
 
 const categoryObject = ref([

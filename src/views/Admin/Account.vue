@@ -42,24 +42,29 @@
     <div class="account-management__admin-accounts">
       <h2 class="account-management__section-title">Phân Quyền</h2>
       <div class="card flex justify-content-center">
-        <Dropdown v-model="selectedRole" @update:model-value="onSelectRole" editable :options="roles" optionLabel="code"
-          placeholder="Select a City" class="w-full md:w-14rem" />
+        <Dropdown v-model="selectedRole" @update:model-value="onSelectRole" :options="roles" optionLabel="code"
+          placeholder="Chọn quyền" class="w-full md:w-14rem" />
+      </div>
+      <div class="card flex justify-content-center">
+        <input type="text" v-model="searchRole" placeholder="Tìm kiếm email" class="md:w-20rem w-full h-10"
+          @input="searchByRole" />
+
       </div>
       <DataTable :value="userRoles" :paginator="true" :rows="5" :rows-per-page-options="[5, 10, 25]" :key="tableKey">
 
         <Column field="user.userId" header="ID User"></Column>
         <Column field="user.emailAddress" header="Email"></Column>
-        <Column field="roleId" header="User">
+        <Column field="roleId" header="Khách hàng">
           <template #body="rowData">
             <RadioButton v-model="rowData.data.roleId" :value="1" @click="dataUserRole(rowData.data, 1)" />
           </template>
         </Column>
-        <Column field="roleId" header="Stall">
+        <Column field="roleId" header="Nhân viên">
           <template #body="rowData">
             <RadioButton v-model="rowData.data.roleId" :value="2" @click="dataUserRole(rowData.data, 2)" />
           </template>
         </Column>
-        <Column field="roleId" header="Admin">
+        <Column field="roleId" header="Quản lý">
           <template #body="rowData">
             <RadioButton v-model="rowData.data.roleId" :value="3" @click="dataUserRole(rowData.data, 3)" />
           </template>
@@ -91,6 +96,7 @@
         <div class="p-field">
           <label for="lastName">Họ</label>
           <InputText id="lastName" v-model="currentUser.lastName"></InputText>
+          <span v-if="firstNameError" class="text-red-500">{{ firstNameError }}</span>
         </div>
         <div class="p-field">
           <label for="firstName">Tên</label>
@@ -125,7 +131,7 @@
 </template>
   
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import Dropdown from 'primevue/dropdown';
 import TreeSelect from 'primevue/treeselect';
 // import { DataTable, Column } from 'primevue/datatable';
@@ -159,12 +165,30 @@ const currentUserRole = ref<UserRoleType>({});
 const roles = ref<RoleType[]>([]);
 const currentRole = ref<RoleType>({});
 
-const selectedRole = ref();
+const selectedRole = ref<any>(null);
+
+const firstNameError = ref('');
 
 const onSelectRole = () => {
-  userRoles.value = userRoles.value.filter((role) => role.role?.code === selectedRole.value.code);
-}
+  userRoles.value = userRoleStore.getUserRoles.value;
+  if (selectedRole.value !== null) {
+    userRoles.value = userRoles.value.filter((role) => role.role?.code === selectedRole.value.code);
+  } else {
+    userRoles.value = userRoleStore.getUserRoles.value;
+  }
 
+}
+const searchRole = ref('');
+const searchByRole = () => {
+  userRoles.value = userRoleStore.getUserRoles.value;
+  if (searchRole.value === '') {
+    userRoles.value = userRoleStore.getUserRoles.value;
+
+  } else {
+    userRoles.value = userRoles.value.filter((role) => role.user?.emailAddress === searchRole.value);
+    tableKey.value++;
+  }
+};
 onMounted(async () => {
   if (searchEmail.value === '') {
     try {
@@ -178,9 +202,11 @@ onMounted(async () => {
     await userStore.fetchByKey(searchEmail.value);
 
     users.value = userStore.getUsers.value;
-    console.log(users.value);
+
     tableKey.value++;
   };
+
+
 
 
 
@@ -229,11 +255,7 @@ const searchByEmail = async () => {
 const dataUserRole = async (updateUserRole: UserRoleType, newRoleId: number) => {
 
   currentUserRole.value = { ...updateUserRole, roleId: newRoleId };
-  const roleId = currentUserRole.value.role?.roleId;
-  console.log(currentUserRole.value.user?.userId);
-  console.log(roleId);
-  console.log(currentUserRole.value);
-  console.log("UserRoleID   " + JSON.stringify(currentUserRole.value));
+
   const newUserRole: UpdateUserRoleParams = {
     userRoleId: currentUserRole.value.userRoleId,
     userId: currentUserRole.value.user?.userId,
@@ -251,7 +273,7 @@ const saveUserRole = async (newUserRole: UpdateUserRoleParams, newUserRoleId: nu
   await userRoleStore.updateUserRole(newUserRoleId, newUserRole);
   await userRoleStore.fetchUserRoles();
   userRoles.value = userRoleStore.getUserRoles.value;
-  console.log("save tc")
+  alert("Thay quyền thành công")
   currentUserRole.value = {};
   dialogVisible.value = false;
 }
@@ -275,18 +297,23 @@ const showDeleteDialog = (user: UserType) => {
 // update user
 const saveUser = async () => {
   // Thực hiện cập nhật danh mục
-  try {
-    await userStore.updateUser(currentUser.value.userId, currentUser.value as UserParams);
+  if (currentUser.value.lastName === '' || currentUser.value.firstName === '') {
+
+  } else {
+    try {
+      await userStore.updateUser(currentUser.value.userId, currentUser.value as UserParams);
+      await userStore.fetchUsers();
+      users.value = userStore.getUsers.value;
+
+      tableKey.value += 1; // Force DataTable re-render
+    } catch (error) {
+      console.error('Error updating user:', error);
+      // Xử lý lỗi
+    }
+    currentUser.value = {};
+    dialogVisible.value = false;
     await userStore.fetchUsers();
-    users.value = userStore.getUsers.value;
-    tableKey.value += 1; // Force DataTable re-render
-  } catch (error) {
-    console.error('Error updating user:', error);
-    // Xử lý lỗi
   }
-  currentUser.value = {};
-  dialogVisible.value = false;
-  await userStore.fetchUsers();
 }
 
 //Delete User
@@ -295,6 +322,7 @@ const deleteUser = async () => {
     await userStore.deleteUser(currentUser.value.userId);
     await userStore.fetchUsers();
     users.value = userStore.getUsers.value;
+    window.location.reload();
     tableKey.value += 1; // Force DataTable re-render
   } catch (error) {
     console.error('Error deleting category:', error);

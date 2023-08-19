@@ -27,16 +27,7 @@
                         </div>
                     </div>
                 </TabPanel>
-                <TabPanel header="Order">
-                    <div class="tabPanel-sub">
-                        <h2>My Account</h2>
-                    </div>
-                </TabPanel>
-                <TabPanel header="Header III">
-                    <div class="tabPanel-sub">
-                        <h2>My Account</h2>
-                    </div>
-                </TabPanel>
+
             </TabView>
         </div>
 

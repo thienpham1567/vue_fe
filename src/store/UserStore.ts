@@ -3,6 +3,7 @@ import type { UserType, CreationParams, UserParams, PasswordChangeParams } from 
 import { ref, type Ref } from "vue";
 import { defineStore } from "pinia"
 import { computed } from "vue";
+import { useRouter } from 'vue-router';
 
 const useUserStore = defineStore("user", () => {
     // state
@@ -12,6 +13,10 @@ const useUserStore = defineStore("user", () => {
     const getUsers = computed(() => users);
     const getUser = computed(() => user);
 
+    const router = useRouter();
+    const goToLogin = () => {
+        router.push('/account/login');
+    }
     //
     const createErrorMessage = ref("");
     const getCreateErrorMessage = computed(() => createErrorMessage);
@@ -29,9 +34,10 @@ const useUserStore = defineStore("user", () => {
         try {
             const { data } = await new User().create(user);
             users.value.push(data);
+            goToLogin;
         } catch (error) {
             if (error.response.status === 400) {
-                createErrorMessage.value = "Đăng ký thất bại";
+                createErrorMessage.value = "Đăng ký thất bại trùng email";
                 console.log(createErrorMessage.value);
             }
         }
