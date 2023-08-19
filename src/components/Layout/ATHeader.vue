@@ -89,8 +89,10 @@
         <div class="flex justify-between m-4">
           <Button type="submit" :label="$t('my-cart')" @click="goToCart"
             class="text-sm text-center text-white btn-color-light rounded focus:outline-none" />
-          <Button type="submit" :label="$t('Proceed-to-checkout')" @click="goToCheckout"
-            class="text-sm text-center text-white btn-color-medium rounded focus:outline-none" />
+          <div v-if="getCart.itemTotalQuantity! > 0">
+            <Button type="submit" :label="$t('Proceed-to-checkout')" @click="goToCheckout"
+              class="text-sm text-center text-white btn-color-medium rounded focus:outline-none" />
+          </div>
         </div>
       </div>
     </div>

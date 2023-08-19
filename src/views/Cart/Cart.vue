@@ -5,7 +5,7 @@
                 <div>{{ $t('item') }}</div>
                 <div>{{ $t('price') }} / {{ $t('quantity') }}</div>
             </div>
-            <CartItem :cart="getCart" :cartItems="getCartItems"/>
+            <CartItem :cart="getCart" :cartItems="getCartItems" />
         </div>
         <div class="lg:w-4/12 flex flex-col justify-between">
             <div class="mb-4 bg-gray-100">
@@ -20,11 +20,12 @@
                     </div>
                 </div>
             </div>
-            <button @click="goToCheckout"
-                class="btn-color-medium text-white font-semibold py-2 rounded w-full"
-                type="submit">
-                {{ $t('Proceed-to-checkout') }}
-            </button>
+            <div v-if="getCart.itemTotalQuantity! > 0">
+                <button @click="goToCheckout" class="btn-color-medium text-white font-semibold py-2 rounded w-full"
+                    type="submit">
+                    {{ $t('Proceed-to-checkout') }}
+                </button>
+            </div>
         </div>
     </div>
 </template>
