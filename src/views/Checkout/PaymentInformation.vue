@@ -55,17 +55,19 @@ import Checkbox from 'primevue/checkbox';
 import Steps from 'primevue/steps';
 import { ref, onMounted } from 'vue';
 import Order from '@/components/Checkout/Order.vue'
-import { useAddressStore, useAccountStore, useWardStore, useDistrictStore, useProvinceStore } from '@/store';
+import { useAddressStore, useAccountStore, useWardStore, useDistrictStore, useProvinceStore, useUserAddressStore } from '@/store';
 import PayPalImg from "@/assets/images/paypal.png";
 import { useRouter } from 'vue-router';
+import jwt_decode from "jwt-decode";
 
 
-const { getAddress } = useAddressStore();
 const { getCurrentToken } = useAccountStore();
 const router = useRouter();
 const { fetchWard, getWard } = useWardStore();
-const { fetchDistrict, getDistrict } = useDistrictStore();
-const { fetchProvince, getProvince } = useProvinceStore();
+const { fetchDistrict,  getDistrict } = useDistrictStore();
+const { fetchProvince,  getProvince } = useProvinceStore();
+const { getAddress, fetchAddress } = useAddressStore();
+const { fetchUserAddresses, getUserAddresses } = useUserAddressStore();
 
 const items = ref([
     {
@@ -98,6 +100,14 @@ const back = () => {
 }
 
 onMounted(() => {
-	Promise.all([fetchWard(getAddress.value?.wardId!), fetchDistrict(getAddress.value?.districtId!), fetchProvince(getAddress.value?.provinceId!)])
+	const token = getCurrentToken();
+	if (token) {
+			const userDecode = jwt_decode(token);
+			fetchUserAddresses({userId: userDecode.userId, isDefault: true}).then(async () => {
+				const userAddress = getUserAddresses.value[0];
+				await fetchAddress(userAddress.addressId!);
+				Promise.all([fetchWard(getAddress.value?.wardId!), fetchDistrict(getAddress.value?.districtId!), fetchProvince(getAddress.value?.provinceId!)]);
+			});
+		}
 })
 </script>

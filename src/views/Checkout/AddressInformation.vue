@@ -97,7 +97,7 @@ const items = ref([
 ]);
 
 const router = useRouter();
-const { fetchWards, fetchWard, getWards,getWard } = useWardStore();
+const { fetchWards, fetchWard, getWards, getWard } = useWardStore();
 const { fetchDistricts, fetchDistrict, getDistricts, getDistrict } = useDistrictStore();
 const { fetchProvinces, fetchProvince, getProvinces, getProvince } = useProvinceStore();
 const { getAddress, fetchAddress, addAddress, updateAddress } = useAddressStore();
