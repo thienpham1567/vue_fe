@@ -138,7 +138,7 @@ const onSubmit = handleSubmit(values => {
 		let districtId = district.districtId;
 		let provinceId = province.provinceId;
 		
-		if (getUserAddresses.value[0].userAddressId) {
+		if (getUserAddresses?.value[0]?.userAddressId) {
 			updateAddress(getUserAddresses.value[0].addressId!, {
 				fullName,
 				phoneNumber,
