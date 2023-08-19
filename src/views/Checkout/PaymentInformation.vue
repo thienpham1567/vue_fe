@@ -5,17 +5,21 @@
 	<div class="flex flex-col lg:flex-row mt-4">
 		<div class="w-full">
 			<div class="border shadow rounded py-4 px-2 max-h-60">
-				<div class="text-xl px-4">Thông tin địa chỉ</div>
-				<div class="info">
-					<p>{{ getAddress?.fullName }}</p>
-					<p>{{ getAddress?.phoneNumber }}</p>
+				<div class="text-xl text-center">Thông tin địa chỉ</div>
+				<div class="info px-4 mt-4">
+					<p>{{ getAddress?.fullName, getAddress?.phoneNumber }}</p>
+					<p class="inline">{{ getAddress?.phoneNumber }}</p>
 					<p>{{ getAddress?.email }}</p>
 					<p>{{ getAddress?.address }}</p>
-					<p>{{ getWard?.name, getDistrict?.name, getProvince?.name }}</p>
+					<div class="flex gap-1">
+						<p>{{ getWard?.name }}</p>,
+						<p>{{ getDistrict?.name }}</p>,
+						<p>{{ getProvince?.name }}</p>.
+					</div>
 				</div>
 			</div>
 			<div class="mt-2 border shadow rounded py-4 px-2">
-				<div class="text-xl px-4">Phương thức thanh toán</div>
+				<div class="text-xl text-center">Phương thức thanh toán</div>
 				<div>
 					<div class="px-4">
 						<div class="flex items-center gap-6">
@@ -37,10 +41,11 @@
 		</div>
 		<Order />
 	</div>
-	<div class="text-left">
-		<button class="btn-color-light text-white font-semibold p-2 rounded w-1/3 mt-2" type="submit" @click="back">
-			Trở lại
-		</button>
+	<div class="text-left mt-2">
+		<div class="flex items-center cursor-pointer" style="font-size: 1rem" @click="back">
+			<i class="pi pi-chevron-left gap-1"></i>
+			<p>Quay lại</p>
+		</div>
 	</div>
 </template>
 

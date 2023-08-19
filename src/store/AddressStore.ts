@@ -1,5 +1,5 @@
 import Address from "@/models/Address";
-import type { AddressType, CreationParams } from "@/types/address";
+import type { AddressType, CreationParams, UpdateParams } from "@/types/address";
 import { DistrictType } from "@/types/district";
 import { ProvinceType } from "@/types/province";
 import { WardType } from "@/types/ward";
@@ -43,12 +43,22 @@ const useAddressStore = defineStore("address", () => {
         setAddress(data!);
     }
 
+    const updateAddress = async (id: number, updateAddress: UpdateParams) => {
+        const { data } = await new Address().update(id, updateAddress);
+        setAddress(data!);
+    }
+
+    const deleteAddress = async (id: number) => {
+        await new Address().delete(id);
+    };
+
     return {
         fetchAddresses,
         fetchAddress,
         getAddresses,
         getAddress,
         addAddress,
+        updateAddress,
     };
 });
 

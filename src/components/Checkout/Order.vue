@@ -31,7 +31,7 @@
 							<div class="text-sm">{{ item.productVariationSize?.productVariation?.product?.name }}</div>
 							<div class="text-xs text-gray-500 mb-2">{{ item.productVariationSize?.productVariation?.product?.brand?.name+'/'+item.productVariationSize?.productVariation?.color?.value }}</div>
 							<div class="flex items-center justify-between">
-								<div class="text-xs font-light">${{ item.price }}</div>
+								<div class="text-xs font-light">${{ item.productVariationSize?.productVariation?.product?.price }}</div>
 								<div class="text-xs font-light">Quantity: {{ item.quantity }}</div>
 							</div>
 						</div>

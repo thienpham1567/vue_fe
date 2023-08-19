@@ -50,7 +50,7 @@
 							</div>
 						</div>
 						<div class="flex items-center justify-between mt-5">
-							<div class="flex items-center" @click="backToCart">
+							<div class="flex items-center cursor-pointer" @click="backToCart">
 								<i class="pi pi-chevron-left gap-1" style="font-size: 0.9rem"></i>
 								<p>Quay lại giỏ hàng</p>
 							</div>
@@ -100,9 +100,9 @@ const router = useRouter();
 const { fetchWards, fetchWard, getWards,getWard } = useWardStore();
 const { fetchDistricts, fetchDistrict, getDistricts, getDistrict } = useDistrictStore();
 const { fetchProvinces, fetchProvince, getProvinces, getProvince } = useProvinceStore();
-const { getAddress, fetchAddress, addAddress } = useAddressStore();
+const { getAddress, fetchAddress, addAddress, updateAddress } = useAddressStore();
 const { getCurrentToken } = useAccountStore();
-const { fetchUserAddresses, getUserAddresses, addUserAddress } = useUserAddressStore();
+const { fetchUserAddresses, getUserAddresses, addUserAddress, getUserAddress } = useUserAddressStore();
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const schema = toTypedSchema(
@@ -133,34 +133,44 @@ const onSubmit = handleSubmit(values => {
 	if (!token) {
 		router.push({ name: "Login" })
 	} else {
-		const userDecode = jwt_decode(token);
 		const { fullName, phoneNumber, email, address, ward, district, province } = values;
 		let wardId = ward.wardId;
 		let districtId = district.districtId;
 		let provinceId = province.provinceId;
-		addAddress({
-			fullName,
-			phoneNumber,
-			email,
-			address,
-			wardId,
-			districtId,
-			provinceId,
-		}).then(async () => {
-			const addressId = getAddress.value?.addressId;
-			await addUserAddress({
-				userId: userDecode.user.userId,
-				addressId: getAddress.value?.addressId,
-				isDefault: true,
+		console.log(getUserAddresses.value);
+		
+		if (getUserAddresses.value[0].userAddressId) {
+			updateAddress(getUserAddresses.value[0].addressId!, {
+				fullName,
+				phoneNumber,
+				email,
+				address,
+				wardId,
+				districtId,
+				provinceId,
+			}).then(() => {
+				router.push("/checkout/payment");
 			});
-			router.push("/checkout/payment");
-		});
-
-		const cartIdFromLocalStorage = localStorage.getItem("cartId");
-		deleteCartItem(cartIdFromLocalStorage).then(() => {
-			delelteCart();
-			localStorage.removeItem("cartId");
-		})
+		} else {
+			const userDecode = jwt_decode(token);
+			addAddress({
+				fullName,
+				phoneNumber,
+				email,
+				address,
+				wardId,
+				districtId,
+				provinceId,
+			}).then(async () => {
+				const addressId = getAddress.value?.addressId;
+				await addUserAddress({
+					userId: userDecode.user.userId,
+					addressId: getAddress.value?.addressId,
+					isDefault: true,
+				});
+				router.push("/checkout/payment");
+			});
+		}
 	}
 });
 
