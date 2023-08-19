@@ -2,7 +2,7 @@
 	<div class="py-10">
 		<Steps :model="items" aria-label="Form Steps" />
 	</div>
-	<div class="flex flex-col lg:flex-row mt-4">
+	<div class="flex flex-col lg:flex-row mt-8">
 		<div class="w-full">
 			<div class="border shadow rounded py-4 px-2 max-h-60">
 				<div class="text-xl text-center">Thông tin địa chỉ</div>
@@ -14,17 +14,17 @@
 					<div class="flex gap-1">
 						<p>{{ getWard?.name }}</p>,
 						<p>{{ getDistrict?.name }}</p>,
-						<p>{{ getProvince?.name }}</p>.
+						<p>{{ getProvince?.name }}</p>
 					</div>
 				</div>
 			</div>
-			<div class="mt-2 border shadow rounded py-4 px-2">
+			<div class="mt-4 border shadow rounded py-4 px-2">
 				<div class="text-xl text-center">Phương thức thanh toán</div>
 				<div>
 					<div class="px-4">
-						<div class="flex items-center gap-6">
+						<div class="flex items-center gap-5">
 							<Checkbox v-model="isPaypal" :binary="true" />
-							<Image :src="PayPalImg" alt="Image" width="130" />
+							<Image :src="PayPalImg" alt="Image" width="120" />
 						</div>
 					</div>
 					<div class="px-4">

@@ -11,13 +11,6 @@ const useAddressStore = defineStore("address", () => {
     // State
     const addresses: Ref<AddressType[]> = ref([]);
     const address: Ref<AddressType | undefined> = ref();
-    let fullName: Ref<string> = ref("");
-    let phoneNumber: Ref<string> = ref("");
-    let email: Ref<string> = ref("");
-    let addressString: Ref<string> = ref("");
-    let wardId: Ref<number | undefined> = ref();
-    let districtId: Ref<number | undefined> = ref();
-    let provinceId: Ref<number | undefined> = ref();
 
     // Getters
     const getAddresses = computed(() => addresses);

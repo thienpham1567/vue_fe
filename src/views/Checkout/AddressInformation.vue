@@ -102,7 +102,7 @@ const { fetchDistricts, fetchDistrict, getDistricts, getDistrict } = useDistrict
 const { fetchProvinces, fetchProvince, getProvinces, getProvince } = useProvinceStore();
 const { getAddress, fetchAddress, addAddress, updateAddress } = useAddressStore();
 const { getCurrentToken } = useAccountStore();
-const { fetchUserAddresses, getUserAddresses, addUserAddress, getUserAddress } = useUserAddressStore();
+const { fetchUserAddresses, getUserAddresses, addUserAddress } = useUserAddressStore();
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const schema = toTypedSchema(
@@ -137,7 +137,6 @@ const onSubmit = handleSubmit(values => {
 		let wardId = ward.wardId;
 		let districtId = district.districtId;
 		let provinceId = province.provinceId;
-		console.log(getUserAddresses.value);
 		
 		if (getUserAddresses.value[0].userAddressId) {
 			updateAddress(getUserAddresses.value[0].addressId!, {
@@ -162,7 +161,6 @@ const onSubmit = handleSubmit(values => {
 				districtId,
 				provinceId,
 			}).then(async () => {
-				const addressId = getAddress.value?.addressId;
 				await addUserAddress({
 					userId: userDecode.user.userId,
 					addressId: getAddress.value?.addressId,
