@@ -6,7 +6,11 @@ class Email extends HTTPBaseService {
     }
 
     async sendEmail(email: String): Promise<void> {
-        this.instance.post(`/email/send-email/${email}`);
+        try {
+            this.instance.post(`/email/send-email/${email}`);
+        } catch (error) {
+            throw error;
+        }
     }
 }
 

@@ -74,11 +74,33 @@ export const admin = {
       path: "best-selling-brand",
       name: "best-selling-brand",
       component: () => import("@/views/Admin/BestSellingBrand.vue"),
+      beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('token');
+        const valueToken = jwt_decode(token!);
+        const roles = valueToken.user.roles;
+        const isStaff = roles.some(role => role.authority === 'STAFF');
+        if (!isStaff) {
+          next(); // Cho phép truy cập nếu là vai trò admin
+        } else {
+          next("/403"); // Chuyển hướng đến trang lỗi 403 nếu không có quyền truy cập
+        }
+      },
     },
     {
       path: "report-revenue",
       name: "report-revenue",
       component: () => import("@/views/Admin/ReportRevenue.vue"),
+      beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('token');
+        const valueToken = jwt_decode(token!);
+        const roles = valueToken.user.roles;
+        const isStaff = roles.some(role => role.authority === 'STAFF');
+        if (!isStaff) {
+          next(); // Cho phép truy cập nếu là vai trò admin
+        } else {
+          next("/403"); // Chuyển hướng đến trang lỗi 403 nếu không có quyền truy cập
+        }
+      },
     },
     {
       path: "review",

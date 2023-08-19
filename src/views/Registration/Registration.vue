@@ -123,9 +123,9 @@ const goToLogin = () => {
 function validatePhoneNumber() {
     const phoneNumberRegex = /^(0[2-9]|84[2-9])(\d{8})$/;
     if (!phoneNumberValue.value) {
-        phoneNumberError.value = 'Phone Number is required.';
+        phoneNumberError.value = 'Số điện thoại Không được để trống';
     } else if (!phoneNumberRegex.test(phoneNumberValue.value)) {
-        phoneNumberError.value = 'Invalid phone number format.';
+        phoneNumberError.value = 'Số điện thoại Không đúng định dạng';
     } else {
         phoneNumberError.value = '';
     }
@@ -133,11 +133,11 @@ function validatePhoneNumber() {
 
 function validateForm() {
     // Kiểm tra lỗi cho từng trường
-    firstNameError.value = firstNameValue.value ? '' : 'First Name is required.';
-    lastNameError.value = lastNameValue.value ? '' : 'Last Name is required.';
-    emailError.value = emailValue.value ? '' : 'Email is required.';
-    passwordError.value = passwordValue.value ? '' : 'Password is required.';
-    rePasswordError.value = rePasswordValue.value ? '' : 'Re-Password is required.';
+    firstNameError.value = firstNameValue.value ? '' : 'Họ Không được để trống';
+    lastNameError.value = lastNameValue.value ? '' : 'Tên Không được để trống';
+    emailError.value = emailValue.value ? '' : 'Email Không được để trống';
+    passwordError.value = passwordValue.value ? '' : 'Mật khẩu Không được để trống';
+    rePasswordError.value = rePasswordValue.value ? '' : 'Nhập lại mật khẩu Không được để trống';
     termsError.value = termsAccepted.value ? '' : 'You must accept the terms and conditions.';
 
     validatePhoneNumber();
@@ -145,9 +145,9 @@ function validateForm() {
     // Kiểm tra độ dài mật khẩu tối thiểu là 8 và tối đa là 20
     if (passwordValue.value) {
         if (passwordValue.value.length < 8) {
-            passwordError.value = 'Password must be at least 8 characters long.';
+            passwordError.value = 'Mật khẩu phải lớn hơn 8 ký tự.';
         } else if (passwordValue.value.length > 20) {
-            passwordError.value = 'Password must not exceed 20 characters.';
+            passwordError.value = 'Mật khẩu phải bé hơn 20 ký tự.';
         } else {
             passwordError.value = '';
         }
@@ -161,8 +161,8 @@ function validateForm() {
 
     // Kiểm tra mật khẩu và xác nhận mật khẩu khớp nhau
     if (passwordValue.value && rePasswordValue.value && passwordValue.value !== rePasswordValue.value) {
-        passwordError.value = 'Passwords do not match.';
-        rePasswordError.value = 'Passwords do not match.';
+        passwordError.value = 'Mật khẩu không trùng nhau';
+        rePasswordError.value = 'Mật khẩu không trùng nhau';
     }
 
     // Kiểm tra xem có lỗi không
@@ -187,7 +187,7 @@ function validateForm() {
     };
 
     addUser(creationParams);
-    goToLogin();
+
 
     check.value = true;
     return true;
