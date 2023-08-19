@@ -144,24 +144,7 @@ watch(
   }
 );
 
-// Hot Products -----------------------------------------------------------------
-// const visibleHotProductCount = ref(4);
-
-// // Lấy danh sách sản phẩm hiển thị dựa trên biến đếm
-// const visibleHotProducts = computed(() => {
-//   return getProducts.value.slice(0, visibleHotProductCount.value);
-// });
-
-// // Kiểm tra xem còn sản phẩm để hiển thị hay không
-// const showLoadMoreHotProductButton = computed(() => {
-//   return visibleHotProductCount.value < getProducts.value.length;
-// });
-
-// // Hàm tải thêm sản phẩm
-// const loadMoreHotProducts = () => {
-//   visibleHotProductCount.value += 4; // Tăng giá trị biến đếm để hiển thị thêm 4 sản phẩm
-// };
-// Daily Products -----------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------
 const visibleRandomProductsCount = ref(4);
 
 // Lấy danh sách sản phẩm ngẫu nhiên dựa trên các index
@@ -200,7 +183,7 @@ const loadMoreRandomProducts = () => {
   visibleRandomProductsCount.value += 4; // Tăng giá trị biến đếm để hiển thị thêm 4 sản phẩm
 };
 
-// Daily Products -----------------------------------------------------------------
+// Daily Products ---------------------------------------------------------------------------------
 const visibleRandomsProductsCount = ref(4);
 
 // Lấy danh sách sản phẩm ngẫu nhiên dựa trên các index
@@ -239,7 +222,7 @@ const loadMoreRandomsProducts = () => {
   visibleRandomsProductsCount.value += 4; // Tăng giá trị biến đếm để hiển thị thêm 4 sản phẩm
 };
 
-// New Product----------------------------------------------------------------------
+// New Product----------------------------------------------------------------------------------------------
 const visibleNewProductCount = ref(4);
 
 
