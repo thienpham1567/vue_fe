@@ -154,7 +154,6 @@ import { useProductStore, useSizeStore, useCartStore } from "@/store";
 import { ref, onMounted, computed, Ref } from "vue";
 import { ProductVariationSizeType } from '@/types/productVariationSize';
 import useReviewStore from '@/store/ReviewStore';
-import useFavoriteStore from '@/store/FavoriteStore';
 import { ReviewType, CreationParams as ReviewCreationParams } from '@/types/review';
 import jwt_decode from "jwt-decode";
 
@@ -167,7 +166,6 @@ const { fetchReviews, getAllReviews } = useReviewStore();
 const { fetchSizes, getSizes } = useSizeStore();
 const { addUpdateToCart } = useCartStore();
 const reviewStore = useReviewStore();
-const { getAllFavorites } = useFavoriteStore();
 let displayedReviews = ref([]);
 const reviewsPerLoad = 2;
 

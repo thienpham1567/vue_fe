@@ -78,10 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useLanguageStore } from '@/store/language';
 import { translate } from '@/i18n';
 
 const $t = translate;
-const languageStore = useLanguageStore();
 </script>

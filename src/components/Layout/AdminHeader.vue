@@ -7,9 +7,6 @@
             stroke-linejoin="round" />
         </svg>
       </button>
-
-
-
     </div>
 
     <div class="flex items-center">

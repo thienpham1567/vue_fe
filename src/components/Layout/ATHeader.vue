@@ -192,8 +192,9 @@ function brands() {
 
 const getAllBrands = () => {
   return [{
-    label: "Our brands",
+    label: "",
     items: brands(),
+    class: "display-none",
   }]
 };
 
@@ -204,7 +205,7 @@ const getSubCategories = (parentCategoryId: number, categoryCode: string) => {
     if (localParentCategoryId === parentCategoryId && localCategoryCode === categoryCode) {
       return {
         label: category.name,
-        command: () => gotoProductList(undefined, category.categoryId)
+        command: () => gotoProductList(undefined, category.categoryId),
       }
     }
   });
@@ -215,8 +216,9 @@ const getCategoriesByParent = (parentCategoryId: number) => {
   let data = getCategories.value.map(category => {
     const localParentCategoryId = category.parentCategory?.categoryId;
     if (localParentCategoryId === parentCategoryId) {
+      let code = category.code === "Shoes" ? "Giày" : "Áo"
       return {
-        label: category.code,
+        label: code,
         items: getSubCategories(parentCategoryId, category.code!),
       }
     }
@@ -292,11 +294,6 @@ function goToFavorite() {
 
 const languageStore = useLanguageStore();
 
-const languages = ref([
-  { code: 'en', label: 'English' },
-  { code: 'vi', label: 'Tiếng Việt' }
-]);
-
 const selectedLanguage = computed({
   get: () => languageStore.currentLanguage,
   set: (value) => {
@@ -305,12 +302,6 @@ const selectedLanguage = computed({
   },
 });
 const $t = translate;
-
-const changeLanguage = (event: Event) => {
-  const target = event.target as HTMLSelectElement;
-  const selectedCode = target.value;
-  selectedLanguage.value = selectedCode;
-};
 
 function goToViewAdmin() {
   dialogCartVisible.value = false;
@@ -346,11 +337,11 @@ checkToken();
 
 const priceInVND = computed(() => {
     const usdPrice = getCart.value.itemSubtotalPrice;
-    const exchangeRate = 24000; // Tỷ giá: 1 USD = 23000 VND
+    const exchangeRate = 24000;
 
     if (usdPrice) {
         const vndPrice = usdPrice * exchangeRate;
-        return vndPrice.toLocaleString('en-US'); // Định dạng số với dấu phẩy
+        return vndPrice.toLocaleString('en-US');
     }
 
     return null;

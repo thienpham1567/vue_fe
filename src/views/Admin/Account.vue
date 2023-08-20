@@ -89,10 +89,8 @@
 </template>
   
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import Dropdown from 'primevue/dropdown';
-import TreeSelect from 'primevue/treeselect';
-// import { DataTable, Column } from 'primevue/datatable';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
@@ -109,7 +107,6 @@ const deleteDialogVisible = ref(false);
 const userStore = useUserStore();
 const userRoleStore = useUserRoleStore();
 const roleStore = useRoleStore();
-const dialogHeader = ref('');
 const dialogVisible = ref(false);
 const tableKey = ref(0);
 
