@@ -22,15 +22,6 @@
             @click="dialogCartVisible = true" />
           <Button v-else icon="pi pi-shopping-cart " class="cart-btn" :label="`Giỏ hàng ${getCart.itemTotalQuantity}`"
             raised @click="dialogCartVisible = true" />
-
-          <!-- Multi Language button  -->
-          <!-- <div class="flex space-x-3 ml-3 bg-yellow-400">
-            <select v-model="selectedLanguage" @change="changeLanguage">
-              <option v-for=" language  in  languages " :value="language.code" :key="language.code">
-                {{ language.label }}
-              </option>
-            </select>
-          </div> -->
         </div>
       </div>
 
@@ -84,7 +75,7 @@
         <CartItem :cart="getCart" :cartItems="getCartItems" />
       </div>
       <div class="bg-gray-100 w-full">
-        <div class="text-end mr-4 pt-2" style="font-size: 1.5rem;">{{ $t('subtotal') }}: ${{ getCart.itemSubtotalPrice }}
+        <div class="text-end mr-4 pt-2" style="font-size: 1.5rem;">{{ $t('subtotal') }}: ${{ priceInVND }}
         </div>
         <div class="flex justify-between m-4">
           <Button type="submit" :label="$t('my-cart')" @click="goToCart"
@@ -132,7 +123,6 @@ import SearchProduct from '@/components/Product/SearchProduct.vue';
 const route = useRoute();
 const router = useRouter();
 const { fetchAllProducts, getProducts } = useProductStore();
-const { getUser } = useAccountStore();
 const { getBrands, fetchBrands } = useBrandStore();
 const { getCategories, fetchCategories } = useCategoryStore();
 const { getCart, getCartItems, fetchCart } = useCartStore();
@@ -154,6 +144,11 @@ watch(
 watch(searchQuery, (newValue) => {
   filterProducts(newValue);
 });
+
+watch(dialogCartVisible, async () => {
+  await fetchCart();
+});
+
 
 function filterProducts(query: string) {
   filteredProducts.value = getProducts.value.filter((product: ProductVariationType) =>
@@ -344,6 +339,18 @@ const logout = () => {
 
 };
 checkToken();
+
+const priceInVND = computed(() => {
+    const usdPrice = getCart.value.itemSubtotalPrice;
+    const exchangeRate = 24000; // Tỷ giá: 1 USD = 23000 VND
+
+    if (usdPrice) {
+        const vndPrice = usdPrice * exchangeRate;
+        return vndPrice.toLocaleString('en-US'); // Định dạng số với dấu phẩy
+    }
+
+    return null;
+});
 
 const fetchData = () => {
   Promise.all([fetchBrands(), fetchCategories(), fetchCart()]).then(() => {
