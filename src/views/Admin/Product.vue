@@ -1,15 +1,15 @@
 <template>
     <div>
-        <div class="flex font-bold text-4xl justify-center mb-4">Product</div>
+        <div class="flex font-bold text-4xl justify-center mb-4">Sản phẩm</div>
         <div class=" mb-4">
             <div class="flex justify-between ml-2 mr-4">
                 <div class="w-1/2 ml-2 mr-2">
-                    <Dropdown v-model="selectedBrand" :options="brands" optionLabel="name" placeholder="Select a Brand"
+                    <Dropdown v-model="selectedBrand" :options="brands" optionLabel="name" placeholder="Chọn thương hiệu"
                         class="w-full md:w-14rem" />
                 </div>
                 <div class="w-1/2 ml-2">
                     <Dropdown v-model="selectedCategory" :options="categoriesWithLabel" optionLabel="label"
-                        placeholder="Select a Category" class="w-full md:w-14rem">
+                        placeholder="Chọn loại sản phẩm" class="w-full md:w-14rem">
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="flex align-items-center">
                                 <div>{{ slotProps.value.name }}</div>
@@ -30,30 +30,30 @@
             </div>
             <div class="flex">
                 <div class="mr-4 ml-4 mt-4 w-1/2">
-                    <label for="ProductName">Product Name</label>
+                    <label for="ProductName">Tên sản phẩm</label>
                     <InputText v-model="currentProduct.name" class="w-full" placeholder="Product Name" />
                 </div>
                 <div class="mr-4 ml-4 mt-4 w-1/2">
-                    <label for="ProductPrice">Product Price</label>
+                    <label for="ProductPrice">Giá sản phẩm</label>
                     <InputNumber v-model="currentProduct.price" class="w-full" inputId="currency-us" placeholder="$00.00"
                         mode="currency" currency="USD" locale="en-US" />
                 </div>
             </div>
             <div class="mr-4 ml-4 mt-4">
-                <label for="description">Description</label>
+                <label for="description">Mô tả</label>
                 <Textarea v-model="currentProduct.description" class="w-full" rows="5" cols="30" />
             </div>
             <div class="flex ml-4 mr-4">
                 <div class="mt-4">
-                    <Button @click="handleSave" type="submit" label="Save"
+                    <Button @click="handleSave" type="submit" label="Lưu"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
                 <div class="ml-2 mt-4">
-                    <Button @click="handleUpdate" type="submit" label="Update"
+                    <Button @click="handleUpdate" type="submit" label="Sửa"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
                 <div class="ml-2 mt-4">
-                    <Button @click="handleRefresh" type="submit" label="Reset"
+                    <Button @click="handleRefresh" type="submit" label="Làm mới"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
             </div>
@@ -62,25 +62,25 @@
         <div class=" mb-4 mt-12">
             <div class="product-list__table">
                 <div class="flex justify-center">
-                    <h2 class="text-3xl font-semibold">Product list</h2>
+                    <h2 class="text-3xl font-semibold">Danh sách sản phẩm</h2>
                 </div>
                 <DataTable :value="products" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
-                    <Column field="productId" header="Product Id"></Column>
-                    <Column field="brand.brandId" header="Brand Id">
+                    <Column field="productId" header="ID sản phẩm"></Column>
+                    <Column field="brand.brandId" header="ID Thương hiệu">
                         <template #body="rowData">
                             <div>
                                 {{ rowData.data.brand.name }}
                             </div>
                         </template>
                     </Column>
-                    <Column field="category.categoryId" header="Category Id">
+                    <Column field="category.categoryId" header="ID Loại">
                         <template #body="rowData">
                             <div>
                                 {{ rowData.data.category.name }}
                             </div>
                         </template>
                     </Column>
-                    <Column class="" field="description" header="Description">
+                    <Column class="" field="description" header="Mô tả">
                         <template #body="rowData">
                             <div class="description-cell">
                                 {{ rowData.data.description.length > 150 ? rowData.data.description.slice(0, 150) +
@@ -90,9 +90,9 @@
                         </template>
                     </Column>
 
-                    <Column field="name" header="Product Name"></Column>
+                    <Column field="name" header="Tên sản phẩm"></Column>
                     <!-- ngày tháng năm chưa format -->
-                    <Column field="price" header="Price">
+                    <Column field="price" header="Giá">
                         <template #body="rowData">
                             <div class="vnd">{{ priceInVND(rowData.data.price) }} VND</div>
                         </template>
@@ -100,7 +100,7 @@
 
                     <Column field="sku" header="SKU Code"></Column>
                     <!-- Add more columns as needed -->
-                    <Column header="Tools">
+                    <Column header="Chỉnh sửa">
                         <template #body="rowData">
                             <div class="product-list__actions">
                                 <Button @click="editData(rowData)" icon="pi pi-pencil"

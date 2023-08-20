@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div class="flex font-bold text-4xl justify-center mb-4">Product Variation Size</div>
+        <div class="flex font-bold text-4xl justify-center mb-4">Kích cở sản phẩm</div>
         <div class=" mb-4">
             <div class="flex justify-between ml-2 mr-4">
                 <div class="w-1/2 ml-2 mr-2">
                     <Dropdown v-model="selectedProductVariation" :options="productVariationWithLabel" optionLabel="label"
-                        placeholder="Select a product variation" class="w-full md:w-14rem">
+                        placeholder="Chọn sản phẩm" class="w-full md:w-14rem">
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="flex align-items-center">
                                 <div>{{ slotProps.value.color.value }}</div>
@@ -20,26 +20,26 @@
                     </Dropdown>
                 </div>
                 <div class="w-1/2 ml-2">
-                    <Dropdown v-model="selectedSize" :options="sizes" optionLabel="value" placeholder="Select a size"
+                    <Dropdown v-model="selectedSize" :options="sizes" optionLabel="value" placeholder="Chọn kích cở"
                         class="w-full md:w-14rem">
                     </Dropdown>
                 </div>
             </div>
             <div class="mr-4 ml-4 mt-4">
-                <label for="SKU-Code">Quantity</label>
-                <InputNumber v-model="currentProductVariationSize.quantity" class="w-full" placeholder="quantity" />
+                <label for="SKU-Code">Số lượng</label>
+                <InputNumber v-model="currentProductVariationSize.quantity" class="w-full" placeholder="Số lượng" />
             </div>
             <div class="flex ml-4 mr-4">
                 <div class="mt-4">
-                    <Button @click="handleSave" type="submit" label="Save"
+                    <Button @click="handleSave" type="submit" label="Lưu"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
                 <div class="ml-2 mt-4">
-                    <Button @click="handleUpdate" type="submit" label="Update"
+                    <Button @click="handleUpdate" type="submit" label="Sửa"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
                 <div class="ml-2 mt-4">
-                    <Button @click="handleRefresh" type="submit" label="Reset"
+                    <Button @click="handleRefresh" type="submit" label="Làm mới"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
             </div>
@@ -48,19 +48,19 @@
         <div class=" mb-4 mt-12">
             <div class="product-list__table">
                 <div class="flex justify-center">
-                    <h2 class="text-3xl font-semibold">ProductVariation Sizes</h2>
+                    <h2 class="text-3xl font-semibold">Danh sách Sản phẩm và Kích cở</h2>
                 </div>
                 <DataTable :value="productVariationSizes" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
-                    <Column field="productVariationSizeId" header="ProductVariationSize Id"></Column>
-                    <Column field="quantity" header="Quantity"></Column>
-                    <Column field="productVariation.productVariationId" header="ProductVariation Id">
+                    <Column field="productVariationSizeId" header="ID kích thước sản phẩm"></Column>
+                    <Column field="quantity" header="Số lượng"></Column>
+                    <Column field="productVariation.productVariationId" header="ID Chi tiết sản phẩm">
                         <template #body="rowData">
                             {{ getProductVariationName(rowData.data.productVariation.productVariationId) }}
                         </template>
                     </Column>
-                    <Column field="size.value" header="Size id"></Column>
+                    <Column field="size.value" header="ID Kích cở"></Column>
                     <!-- Add more columns as needed -->
-                    <Column header="Tools">
+                    <Column header="Chỉnh sửa">
                         <template #body="rowData">
                             <div class="product-list__actions">
                                 <Button @click="editData(rowData)" icon="pi pi-pencil"
@@ -70,7 +70,7 @@
                             </div>
                         </template>
                     </Column>
-                    <Column field="createdAt" header="ProductVariationSize Id"></Column>
+                    <Column field="createdAt" header="ID kích thước sản phẩm"></Column>
                 </DataTable>
             </div>
 

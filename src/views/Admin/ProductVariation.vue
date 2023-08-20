@@ -1,25 +1,25 @@
 <template>
     <div>
-        <div class="flex font-bold text-4xl justify-center mb-4">ProductVariation</div>
+        <div class="flex font-bold text-4xl justify-center mb-4">Chi tiết sản phẩm</div>
         <div class=" mb-4">
             <div class="flex justify-between ml-2 mr-4">
                 <div class="w-1/2 ml-2 mr-2">
-                    <Dropdown v-model="selectedColor" :options="colors" optionLabel="value" placeholder="Select color"
+                    <Dropdown v-model="selectedColor" :options="colors" optionLabel="value" placeholder="Chọn màu"
                         class="w-full md:w-14rem" />
                 </div>
                 <div class="w-1/2 ml-2">
                     <Dropdown v-model="selectedProduct" :options="products" optionLabel="name"
-                        placeholder="Select a product name" class="w-full md:w-14rem" />
+                        placeholder="Chọn tên sản phẩm" class="w-full md:w-14rem" />
                 </div>
             </div>
             <div class="flex ml-4 mr-4">
                 <div class="mt-4">
-                    <Button @click="handleSaveProductVariation" type="submit" label="Save"
+                    <Button @click="handleSaveProductVariation" type="submit" label="Lưu"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
 
                 <div class="ml-2 mt-4">
-                    <Button @click="handleRefresh" type="submit" label="Reset"
+                    <Button @click="handleRefresh" type="submit" label="Làm mới"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
             </div>
@@ -29,14 +29,14 @@
             <!--ProductVariation-->
             <div class="account-management__user-accounts">
                 <div class="flex justify-center">
-                    <h2 class="text-3xl font-semibold">ProductVariation list</h2>
+                    <h2 class="text-3xl font-semibold">Danh sách chi tiết sản phẩm</h2>
                 </div>
                 <DataTable :value="productVariations" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
-                    <Column field="productVariationId" header="ProductVariation Id"></Column>
-                    <Column field="color.value" header="Color Id"></Column>
-                    <Column field="product.name" header="Product Id"></Column>
+                    <Column field="productVariationId" header="ID Chi tiết sản phẩm"></Column>
+                    <Column field="color.value" header="ID màu"></Column>
+                    <Column field="product.name" header="ID sản phẩm"></Column>
                     <!-- Add more columns as needed -->
-                    <Column header="Tools">
+                    <Column header="Chỉnh sửa">
                         <template #body="rowData">
                             <div class="brand-list__actions">
                                 <Button @click="showDeleteDialog(rowData.data)" icon="pi pi-trash"

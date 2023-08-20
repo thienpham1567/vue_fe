@@ -1,12 +1,12 @@
 <template>
     <div>
-        <div class="flex font-bold text-4xl justify-center mb-4">Product Image</div>
+        <div class="flex font-bold text-4xl justify-center mb-4">Hình sản phẩm</div>
         <div class=" mb-4">
             <div class="flex justify-between ml-2 mr-2">
                 <div class="w-full ml-2 mr-2">
-                    <label for="description">Product Variation</label>
+                    <label for="description">Chi tiết sản phẩm</label>
                     <Dropdown v-model="selectedProductVariation" :options="productVariationWithLabel" optionLabel="label"
-                        placeholder="Select a product variation" class="w-full md:w-14rem">
+                        placeholder="Chọn Sản phẩm" class="w-full md:w-14rem">
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="flex align-items-center">
                                 <div>{{ slotProps.value.color.value }}</div>
@@ -22,16 +22,16 @@
                 </div>
             </div>
             <div class="mr-4 ml-4 mt-4">
-                <label for="description">Description</label>
+                <label for="description">Trạng thái</label>
                 <div class="card flex justify-content-center">
                     <div class="flex flex-wrap gap-3">
                         <div class="flex align-items-center">
                             <RadioButton v-model="ingredient" inputId="ingredient1" name="PrimaryImg" value="true" />
-                            <label for="ingredient1" class="ml-2">Is Primary</label>
+                            <label for="ingredient1" class="ml-2">Hình chính</label>
                         </div>
                         <div class="flex align-items-center">
                             <RadioButton v-model="ingredient" inputId="ingredient2" name="PrimaryImg" value="false" />
-                            <label for="ingredient2" class="ml-2">Not Primary</label>
+                            <label for="ingredient2" class="ml-2">Hình phụ</label>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
 
             <div class="flex ">
                 <div class="mr-4 ml-4 mt-4 w-full">
-                    <label for="SKU-Code">Primary Image URL</label>
+                    <label for="SKU-Code">Đường dẩn hình</label>
                     <InputText v-model="currentImageURL" class="w-full" placeholder="" />
                 </div>
             </div>
@@ -53,15 +53,15 @@
             </div>
             <div class=" flex ml-4 mr-4">
                 <div class="mt-4">
-                    <Button @click="handleSave" type="submit" label="Save"
+                    <Button @click="handleSave" type="submit" label="Lưu"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
                 <div class="ml-2 mt-4">
-                    <Button @click="handleUpdate" type="submit" label="Update"
+                    <Button @click="handleUpdate" type="submit" label="Sửa"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
                 <div class="ml-2 mt-4">
-                    <Button @click="handleRefresh" type="submit" label="Reset"
+                    <Button @click="handleRefresh" type="submit" label="Làm mới"
                         class="w-full text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
                 </div>
             </div>
@@ -70,24 +70,24 @@
         <div class=" mb-4 mt-6">
             <div class="product-list__table">
                 <div class="flex justify-center mb-6">
-                    <h2 class="text-3xl font-semibold">Product Image list</h2>
+                    <h2 class="text-3xl font-semibold">Danh sách hình sản phẩm</h2>
                 </div>
                 <DataTable :value="productImages" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
-                    <Column field="productImageld" header="Product Image Id"></Column>
-                    <Column header="Image URL">
+                    <Column field="productImageld" header="ID hình sản phẩm"></Column>
+                    <Column header="Hình">
                         <template #body="Props">
                             <img :src="Props.data.imageUrl" style="width: 100px; height: 100px;" alt="image">
                         </template>
                     </Column>
-                    <Column field="isPrimary" header="Is Primary"></Column>
-                    <Column field="productVariation.productVariationId" header="Product Variation Id">
+                    <Column field="isPrimary" header="Hình Chính"></Column>
+                    <Column field="productVariation.productVariationId" header="ID chi tiết sản phẩm">
                         <template #body="rowData">
                             {{ getProductVariationName(rowData.data.productVariation.productVariationId) }}
                         </template>
                     </Column>
 
                     <!-- Add more columns as needed -->
-                    <Column header="Tools">
+                    <Column header="Chỉnh sửa">
                         <template #body="rowData">
                             <div class="product-list__actions">
                                 <Button @click="editData(rowData)" icon="pi pi-pencil"
