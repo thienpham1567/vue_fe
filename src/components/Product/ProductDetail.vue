@@ -181,13 +181,12 @@ const ratingSubmitValue = ref('');
 const commentsValue = ref('');
 const route = useRoute();
 const { productId } = route.params;
-const { getProduct, getAllProducts, fetchOneProduct, getProducts } = useProductStore();
+const { getProduct, getAllProducts, fetchOneProduct, getProducts, fetchAllProducts } = useProductStore();
 const { fetchReviews, getAllReviews } = useReviewStore();
 const { fetchSizes, getSizes } = useSizeStore();
 const { addUpdateToCart } = useCartStore();
 const reviewStore = useReviewStore();
-const { fetchFavorites, getAllFavorites } = useFavoriteStore();
-const favoriteStore = useFavoriteStore();
+const { getAllFavorites } = useFavoriteStore();
 let displayedReviews = ref([]);
 const reviewsPerLoad = 2;
 
@@ -261,31 +260,6 @@ const clothingSizes = computed(() => {
 
 const primaryImage = computed(() => selectedProduct.value.productImages?.find(productImage => productImage.isPrimary));
 const orderImages = computed(() => selectedProduct.value.productImages?.filter(productImage => !productImage.isPrimary));
-
-//LIKE - UNLIKE FAVORITE
-// const toggleLike = async () => {
-//     try {
-
-//         await favoriteStore.check();
-//     console.log('Thao tác yêu thích thành công!');
-//   } catch (error) {
-//     console.error('Có lỗi xảy ra khi thao tác yêu thích:', error);
-//   }
-// }
-const toggleLike = async () => {
-    try {
-        const fav = favoriteStore.check();
-        if (fav.isLiked) {
-            alert("da like")
-        } else {
-            alert("chua like")
-        }
-        console.log('Thao tác yêu thích thành công!');
-        console.log('Kết quả kiểm tra yêu thích:', response);
-    } catch (error) {
-        console.error('Có lỗi xảy ra khi thao tác yêu thích:', error);
-    }
-};
 
 const handleSaveReview = async () => {
     try {
@@ -416,7 +390,6 @@ const showLoadMoreRandomsButton = computed(() => {
 const loadMoreRandomsProducts = () => {
     visibleRandomsProductsCount.value += 4; // Thay đổi số lượng sản phẩm hiển thị thêm tùy theo mong muốn
 };
-
 
 onMounted(fetchData);
 </script>
