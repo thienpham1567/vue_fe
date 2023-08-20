@@ -155,26 +155,14 @@ import { ref, onMounted, computed, Ref } from "vue";
 import { ProductVariationSizeType } from '@/types/productVariationSize';
 import useReviewStore from '@/store/ReviewStore';
 import useFavoriteStore from '@/store/FavoriteStore';
-import { product } from '@/router/product';
-import ProductVariation from '@/models/ProductVariation';
-import Review from '@/models/Review';
-import Favorite from '@/models/Favorite';
-
 import { ReviewType, CreationParams as ReviewCreationParams } from '@/types/review';
-import { FavoriteType, CreationParams as FavoriteCreationParams } from '@/types/favorite';
-
-import { UserType } from '@/types/user';
 import jwt_decode from "jwt-decode";
-import { favorite } from '@/router/favorite';
-import type { FavoriteResponse } from '@/types/favorite';
-
-
 
 const ratingSubmitValue = ref('');
 const commentsValue = ref('');
 const route = useRoute();
 const { productId } = route.params;
-const { getProduct, getAllProducts, fetchOneProduct, getProducts, fetchAllProducts } = useProductStore();
+const { getProduct, getAllProducts, fetchOneProduct, getProducts } = useProductStore();
 const { fetchReviews, getAllReviews } = useReviewStore();
 const { fetchSizes, getSizes } = useSizeStore();
 const { addUpdateToCart } = useCartStore();
@@ -312,14 +300,6 @@ const filterReviews = () => {
     });
 };
 
-const filterFavorites = () => {
-    // Lọc
-    filteredFavorites.value = getAllFavorites.value.filter((favorite) => {
-        return favorite.productVariationId === selectedProduct.value.productVariationId;
-        // check
-    });
-}
-
 const loadInitialReviews = () => {
     displayedReviews.value = filteredReviews.value.slice(0, reviewsPerLoad);
 };
@@ -348,8 +328,6 @@ const priceInVND = computed(() => {
     return null;
 });
 
-//------------------------------------------------------------------------------
-
 const visibleRandomsProductsCount = ref(4);
 const randomIndexess = computed(() => {
     const totalCounts = getProducts.value.length;
@@ -373,7 +351,6 @@ const randomsProducts = computed(() => {
     return randomIndexess.value
         .slice(0, visibleRandomsProductsCount.value)
         .map(index => getProducts.value[index]);
-    console.log("2222");
 });
 
 const showLoadMoreRandomsButton = computed(() => {

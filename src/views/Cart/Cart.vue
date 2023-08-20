@@ -16,7 +16,7 @@
                     <div class="border-b border-gray-300 my-2"></div>
                     <div class="flex justify-between">
                         <div class="font-light text-lg">{{ $t('subtotal') }}</div>
-                        <div class="font-semibold">${{ getCart.itemSubtotalPrice }}</div>
+                        <div class="font-semibold">${{ (getCart.itemSubtotalPrice! * 24000).toLocaleString('en-US') }}</div>
                     </div>
                 </div>
             </div>
