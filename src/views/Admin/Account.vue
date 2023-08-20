@@ -28,8 +28,6 @@
         <Column field="phoneNumber" header="Số điện thoại"></Column>
         <Column header="Hành động">
           <template #body="rowData">
-            <Button class="p-button-sm p-button-secondary" label="Sửa" icon="pi pi-pencil"
-              @click="showEditDialog(rowData.data)"></Button>
             <Button class="p-button-sm p-button-danger" label="Xóa" icon="pi pi-trash"
               @click="showDeleteDialog(rowData.data)"></Button>
           </template>
@@ -73,48 +71,8 @@
       </DataTable>
     </div>
 
-    <Dialog v-model="dialogVisible" :visible="dialogVisible" :header="dialogHeader"
-      class="account-management__dialog w-1/2">
-      <template #header>
-        <div class="category-list__dialog-buttons">
-          <h3>Sửa người dùng</h3>
-        </div>
-      </template>
-      <div class="p-fluid">
-        <div class="p-field">
-          <label for="userId">ID</label>
-          <InputText id="userId" v-model="currentUser.userId" readonly></InputText>
-        </div>
-        <div class="p-field">
-          <label for="emailAddress">Email</label>
-          <InputText id="emailAddress" v-model="currentUser.emailAddress" readonly></InputText>
-        </div>
-        <div class="p-field">
-          <label for="phoneNumber">Số điện thoại</label>
-          <InputText id="phoneNumber" v-model="currentUser.phoneNumber"></InputText>
-        </div>
-        <div class="p-field">
-          <label for="lastName">Họ</label>
-          <InputText id="lastName" v-model="currentUser.lastName"></InputText>
-          <span v-if="firstNameError" class="text-red-500">{{ firstNameError }}</span>
-        </div>
-        <div class="p-field">
-          <label for="firstName">Tên</label>
-          <InputText id="fistName" v-model="currentUser.firstName"></InputText>
-        </div>
-        <div class="p-field">
-          <label for="password">Password</label>
-          <InputText id="password" v-model="currentUser.password" type="password" readonly></InputText>
-        </div>
-      </div>
 
-      <template #footer>
-        <div class="account-management__dialog-buttons">
-          <Button class="p-button-success" label="Lưu" @click="saveUser"></Button>
-          <Button class="p-button-danger" label="Hủy" @click="cancelEdit"></Button>
-        </div>
-      </template>
-    </Dialog>
+
     <!-- Delete -->
     <Dialog v-model="deleteDialogVisible" :visible="deleteDialogVisible" header="Xác nhận xóa" :closable="false"
       class="category-list__dialog">
@@ -139,7 +97,6 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
-import InputText from 'primevue/inputtext';
 import useUserStore from '@/store/UserStore';
 import useUserRoleStore from '@/store/UserRoleStore';
 import useRoleStore from '@/store/RoleStore';
@@ -167,7 +124,7 @@ const currentRole = ref<RoleType>({});
 
 const selectedRole = ref<any>(null);
 
-const firstNameError = ref('');
+
 
 const onSelectRole = () => {
   userRoles.value = userRoleStore.getUserRoles.value;
@@ -279,12 +236,6 @@ const saveUserRole = async (newUserRole: UpdateUserRoleParams, newUserRoleId: nu
 }
 
 
-// show edit
-const showEditDialog = (user: UserType) => {
-  currentUser.value = { ...user };
-  dialogVisible.value = true;
-
-};
 
 
 // show delete
@@ -294,27 +245,7 @@ const showDeleteDialog = (user: UserType) => {
   deleteDialogVisible.value = true;
 };
 
-// update user
-const saveUser = async () => {
-  // Thực hiện cập nhật danh mục
-  if (currentUser.value.lastName === '' || currentUser.value.firstName === '') {
 
-  } else {
-    try {
-      await userStore.updateUser(currentUser.value.userId, currentUser.value as UserParams);
-      await userStore.fetchUsers();
-      users.value = userStore.getUsers.value;
-
-      tableKey.value += 1; // Force DataTable re-render
-    } catch (error) {
-      console.error('Error updating user:', error);
-      // Xử lý lỗi
-    }
-    currentUser.value = {};
-    dialogVisible.value = false;
-    await userStore.fetchUsers();
-  }
-}
 
 //Delete User
 const deleteUser = async () => {
@@ -336,9 +267,6 @@ const deleteUser = async () => {
 
 function cancelDelete() {
   deleteDialogVisible.value = false;
-}
-function cancelEdit() {
-  dialogVisible.value = false;
 }
 
 
