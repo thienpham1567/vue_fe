@@ -2,7 +2,7 @@ import type { UserType } from "./user";
 import type { OrderLineType } from "./orderLine";
 export interface OrderType {
     orderId?: string;
-    denormalizedAddress?: string;
+    addressId?: number;
     orderTotalPrice?: number;
     ordersStatus?: string;
     createdAt?: string;
@@ -12,7 +12,7 @@ export interface OrderType {
   }
   
   export interface CreationParams {
-    denormalizedAddress?: string;
+    addressId?: number;
     orderTotalPrice?: number;
     ordersStatus?: string;
     createdAt?: string;
