@@ -301,7 +301,7 @@ const onSelectProduct = (product: ProductVariationType) => {
 }
 
 const fetchData = () => {
-    Promise.all([fetchAllProducts() ,fetchReviews(), fetchSizes(), fetchOneProduct(+productId)]).then(() => {
+    Promise.all([fetchReviews(), fetchSizes(), fetchOneProduct(+productId)]).then(() => {
         selectedProduct.value = getProduct.value;
         filterReviews();
         loadInitialReviews();
