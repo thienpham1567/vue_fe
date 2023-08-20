@@ -230,18 +230,22 @@ const setDataHeader = () => {
     {
       label: "Nữ",
       items: [getCategoriesByParent(MainCategories.Women)],
+      class: "z-index-100",
     },
     {
       label: "Nam",
       items: [getCategoriesByParent(MainCategories.Men)],
+      class: "z-index-100",
     },
     {
       label: "Trẻ Em",
       items: [getCategoriesByParent(MainCategories.Kids)],
+      class: "z-index-100",
     },
     {
       label: "Thương Hiệu",
       items: [getAllBrands()],
+      class: "z-index-100",
     },
   ];
 }
