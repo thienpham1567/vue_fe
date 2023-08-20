@@ -86,6 +86,8 @@
                     <span v-if="newPasswordError" class="text-red-500">{{ newPasswordError }}</span>
                 </span>
                 <div v-if="changeError">Mật khẩu mới không trùng nhau</div>
+                <label class="errorMessage" v-if="getChangeErrorMessage !== '' || getChangeErrorMessage !== undefined">{{
+                    getChangeErrorMessage }}</label>
             </div>
             <template #footer>
                 <Button label="Huỷ" icon="pi pi-times" @click="visiblePass = false" text
@@ -115,6 +117,7 @@ const users = ref<UserType[]>([]);
 const currentUser = ref<UserType>({});
 const tableKey = ref(0);
 
+const { getChangeErrorMessage } = useUserStore();
 
 const valueToken = localStorage.getItem('token');
 const userValue = jwt_decode(valueToken!);
@@ -142,8 +145,8 @@ const updatePass = async () => {
 
 
         currentUser.value = userStore.getUser.value;
-        window.location.reload();
-        visiblePass.value = false;
+
+        // visiblePass.value = false;
         changeError.value = false;
 
     } else {

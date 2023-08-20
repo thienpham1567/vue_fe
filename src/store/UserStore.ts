@@ -20,6 +20,10 @@ const useUserStore = defineStore("user", () => {
     //
     const createErrorMessage = ref("");
     const getCreateErrorMessage = computed(() => createErrorMessage);
+
+    const changeErrorMessage = ref("");
+    const getChangeErrorMessage = computed(() => changeErrorMessage);
+
     //Get User
     const fetchUsers = async () => {
         const { data } = await new User().list();
@@ -34,7 +38,7 @@ const useUserStore = defineStore("user", () => {
         try {
             const { data } = await new User().create(user);
             users.value.push(data);
-            goToLogin;
+            goToLogin();
         } catch (error) {
             if (error.response.status === 400) {
                 createErrorMessage.value = "Đăng ký thất bại trùng email";
@@ -60,8 +64,18 @@ const useUserStore = defineStore("user", () => {
     };
     //ChangePass
     const changePass = async (id: number, password: PasswordChangeParams) => {
-        await new User().changePass(id, password);
-        setUser({});
+        try {
+            await new User().changePass(id, password);
+            setUser({});
+            changeErrorMessage.value = "Lưu thành công";
+            console.log(changeErrorMessage.value);
+        } catch (error) {
+            if (error.response.status === 400) {
+                changeErrorMessage.value = "Sai mật khẩu";
+                console.log(changeErrorMessage.value);
+            }
+        }
+
     };
     //Delete
     const deleteUser = async (id: number) => {
@@ -90,7 +104,8 @@ const useUserStore = defineStore("user", () => {
         fetchByKey,
         fetchByEmail,
         changePass,
-        getCreateErrorMessage
+        getCreateErrorMessage,
+        getChangeErrorMessage
     }
 });
 

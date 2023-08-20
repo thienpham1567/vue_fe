@@ -15,6 +15,9 @@
             <div v-else>
                 <p class="mb-4">Một liên kết đặt lại mật khẩu đã được gửi đến địa chỉ email {{ email }}.</p>
                 <p>Vui lòng kiểm tra hộp thư đến của bạn và làm theo hướng dẫn để đặt lại mật khẩu.</p>
+                <button @click="goToLogin()" class="mt-4 w-full bg-blue-500 text-white font-bold py-2 px-4 rounded">
+                    Trở về trang đăng nhập
+                </button>
             </div>
         </div>
     </div>
@@ -37,7 +40,7 @@ const emailSent = ref(false); // Khởi tạo giá trị ban đầu là false
 const sendResetLink = async () => {
     await emailStore.sendEmails(email.value);
     emailSent.value = true; // Cập nhật giá trị emailSent
-    goToLogin
+
 };
 
 </script>

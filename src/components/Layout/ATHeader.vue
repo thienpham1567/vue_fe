@@ -286,7 +286,7 @@ function goToViewOrders() {
   router.push('/myaccount/view-order');
 }
 
-function goToFavorite(){
+function goToFavorite() {
   dialogCartVisible.value = false;
   router.push('/favorite');
 }
@@ -338,7 +338,10 @@ function checkToken() {
 
 const logout = () => {
   localStorage.removeItem("token");
-  window.location.reload();
+  router.push('/').then(() => {
+    window.location.reload();
+  });
+
 };
 checkToken();
 

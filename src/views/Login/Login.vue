@@ -14,11 +14,12 @@
                 <div class="mb-4">
                     <div class="flex justify-between">
                         <label for="password">{{ $t('pass') }} </label>
-                        <a class="block text-sm text-indigo-700 fontme hover:underline" href="/account/fogot">Forgot your
-                            password?</a>
+                        <a class="block text-sm text-indigo-700 fontme hover:underline" href="/account/fogot">Tìm lại mật
+                            khẩu?</a>
                     </div>
                     <Password v-model="passwordValue" placeholder="Password" :feedback="false" class="w-full w-inherit" />
-                    <a class="block text-sm text-indigo-700 fontme hover:underline mt-2" href="#">{{ $t('forgotpass') }}
+                    <a class="block text-sm text-indigo-700 fontme hover:underline mt-2" href="/account/fogot">{{
+                        $t('forgotpass') }}
                     </a>
                     <span v-if="passwordError" class="text-red-500">{{ passwordError }}</span>
                 </div>
@@ -74,13 +75,13 @@ const { login, getErrorMessage } = useAccountStore();
 
 
 async function validateForm() {
-    emailError.value = emailValue.value ? '' : 'Email is required.';
-    passwordError.value = passwordValue.value ? '' : 'Password is required.';
+    emailError.value = emailValue.value ? '' : 'Email không được để trống.';
+    passwordError.value = passwordValue.value ? '' : 'Password không được để trống.';
 
     // Kiểm tra định dạng email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (emailValue.value && !emailRegex.test(emailValue.value)) {
-        emailError.value = 'Invalid email format.';
+        emailError.value = 'Sai định dạng email.';
     }
 
     // Kiểm tra xem có lỗi không

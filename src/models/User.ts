@@ -39,7 +39,11 @@ class User extends HTTPBaseService {
     return await this.instance.put(`/users/${id}`, params);
   }
   async changePass(id: number, params: PasswordChangeParams): Promise<UserResponse> {
-    return await this.instance.post(`/users/changepassword/${id}`, params);
+    try {
+      return await this.instance.post(`/users/changepassword/${id}`, params);
+    } catch (error) {
+      throw error;
+    }
   }
   async delete(id: number): Promise<void> {
     this.instance.delete(`/users/${id}`);
