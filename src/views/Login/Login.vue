@@ -36,10 +36,10 @@
             </template>
             <template #footer>
                 <Button type="submit" :label="$t('signin')" @click="validateForm()"
-                    class="w-full px-4 py-2 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
+                    class="w-full px-4 py-2 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500 btn-color-light" />
                 <span class="divider text-gray-500 text-sm">{{ $t('new-mem') }} </span>
                 <Button type="submit" :label="$t('create')" @click="goToRegistration"
-                    class="w-full px-4 py-2 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500" />
+                    class="w-full px-4 py-2 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500 btn-color-light" />
             </template>
         </Card>
     </div>

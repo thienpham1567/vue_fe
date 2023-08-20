@@ -8,14 +8,16 @@
                     <label for="email" class="block mb-1">Email:</label>
                     <input type="email" id="email" v-model="email" class="w-full p-2 border rounded">
                 </div>
-                <button @click="sendResetLink" class="mt-4 w-full bg-blue-500 text-white font-bold py-2 px-4 rounded">
+                <button @click="sendResetLink"
+                    class="mt-4 w-full bg-blue-500 text-white font-bold py-2 px-4 rounded btn-color-light">
                     Gửi liên kết đặt lại mật khẩu
                 </button>
             </div>
             <div v-else>
                 <p class="mb-4">Một liên kết đặt lại mật khẩu đã được gửi đến địa chỉ email {{ email }}.</p>
                 <p>Vui lòng kiểm tra hộp thư đến của bạn và làm theo hướng dẫn để đặt lại mật khẩu.</p>
-                <button @click="goToLogin()" class="mt-4 w-full bg-blue-500 text-white font-bold py-2 px-4 rounded">
+                <button @click="goToLogin()"
+                    class="mt-4 w-full bg-blue-500 text-white font-bold py-2 px-4 rounded btn-color-light">
                     Trở về trang đăng nhập
                 </button>
             </div>
