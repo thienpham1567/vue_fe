@@ -50,10 +50,10 @@
           <label for="customerName">Tên khách hàng</label>
           <InputText id="customerName" v-model="formattedName" :disabled="isEditing"></InputText>
         </div>
-        <div class="p-field">
+        <!-- <div class="p-field">
           <label for="customerAddress">Địa chỉ khách hàng</label>
           <InputText id="customerAddress" v-model="currentOrder.denormalizedAddress" :disabled="isEditing"></InputText>
-        </div>
+        </div> -->
         <div class="p-field">
           <label for="customerPhone">Số điện thoại</label>
           <InputText id="customerPhone" v-model="currentOrder.user.phoneNumber" :disabled="isEditing"></InputText>

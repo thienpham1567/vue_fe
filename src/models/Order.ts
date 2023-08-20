@@ -14,6 +14,10 @@ class Order extends HTTPBaseService {
     super();
   }
 
+  async order(params: {cartId?: string}): Promise<ListResponse> {
+    return await this.instance.get("/payment/paypal/success", { params });
+  }
+
   async list(params: QueryUserParams): Promise<ListResponse> {
     return await this.instance.get("/orders", {params});
   }

@@ -27,15 +27,24 @@
 
 <script setup>
 // import { ref } from 'vue';
+import useCartStore from '@/store/Cart';
+import useOrderStore from '@/store/OrderStore';
 import { ref, computed, onMounted } from 'vue';
+
+const {
+  fetchOrderByCartId
+} = useOrderStore();
+const {
+  getCart
+} = useCartStore();
+
 
 onMounted(async () => {
   try {
-    console.log(userId);
-    await orderStore.fetchOrdersById(userId);
-    orders.value = orderStore.getOrders.value;
-    console.log(orders.value);
-    
+    // console.log(userId);
+    const cartId = localStorage.getItem('cartId');
+    await fetchOrderByCartId(cartId);
+    console.log(fetchOrderByCartId);
   } catch (error) {
     console.error('Error fetching orders:', error);
     // Handle error
@@ -69,6 +78,8 @@ const goToOrderHistory = () => {
   // Replace with actual route or URL
   router.push("/order-history");
 };
+
+
 </script>
 
 <style scoped>

@@ -96,7 +96,7 @@ const payWithPaypal = async () => {
 		try {
 			const paymentData = {
 				userId: userDecode.user.userId,
-				denormalizedAddress: "",
+				addressId: getAddress.value?.addressId,
 				cart: getCart.value,
 			};
 			const redirectUrl = await new Payment().processPayment(paymentData);
