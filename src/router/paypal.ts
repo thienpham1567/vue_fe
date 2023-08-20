@@ -5,11 +5,6 @@ export const paypal = {
   component: Layout,
   children: [
     {
-      path: "",
-      name: "Payment",
-      component: () => import("@/views/Paypal/Paypal.vue"),
-    },
-    {
       path: "cancel",
       name: "Payment",
       component: () => import("@/views/Paypal/Cancel.vue"),
