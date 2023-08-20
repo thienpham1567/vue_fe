@@ -129,6 +129,22 @@
             </button>
         </div>
     </div>
+
+    <!-- Product -->
+    <div class="mt-4 mb-4">
+        <div class="font-semibold text-2xl">SẢN PHẨM CÓ THỂ BẠN QUAN TÂM</div>
+        <div class="border-b border-gray-400"></div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 justify-center">
+        <Product v-for="(product, index) in randomsProducts" :key="product.id" :product="product" class="" />
+    </div>
+
+    <div class="  justify-center text-center animate-bounce">
+        <Button v-if="showLoadMoreRandomsButton" text @click="loadMoreRandomsProducts"
+            class="w-full sign-in-register-btn justify-center">Show
+            more</Button>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -138,6 +154,7 @@ import 'primeicons/primeicons.css';
 import Image from 'primevue/image';
 import RadioButton from 'primevue/radiobutton';
 import Button from 'primevue/button';
+import Product from '@/components/Product/ProductForHome.vue'
 import { useRoute } from "vue-router";
 import { ProductVariationType } from "@/types/productVariation";
 import { useProductStore, useSizeStore, useCartStore } from "@/store";
@@ -164,7 +181,7 @@ const ratingSubmitValue = ref('');
 const commentsValue = ref('');
 const route = useRoute();
 const { productId } = route.params;
-const { getProduct, getAllProducts, fetchOneProduct } = useProductStore();
+const { getProduct, getAllProducts, fetchOneProduct, getProducts } = useProductStore();
 const { fetchReviews, getAllReviews } = useReviewStore();
 const { fetchSizes, getSizes } = useSizeStore();
 const { addUpdateToCart } = useCartStore();
@@ -270,10 +287,6 @@ const toggleLike = async () => {
     }
 };
 
-
-
-
-
 const handleSaveReview = async () => {
     try {
         const token = localStorage.getItem("token");
@@ -367,6 +380,42 @@ const priceInVND = computed(() => {
 
     return null;
 });
+
+//------------------------------------------------------------------------------
+
+const visibleRandomsProductsCount = ref(4);
+const randomIndexess = computed(() => {
+    const totalCounts = getProducts.value.length;
+    const indexess = [];
+
+    // Tạo mảng index sản phẩm
+    for (let i = 0; i < totalCounts; i++) {
+        indexess.push(i);
+    }
+
+    // Trộn mảng index để lấy các index ngẫu nhiên
+    for (let i = totalCounts - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indexess[i], indexess[j]] = [indexess[j], indexess[i]];
+    }
+
+    return indexess;
+});
+
+const randomsProducts = computed(() => {
+    return randomIndexess.value
+        .slice(0, visibleRandomsProductsCount.value)
+        .map(index => getProducts.value[index]);
+    console.log("2222");
+});
+
+const showLoadMoreRandomsButton = computed(() => {
+    return visibleRandomsProductsCount.value < getProducts.value.length;
+});
+
+const loadMoreRandomsProducts = () => {
+    visibleRandomsProductsCount.value += 4; // Thay đổi số lượng sản phẩm hiển thị thêm tùy theo mong muốn
+};
 
 
 onMounted(fetchData);

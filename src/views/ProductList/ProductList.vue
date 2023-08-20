@@ -78,11 +78,11 @@
                     </button>
                 </div>
                 <div class="mb-2" v-show="!showSizeSection">
-                    <div class="flex flex-col">
-                        <div v-for="size of sizeObject" :key="size.key" class="flex align-items-center mb-3 ml-5">
-                            <Checkbox v-model="selectedSizes" :inputId="size.key" name="size" :value="size.value"
+                    <div class="flex flex-row flex-wrap gap-2 mt-1">
+                        <div v-for="size of sizeObject" :key="size.key" class="sizes">
+                            <Checkbox v-model="selectedSizes" :inputId="size.sizeId?.toString()" name="size" :value="size"
                                 @update:modelValue="filterProduct" />
-                            <label :for="size.key" class="ml-1">{{ size.value }}</label>
+                            <label :for="size.sizeId?.toString()">{{ size.value }}</label>
                         </div>
                         <!-- Thêm các checkbox khoảng giá khác nếu cần -->
                     </div>

@@ -24,13 +24,13 @@
             raised @click="dialogCartVisible = true" />
 
           <!-- Multi Language button  -->
-          <div class="flex space-x-3 ml-3 bg-yellow-400">
+          <!-- <div class="flex space-x-3 ml-3 bg-yellow-400">
             <select v-model="selectedLanguage" @change="changeLanguage">
               <option v-for=" language  in  languages " :value="language.code" :key="language.code">
                 {{ language.label }}
               </option>
             </select>
-          </div>
+          </div> -->
         </div>
       </div>
 

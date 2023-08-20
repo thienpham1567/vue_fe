@@ -118,7 +118,7 @@ const router = useRouter();
 const { fetchAllProducts, getProducts } = useProductStore();
 const spham = ref<string[]>([
   "https://thumb.tildacdn.com/tild3235-3163-4439-a661-626434373431/-/format/webp/nike-slide4.jpg",
-  "https://scontent.fsgn8-4.fna.fbcdn.net/v/t1.6435-9/127506094_1346134662404271_2275478172592726603_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=730e14&_nc_ohc=A71I7jLASUUAX9SxL5p&_nc_ht=scontent.fsgn8-4.fna&oh=00_AfAQvTYD6Xawrbkpn6OKGx5ZkzV9IviquRXAxn40weEMyA&oe=64D581F6",
+  "https://c.wallhere.com/photos/82/46/jumping_basketball_Adidas-172191.jpg!d",
   "https://static.nike.com/a/images/f_auto/dpr_1.6,cs_srgb/w_1089,c_limit/3d7f5d02-bf49-403a-a77f-04fc8680c54b/nike-just-do-it.jpg",
   // Add more image URLs here
 ]);
@@ -144,24 +144,7 @@ watch(
   }
 );
 
-// Hot Products -----------------------------------------------------------------
-// const visibleHotProductCount = ref(4);
-
-// // Lấy danh sách sản phẩm hiển thị dựa trên biến đếm
-// const visibleHotProducts = computed(() => {
-//   return getProducts.value.slice(0, visibleHotProductCount.value);
-// });
-
-// // Kiểm tra xem còn sản phẩm để hiển thị hay không
-// const showLoadMoreHotProductButton = computed(() => {
-//   return visibleHotProductCount.value < getProducts.value.length;
-// });
-
-// // Hàm tải thêm sản phẩm
-// const loadMoreHotProducts = () => {
-//   visibleHotProductCount.value += 4; // Tăng giá trị biến đếm để hiển thị thêm 4 sản phẩm
-// };
-// Daily Products -----------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------
 const visibleRandomProductsCount = ref(4);
 
 // Lấy danh sách sản phẩm ngẫu nhiên dựa trên các index
@@ -200,7 +183,7 @@ const loadMoreRandomProducts = () => {
   visibleRandomProductsCount.value += 4; // Tăng giá trị biến đếm để hiển thị thêm 4 sản phẩm
 };
 
-// Daily Products -----------------------------------------------------------------
+// Daily Products ---------------------------------------------------------------------------------
 const visibleRandomsProductsCount = ref(4);
 
 // Lấy danh sách sản phẩm ngẫu nhiên dựa trên các index
@@ -239,7 +222,7 @@ const loadMoreRandomsProducts = () => {
   visibleRandomsProductsCount.value += 4; // Tăng giá trị biến đếm để hiển thị thêm 4 sản phẩm
 };
 
-// New Product----------------------------------------------------------------------
+// New Product----------------------------------------------------------------------------------------------
 const visibleNewProductCount = ref(4);
 
 
