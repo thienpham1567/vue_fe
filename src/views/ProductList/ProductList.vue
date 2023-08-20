@@ -80,9 +80,9 @@
                 <div class="mb-2" v-show="!showSizeSection">
                     <div class="flex flex-row flex-wrap gap-2 mt-1">
                         <div v-for="size of sizeObject" :key="size.key" class="sizes">
-                            <Checkbox v-model="selectedSizes" :inputId="size.sizeId?.toString()" name="size" :value="size"
+                            <Checkbox v-model="selectedSizes" :inputId="size.key" name="size" :value="size.value"
                                 @update:modelValue="filterProduct" />
-                            <label :for="size.sizeId?.toString()">{{ size.value }}</label>
+                            <label :for="size.key">{{ size.value }}</label>
                         </div>
                         <!-- Thêm các checkbox khoảng giá khác nếu cần -->
                     </div>
