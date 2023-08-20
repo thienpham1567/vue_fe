@@ -67,13 +67,6 @@
                 <Button label="Add to cart" class="btn w-full" size="small" @click="addCart" />
             </div>
 
-
-            <div class="mt-5">
-                <Button icon="pi pi-heart-fill" size="small" @click="toggleLike" />
-                <!-- :icon="isLiked ? 'pi pi-heart' : 'pi pi-heart-o'" -->
-            </div>
-
-
             <div class="mt-4">
                 <div class="font-semibold text-2xl">ĐÁNH GIÁ CỦA BẠN</div>
                 <div class="border-b border-gray-400 mb-4"></div>
