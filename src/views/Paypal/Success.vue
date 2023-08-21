@@ -11,38 +11,18 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 // import { ref } from 'vue';
-import Order from '@/models/Order';
 import useCartStore from '@/store/Cart';
 import useOrderStore from '@/store/OrderStore';
-import { ref, computed, onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment';
 import Button from 'primevue/button';
 
-
 const { fetchOrderbyCartId, getOrder } = useOrderStore();
-const id = localStorage.getItem('cartId');
+const { deleteCart, deleteCartItem, clearCart } = useCartStore();
 const router = useRouter();
-
-
-const deleteCartItems = () => {
-  const cartIdFromLocalStorage = localStorage.getItem("cartId");
-  deleteCartItem(cartIdFromLocalStorage).then(() => {
-    localStorage.removeItem("cartId");
-  });
-
-}; 
-const deleteCartItem = async (cartItemId) => {
- 
-};
-
-onMounted(() => {
-  fetchOrderbyCartId(id).then(() => { 
-    deleteCartItems();
-  });
-});
 
 const formattedDate = computed(() => {
   if (getOrder.value && getOrder.value.createdAt) {
@@ -55,24 +35,22 @@ const formattedDate = computed(() => {
 const priceInVND = computed(() => {
   const exchangeRate = 24000; // Tỷ giá: 1 USD = 24000 VND
   return (usdPrice) => {
-      const vndPrice = usdPrice * exchangeRate;
-      return vndPrice.toLocaleString('en-US'); // Định dạng số với dấu phẩy
+    const vndPrice = usdPrice * exchangeRate;
+    return vndPrice.toLocaleString('en-US'); // Định dạng số với dấu phẩy
   };
 });
 
 function goToOrder() {
-    router.push('/myaccount/view-order');
+  router.push('/myaccount/view-order');
 }
 
-
-
-
-
-
-
-
-
-
+onMounted(() => {
+  const cartIdFromLocalStorage = localStorage.getItem("cartId");
+  fetchOrderbyCartId(cartIdFromLocalStorage).then(() => {
+    clearCart();
+    localStorage.removeItem("cartId");
+  });
+});
 </script>
 
 <style scoped>
@@ -81,17 +59,21 @@ function goToOrder() {
   margin: 0 auto;
   padding: 20px;
   text-align: center;
-  border: 2px solid #333; /* Viền xung quanh */
-  background-color: #f5f5f5; /* Màu xám nền */
+  border: 2px solid #333;
+  /* Viền xung quanh */
+  background-color: #f5f5f5;
+  /* Màu xám nền */
 }
 
 .title {
-  color: #1e88e5; /* Màu đậm cho tiêu đề */
+  color: #1e88e5;
+  /* Màu đậm cho tiêu đề */
 }
 
 .section-title {
   margin-top: 20px;
-  color: #4caf50; /* Màu đậm cho tiêu đề phần */
+  color: #4caf50;
+  /* Màu đậm cho tiêu đề phần */
 }
 
 .order-details {
@@ -118,5 +100,4 @@ function goToOrder() {
 
 .item-info {
   text-align: left;
-}
-</style>
+}</style>

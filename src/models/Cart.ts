@@ -19,6 +19,14 @@ class Cart extends HTTPBaseService {
     let params = { cartItemId };
     return await this.instance.delete(`/cart/remove/${cartId}`, { params });
   }
+
+  async deleteCartId(cartId: string): Promise<boolean> {
+    return await this.instance.delete(`/cart/delete/${cartId}`);
+  }
+
+  async deleteCartItemId(cartId: string): Promise<boolean> {
+    return await this.instance.delete(`/cart/item/delete/${cartId}`);
+  }
 }
 
 export default Cart;

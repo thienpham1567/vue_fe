@@ -47,12 +47,28 @@ const useCartStore = defineStore("cart", () => {
         cartItems.value = data?.cartItems ?? [];
     };
 
+    const clearCart = () => {
+        cart.value = {};
+        cartItems.value = [];
+    }
+
+    const deleteCart = async (cartId: string) => {
+        await new Cart().deleteCartId(cartId);
+    }
+
+    const deleteCartItem = async (cartId: string) => {
+        await new Cart().deleteCartItemId(cartId);
+    }
+
     return {
         getCart,
         getCartItems,
         fetchCart,
         addUpdateToCart,
-        removeItemFromCart
+        removeItemFromCart,
+        deleteCart,
+        deleteCartItem,
+        clearCart,
     };
 });
 
