@@ -32,14 +32,14 @@
 							</div>
 							<div class="w-full p-3">
 								<label for="State" class="text-gray-600 mb-1">Phường (Xã)</label>
-								<Dropdown v-bind="ward" :options="getWards" optionLabel="name" placeholder="Chọn Xã(Phường)"
-									class="w-full" />
+								<Dropdown v-bind="ward" :options="wardFilterByDistrct" optionLabel="name" placeholder="Chọn Xã(Phường)"
+									class="w-full" :disabled="district.modelValue == undefined" />
 								<span class="errorMessage">{{ errors.ward }}</span>
 							</div>
 							<div class="w-full lg:w-1/2 p-3">
 								<label for="district" class="text-gray-600 mb-1">Chọn Quận(Huyện)</label>
-								<Dropdown v-bind="district" :options="getDistricts" optionLabel="name" placeholder="Chọn Quận(Huyện)"
-									class="w-full" />
+								<Dropdown v-bind="district" :options="districtFilterByProvince" optionLabel="name" placeholder="Chọn Quận(Huyện)"
+									class="w-full" :disabled="province.modelValue == undefined" />
 								<span class="errorMessage">{{ errors.district }}</span>
 							</div>
 							<div class="w-full lg:w-1/2 p-3">
@@ -77,7 +77,7 @@ import { toTypedSchema } from '@vee-validate/yup';
 import * as yup from 'yup';
 import { useDistrictStore, useWardStore, useProvinceStore, useAddressStore, useAccountStore, useUserAddressStore} from '@/store';
 import { onMounted } from 'vue';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import jwt_decode from "jwt-decode";
 
@@ -127,6 +127,10 @@ let address = defineInputBinds("address");
 let ward = defineComponentBinds("ward");
 let district = defineComponentBinds("district");
 let province = defineComponentBinds("province");
+
+const districtFilterByProvince = computed(() => getDistricts.value.filter(district => district.provinceId === province.value.modelValue?.provinceId));
+const wardFilterByDistrct = computed(() => getWards.value.filter(ward => ward.districtId === district.value.modelValue?.districtId));
+
 
 const onSubmit = handleSubmit(values => {
 	const token = getCurrentToken();

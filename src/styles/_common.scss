@@ -73,3 +73,9 @@
 .display-none {
   display: none;
 }
+
+.disabled {
+  cursor: none;
+  user-select: none;
+  pointer-events: none;
+}
