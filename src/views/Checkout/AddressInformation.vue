@@ -32,7 +32,7 @@
 							</div>
 							<div class="w-full p-3">
 								<label for="State" class="text-gray-600 mb-1">Phường (Xã)</label>
-								<Dropdown v-bind="ward" :options="wardFilterByDistrct" optionLabel="name" placeholder="Chọn Xã(Phường)"
+								<Dropdown v-bind="ward" :options="wardFilterByDistrict" optionLabel="name" placeholder="Chọn Xã(Phường)"
 									class="w-full" :disabled="district.modelValue == undefined" />
 								<span class="errorMessage">{{ errors.ward }}</span>
 							</div>
@@ -129,7 +129,7 @@ let district = defineComponentBinds("district");
 let province = defineComponentBinds("province");
 
 const districtFilterByProvince = computed(() => getDistricts.value.filter(district => district.provinceId === province.value.modelValue?.provinceId));
-const wardFilterByDistrct = computed(() => getWards.value.filter(ward => ward.districtId === district.value.modelValue?.districtId));
+const wardFilterByDistrict = computed(() => getWards.value.filter(ward => ward.districtId === district.value.modelValue?.districtId));
 
 
 const onSubmit = handleSubmit(values => {
