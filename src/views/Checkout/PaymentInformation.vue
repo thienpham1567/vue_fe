@@ -65,7 +65,7 @@ import Payment from "@/models/Paypal";
 
 const { getCurrentToken } = useAccountStore();
 const router = useRouter();
-const { fetchWard, getWard } = useWardStore();
+const { fetchWards, getWard, getWards, setWard } = useWardStore();
 const { fetchDistrict, getDistrict } = useDistrictStore();
 const { fetchProvince, getProvince } = useProvinceStore();
 const { getAddress, fetchAddress } = useAddressStore();
@@ -122,7 +122,9 @@ onMounted(() => {
 		fetchUserAddresses({ userId: userDecode.userId, isDefault: true }).then(async () => {
 			const userAddress = getUserAddresses.value[0];
 			await fetchAddress(userAddress.addressId!);
-			Promise.all([fetchWard(getAddress.value?.wardId!), fetchDistrict(getAddress.value?.districtId!), fetchProvince(getAddress.value?.provinceId!)]);
+			await Promise.all([fetchWards(), fetchDistrict(getAddress.value?.districtId!), fetchProvince(getAddress.value?.provinceId!)]);
+			let ward = getWards.value.find(w => w.wardId === getAddress.value?.wardId);
+			setWard(ward!);
 		});
 	}
 })

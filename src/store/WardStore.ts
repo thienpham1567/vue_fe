@@ -33,6 +33,7 @@ const useWardStore = defineStore("ward", () => {
         fetchWard,
         getWards,
         getWard,
+        setWard,
     };
 });
 

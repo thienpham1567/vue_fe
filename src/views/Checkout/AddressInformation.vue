@@ -98,7 +98,7 @@ const items = ref([
 ]);
 
 const router = useRouter();
-const { fetchWards, fetchWard, getWards, getWard } = useWardStore();
+const { fetchWards, fetchWard, getWards, getWard, setWard } = useWardStore();
 const { fetchDistricts, fetchDistrict, getDistricts, getDistrict } = useDistrictStore();
 const { fetchProvinces, fetchProvince, getProvinces, getProvince } = useProvinceStore();
 const { getAddress, fetchAddress, addAddress, updateAddress } = useAddressStore();
@@ -130,7 +130,7 @@ let district = defineComponentBinds("district");
 let province = defineComponentBinds("province");
 
 const districtFilterByProvince = computed(() => getDistricts.value.filter(district => district.provinceId === province.value.modelValue?.provinceId));
-const wardFilterByDistrict = computed(() => getWards.value.filter(ward => ward.provinceId == province.value.modelValue?.provinceId));
+const wardFilterByDistrict = computed(() => getWards.value.filter(ward => ward.districtId == district.value.modelValue?.districtId));
 
 
 const onSubmit = handleSubmit(values => {
@@ -190,7 +190,9 @@ const fetchData = () => {
 			fetchUserAddresses({ userId: userDecode.userId, isDefault: true }).then(async () => {
 				const userAddress = getUserAddresses.value[0];
 				await fetchAddress(userAddress.addressId!);
-				Promise.all([fetchWard(getAddress.value?.wardId!), fetchDistrict(getAddress.value?.districtId!), fetchProvince(getAddress.value?.provinceId!)]).then(() => {
+				let ward = getWards.value.find(w => w.wardId === getAddress.value?.wardId);
+				setWard(ward!);
+				Promise.all([fetchDistrict(getAddress.value?.districtId!), fetchProvince(getAddress.value?.provinceId!)]).then(() => {
 					setValues({
 						fullName: getAddress.value?.fullName,
 						phoneNumber: getAddress.value?.phoneNumber,
