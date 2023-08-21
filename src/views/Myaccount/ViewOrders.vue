@@ -18,6 +18,11 @@
       </Column>
       <Column field="ordersStatus" header="Trạng thái" :body="statusBodyTemplate" sortable="custom"
         :sort-function="customSort">
+        <template #body="rowData">
+          <span :class="getStatusBadgeClass(rowData.data.ordersStatus)">
+            {{ rowData.data.ordersStatus }}
+          </span>
+        </template>
       </Column>
       <Column header="Xem đơn hàng" :body="viewOrderTemplate">
         <template #body="rowData">
@@ -188,6 +193,21 @@ function getFieldData(order: OrderType, field: string) {
   }
 }
 
+function getStatusBadgeClass(status) {
+  switch (status) {
+    case 'Đang xử lý':
+      return 'status-pending';
+    case 'Đã xác nhận':
+      return 'status-processing';
+    case 'Đang giao':
+      return 'status-delivery';  
+    case 'Hoàn thành':
+      return 'status-completed';
+    default:
+      return '';
+  }
+}
+
 const cancelEdit = () => {
   currentOrder.value = {};
   dialogVisible.value = false;
@@ -195,7 +215,36 @@ const cancelEdit = () => {
 
 </script>
   
+
 <style scoped>
+
+.status-pending {
+  background-color: #ffc107;
+  color: #000;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.status-processing {
+  background-color: #84b8f0;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.status-delivery {
+  background-color: #007bff;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.status-completed {
+  background-color: #28a745;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
 .order-list {
   padding: 20px;
 }
