@@ -1,4 +1,4 @@
-ß<template>
+<template>
 	<div class="py-10">
 		<Steps :model="items" aria-label="Form Steps" />
 	</div>
@@ -32,20 +32,21 @@
 							</div>
 							<div class="w-full p-3">
 								<label for="State" class="text-gray-600 mb-1">Phường (Xã)</label>
-								<Dropdown v-bind="ward" :options="getWards" optionLabel="name" placeholder="Chọn Xã(Phường)"
-									class="w-full" :disabled="district.modelValue == undefined" />
+								<Dropdown v-bind="ward" :options="wardFilterByDistrict" optionLabel="name" placeholder="Chọn Xã(Phường)"
+									class="w-full" :disabled="province.modelValue == undefined" />
 								<span class="errorMessage">{{ errors.ward }}</span>
 							</div>
 							<div class="w-full lg:w-1/2 p-3">
-								<label for="district" class="text-gray-600 mb-1">Chọn Quận(Huyện)</label>
-								<Dropdown v-bind="district" :options="districtFilterByProvince" optionLabel="name" placeholder="Chọn Quận(Huyện)"
-									class="w-full" :disabled="province.modelValue == undefined" />
+								<label for="district" class="text-gray-600 mb-1">Quận(Huyện)</label>
+								<Dropdown v-bind="district" :options="districtFilterByProvince" optionLabel="name"
+									placeholder="Chọn Quận(Huyện)" class="w-full"
+									:disabled="province.modelValue == undefined" />
 								<span class="errorMessage">{{ errors.district }}</span>
 							</div>
 							<div class="w-full lg:w-1/2 p-3">
 								<label for="City" class="text-gray-600 mb-1">Tỉnh(Thành Phố)</label>
-								<Dropdown v-bind="province" :options="getProvinces" optionLabel="name" placeholder="Chọn Tỉnh(Thành Phố)"
-									class="w-full" />
+								<Dropdown v-bind="province" :options="getProvinces" optionLabel="name"
+									placeholder="Chọn Tỉnh(Thành Phố)" class="w-full" />
 								<span class="errorMessage">{{ errors.province }}</span>
 							</div>
 						</div>
@@ -75,25 +76,25 @@ import Order from '@/components/Checkout/Order.vue'
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/yup';
 import * as yup from 'yup';
-import { useDistrictStore, useWardStore, useProvinceStore, useAddressStore, useAccountStore, useUserAddressStore} from '@/store';
+import { useDistrictStore, useWardStore, useProvinceStore, useAddressStore, useAccountStore, useUserAddressStore } from '@/store';
 import { onMounted } from 'vue';
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import jwt_decode from "jwt-decode";
 
 const items = ref([
-    {
-        label: 'Thông tin và địa chỉ',
-        to: "/checkout/address"
-    },
-    {
-        label: 'Phương thức thanh toán',
-        to: "/checkout/payment",
-    },
-    {
-        label: 'Xác nhận đơn hàng',
-        to: "/checkout/confirmation",
-    },
+	{
+		label: 'Thông tin và địa chỉ',
+		to: "/checkout/address"
+	},
+	{
+		label: 'Phương thức thanh toán',
+		to: "/checkout/payment",
+	},
+	{
+		label: 'Xác nhận đơn hàng',
+		to: "/checkout/confirmation",
+	},
 ]);
 
 const router = useRouter();
@@ -129,7 +130,7 @@ let district = defineComponentBinds("district");
 let province = defineComponentBinds("province");
 
 const districtFilterByProvince = computed(() => getDistricts.value.filter(district => district.provinceId === province.value.modelValue?.provinceId));
-const wardFilterByDistrict = computed(() => getWards.value.filter(ward => ward.districtId === district.value.modelValue?.districtId));
+const wardFilterByDistrict = computed(() => getWards.value.filter(ward => ward.provinceId == province.value.modelValue?.provinceId));
 
 
 const onSubmit = handleSubmit(values => {
@@ -141,7 +142,7 @@ const onSubmit = handleSubmit(values => {
 		let wardId = ward.wardId;
 		let districtId = district.districtId;
 		let provinceId = province.provinceId;
-		
+
 		if (getUserAddresses?.value[0]?.userAddressId) {
 			updateAddress(getUserAddresses.value[0].addressId!, {
 				fullName,
@@ -177,8 +178,8 @@ const onSubmit = handleSubmit(values => {
 });
 
 const backToCart = () => {
-	router.push({name: "Cart"});
-	
+	router.push({ name: "Cart" });
+
 }
 
 const fetchData = () => {
@@ -186,13 +187,13 @@ const fetchData = () => {
 		const token = getCurrentToken();
 		if (token) {
 			const userDecode = jwt_decode(token);
-			fetchUserAddresses({userId: userDecode.userId, isDefault: true}).then(async () => {
+			fetchUserAddresses({ userId: userDecode.userId, isDefault: true }).then(async () => {
 				const userAddress = getUserAddresses.value[0];
 				await fetchAddress(userAddress.addressId!);
 				Promise.all([fetchWard(getAddress.value?.wardId!), fetchDistrict(getAddress.value?.districtId!), fetchProvince(getAddress.value?.provinceId!)]).then(() => {
 					setValues({
 						fullName: getAddress.value?.fullName,
-						phoneNumber:getAddress.value?.phoneNumber,
+						phoneNumber: getAddress.value?.phoneNumber,
 						email: getAddress.value?.email,
 						address: getAddress.value?.address,
 						ward: getWard.value,
