@@ -1,8 +1,9 @@
 import type { UserType } from "./user";
 import type { OrderLineType } from "./orderLine";
+import { AddressType } from "./address";
 export interface OrderType {
     orderId?: string;
-    addressId?: number;
+    address?: AddressType;
     orderTotalPrice?: number;
     ordersStatus?: string;
     createdAt?: string;
@@ -45,6 +46,9 @@ export interface OrderType {
     userId: number;
   }
 
+    export interface OrderByCartId {
+    cartId: string;
+  }
   // export interface UserType {
   //   userId?: number;
   //   username?: string;

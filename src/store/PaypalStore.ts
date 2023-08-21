@@ -1,20 +1,22 @@
 import { ref, computed } from 'vue';
-import Order from '@/models/Order';
-import type { OrderType, CreationParams, UpdateParams } from '@/types/order';
+import Order from '@/models/Paypal';
+import type { , CreationParams, UpdateParams } from '@/types/order';
 import { UserType } from '@/types/user';
+import { PaymentRequestType } from '@/types/paymentRequest';
 
 const usePaypalStore = () => {
   // State
-  const payment = ref<OrderType[]>([]);
-  const order = ref<OrderType>({});
-
+  const payments = ref<PaymentRequestType[]>([]);
+  const payment = ref<PaymentRequestType>({});
+  const cart: Ref<CartType> = ref({});
+  
   // Getters
-  const getOrders = computed(() => orders.value);
-  const getOrder = computed(() => order.value);
-
+  const getPayments = computed(() => payments.value);
+  const getPayment = computed(() => payment.value);
+  const getCart = computed(() => cart);
   // Actions
-  const fetchPayment = async (user?: number) => {
-    const { data } = await new Order().list({
+  const fetchPayment = async (userId: number) => {
+    const { data } = await new Payment().list({
       user: user as UserType
     });
     setOrders(data);

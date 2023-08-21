@@ -11,7 +11,11 @@
 
     <DataTable :value="filteredOrders" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]"
       :sort-mode="'multiple'">
-      <Column field="orderTotalPrice" header="Tổng số tiền" sortable="custom" :sort-function="customSort"></Column>
+      <Column field="orderTotalPrice" header="Tổng số tiền" sortable="custom" :sort-function="customSort">
+        <template #body="rowData">
+          {{ priceInVND(rowData.data.orderTotalPrice) }} VND
+        </template>
+      </Column>
       <Column field="ordersStatus" header="Trạng thái" :body="statusBodyTemplate" sortable="custom"
         :sort-function="customSort">
       </Column>
@@ -23,6 +27,7 @@
           </div>
         </template>
       </Column>
+      
     </DataTable>
 
     <Dialog v-model="dialogVisible" :visible="dialogVisible" class="order-list__dialog">
@@ -36,7 +41,7 @@
         </div>
         <div class="p-field">
           <label for="customerAddress">Địa chỉ khách hàng</label>
-          <InputText id="customerAddress" v-model="currentOrder.denormalizedAddress" :disabled="isEditing"></InputText>
+          <InputText id="customerAddress" v-model="currentOrder.address.address" :disabled="isEditing"></InputText>
         </div>
         <div class="p-field">
           <label for="customerPhone">Số điện thoại</label>
@@ -47,10 +52,6 @@
           <Calendar id="orderDate" v-model="formattedDate" :disabled="isEditing"></Calendar>
         </div>
         <div class="p-field">
-          <label for="customerStatus">Trạng thái</label>
-          <InputText id="customerStatus" v-model="currentOrder.ordersStatus" :disabled="isEditing"></InputText>
-        </div>
-        <div class="p-field">
           <label for="products">Danh sách sản phẩm</label>
           <DataTable :value="currentOrder?.orderLines">
             <Column field="productVariationSize.productVariation.product.name" header="Tên sản phẩm"></Column>
@@ -59,7 +60,11 @@
                 <img :src="Props.data.imageUrl" style="width: 100px; height: 100px;" alt="image">
               </template>
             </Column>
-            <Column field="price" header="Giá"></Column>
+            <Column field="price" header="Giá">
+              <template #body="rowData">
+                <div class="vnd">{{ priceInVND(rowData.data.price) }} VND</div>
+              </template>
+            </Column>
             <Column field="quantity" header="Số lượng"></Column>
           </DataTable>
         </div>
@@ -96,7 +101,11 @@ const dialogHeader = ref('');
 const token = localStorage.getItem('token');
 const uservalue = jwt_decode(token!);
 const userId = uservalue.user.userId;
-
+const filterKeyword = ref('');
+const filterStatus = ref('');
+const dialogVisible = ref(false);
+const currentOrder = ref<OrderType | null>(null);
+const isEditing = ref(true);
 
 
 onMounted(async () => {
@@ -107,22 +116,16 @@ onMounted(async () => {
     console.log(orders.value);
   } catch (error) {
     console.error('Error fetching orders:', error);
-    // Handle error
   }
 });
 
-const filterKeyword = ref('');
-const filterStatus = ref('');
-const statusOptions = [
-  { label: 'Chưa xử lý', value: 'Chưa xử lý' },
-  { label: 'Đang xử lý', value: 'Đang xử lý' },
-  { label: 'Hoàn thành', value: 'Hoàn thành' },
-];
-
-const dialogVisible = ref(false);
-const currentOrder = ref<OrderType | null>(null);
-const isEditing = ref(true);
-
+const priceInVND = computed(() => {
+  const exchangeRate = 24000; // Tỷ giá: 1 USD = 24000 VND
+  return (usdPrice) => {
+    const vndPrice = usdPrice * exchangeRate;
+    return vndPrice.toLocaleString('en-US'); // Định dạng số với dấu phẩy
+  };
+});
 
 const formattedDate = computed(() => {
   if (currentOrder.value && currentOrder.value.createdAt) {
@@ -139,55 +142,13 @@ const formattedName = computed(() => {
   return null;
 });
 
-
-
-// const formattedDate = computed(() => {
-//   if (currentOrder.value && currentOrder.value.createdAt) {
-//     const dateObj = new Date(currentOrder.value.createdAt);
-//     return dateObj.toISOString().split('T')[0];
-//   }
-//   return null;
-// });
-
-// const formattedDate = computed(() => {
-//   if (currentOrder.value && currentOrder.value.createdAt) {
-//     const parts = currentOrder.value.createdAt.split(/[- :]/);
-//     const year = parseInt(parts[0]);
-//     const month = parseInt(parts[1]) - 1;
-//     const day = parseInt(parts[2]);
-//     const dateObj = new Date(year, month, day);
-//     return dateObj.toISOString().split('T')[0];
-//   }
-//   return null;
-// });
-
-// const formattedDate = computed(() => {
-//   if (currentOrder.value && typeof currentOrder.value.createdAt === 'string') {
-//     const parts = currentOrder.value.createdAt.split(' ');
-//     return parts[0];
-//   }
-//   return null;
-// });
-
-// const formattedDate = computed(() => {
-//   if (currentOrder.value && currentOrder.value.createdAt) {
-//     const dateObj = new Date(currentOrder.value.createdAt);
-//     const year = dateObj.getFullYear();
-//     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-//     const day = String(dateObj.getDate()).padStart(2, '0');
-//     return `${year}-${month}-${day}`;
-//   }
-//   return null;
-// });
-
-
 const openOrderDialog = (order: OrderType) => {
   currentOrder.value = { ...order };
-  dialogHeader.value = `Thông tin đơn hàng${order.orderId}`;
+  dialogHeader.value = `Thông tin đơn hàng`;
   dialogVisible.value = true;
 };
 
-// Computed property for filtered orders based on filterKeyword and filterStatus
+
 const filteredOrders = computed(() => {
   let filtered = orders.value;
   if (filterKeyword.value) {
@@ -200,7 +161,7 @@ const filteredOrders = computed(() => {
   return filtered;
 });
 
-// Custom sort function for sorting columns
+// Filter
 function customSort(event: any) {
   const { field, order } = event.multiSortMeta[0];
   if (field) {
@@ -213,7 +174,7 @@ function customSort(event: any) {
   }
 }
 
-// Helper function to get field data for sorting
+// ----------------------------------------------------------------
 function getFieldData(order: OrderType, field: string) {
   switch (field) {
     case 'orderId':
@@ -226,25 +187,6 @@ function getFieldData(order: OrderType, field: string) {
       return '';
   }
 }
-
-function applyFilters() {
-  const keyword = filterKeyword.value.toLowerCase();
-  const status = filterStatus.value;
-
-  filteredOrders.value = orders.value.filter((order) => {
-    const isKeywordMatched = order.user.username.toLowerCase().includes(keyword);
-    const isStatusMatched = !status || order.ordersStatus === status;
-    return isKeywordMatched && isStatusMatched;
-  });
-}
-
-// Reset the filters
-function resetFilters() {
-  filterKeyword.value = '';
-  filterStatus.value = '';
-  filteredOrders.value = orders.value;
-}
-
 
 const cancelEdit = () => {
   currentOrder.value = {};
