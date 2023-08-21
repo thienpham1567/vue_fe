@@ -19,19 +19,33 @@
           {{ priceInVND(rowData.data.orderTotalPrice) }} VND
         </template>
       </Column>
-      <Column field="ordersStatus" header="Trạng thái" :body="statusBodyTemplate" sortable="custom"
+      <Column header="Trạng thái" :body="statusEditTemplate">
+        <template #body="rowData">
+          <Dropdown v-model="rowData.data.ordersStatus" :options="statusOptions" optionLabel="label" optionValue="value"
+            @change="updateOrderStatus(rowData.data.ordersStatus)" />
+        </template>
+      </Column>
+
+      <!-- <Column header="Trạng thái" :body="statusEditTemplate">
+        <template #body="rowData">
+          <Dropdown v-model="rowData.data.ordersStatus" :options="statusOptions" optionLabel="label"
+            optionValue="value" />
+        </template>
+      </Column> -->
+      <!-- <Column field="ordersStatus" header="Trạng thái" :body="statusBodyTemplate" sortable="custom"
         :sort-function="customSort">
         <template #body="rowData">
           <span :class="getStatusBadgeClass(rowData.data.ordersStatus)">
             {{ rowData.data.ordersStatus }}
           </span>
         </template>
-      </Column>
+      </Column> -->
       <Column header="Xem đơn hàng" :body="viewOrderTemplate">
         <template #body="rowData">
           <div class="category-list__actions">
             <Button icon="pi pi-pencil" class="p-button-rounded p-button-success"
               @click="openOrderDialog(rowData.data)"></Button>
+            <Button icon="" class="p-button-success" @click="updateOrderStatusDialog(rowData.data)"></Button>
           </div>
         </template>
       </Column>
@@ -59,6 +73,10 @@
           <InputText id="customerPhone" v-model="currentOrder.user.phoneNumber" :disabled="isEditing"></InputText>
         </div>
         <div class="p-field">
+          <label for="customerPhone">Địa chỉ</label>
+          <InputText id="customerPhone" v-model="currentOrder.address.address" :disabled="isEditing"></InputText>
+        </div>
+        <div class="p-field">
           <label for="orderDate">Ngày đặt hàng</label>
           <Calendar id="orderDate" v-model="formattedDate" :disabled="isEditing"></Calendar>
         </div>
@@ -76,10 +94,10 @@
               </template>
             </Column>
             <Column field="price" header="Giá">
-                        <template #body="rowData">
-                            <div class="vnd">{{ priceInVND(rowData.data.price) }} VND</div>
-                        </template>
-                    </Column>
+              <template #body="rowData">
+                <div class="vnd">{{ priceInVND(rowData.data.price) }} VND</div>
+              </template>
+            </Column>
             <Column field="quantity" header="Số lượng"></Column>
           </DataTable>
         </div>
@@ -123,6 +141,11 @@ onMounted(async () => {
   }
 });
 
+const { updateOrder } = useOrderStore();
+
+const updateOrderStatus = async (order: OrderType) => {
+  await updateOrder(order.orderId, { ordersStatus: order.ordersStatus });
+};
 
 // xử lí hiển thị cho TRẠNG THÁI
 const filterKeyword = ref('');
@@ -132,18 +155,21 @@ const statusOptions = [
   { label: 'Đang xử lý', value: 'Đang xử lý' },
   { label: 'Hoàn thành', value: 'Hoàn thành' },
 ];
-function getStatusBadgeClass(status) {
-  switch (status) {
-    case 'Chưa xử lý':
-      return 'status-pending';
-    case 'Đang xử lý':
-      return 'status-processing';
-    case 'Hoàn thành':
-      return 'status-completed';
-    default:
-      return '';
-  }
-}
+
+
+
+// function getStatusBadgeClass(status) {
+//   switch (status) {
+//     case 'Chưa xử lý':
+//       return 'status-pending';
+//     case 'Đang xử lý':
+//       return 'status-processing';
+//     case 'Hoàn thành':
+//       return 'status-completed';
+//     default:
+//       return '';
+//   }
+// }
 
 
 const dialogVisible = ref(false);
@@ -166,52 +192,17 @@ const formattedName = computed(() => {
   return null;
 });
 
-
-
-// const formattedDate = computed(() => {
-//   if (currentOrder.value && currentOrder.value.createdAt) {
-//     const dateObj = new Date(currentOrder.value.createdAt);
-//     return dateObj.toISOString().split('T')[0];
-//   }
-//   return null;
-// });
-
-// const formattedDate = computed(() => {
-//   if (currentOrder.value && currentOrder.value.createdAt) {
-//     const parts = currentOrder.value.createdAt.split(/[- :]/);
-//     const year = parseInt(parts[0]);
-//     const month = parseInt(parts[1]) - 1;
-//     const day = parseInt(parts[2]);
-//     const dateObj = new Date(year, month, day);
-//     return dateObj.toISOString().split('T')[0];
-//   }
-//   return null;
-// });
-
-// const formattedDate = computed(() => {
-//   if (currentOrder.value && typeof currentOrder.value.createdAt === 'string') {
-//     const parts = currentOrder.value.createdAt.split(' ');
-//     return parts[0];
-//   }
-//   return null;
-// });
-
-// const formattedDate = computed(() => {
-//   if (currentOrder.value && currentOrder.value.createdAt) {
-//     const dateObj = new Date(currentOrder.value.createdAt);
-//     const year = dateObj.getFullYear();
-//     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-//     const day = String(dateObj.getDate()).padStart(2, '0');
-//     return `${year}-${month}-${day}`;
-//   }
-//   return null;
-// });
-
-
 const openOrderDialog = (order: OrderType) => {
   currentOrder.value = { ...order };
   dialogHeader.value = `Thông tin đơn hàng #${order.orderId}`;
   dialogVisible.value = true;
+};
+
+const updateOrderStatusDialog = (order: OrderType) => {
+  currentOrder.value = { ...order };
+  dialogHeader.value = `Cập nhật trạng thái đơn hàng #${order.orderId}`;
+  dialogVisible.value = true;
+  isEditing.value = true; // Khóa việc chỉnh sửa
 };
 
 // Computed property for filtered orders based on filterKeyword and filterStatus
