@@ -1,22 +1,16 @@
-import { ref, computed , Ref} from 'vue';
+import { ref, computed } from 'vue';
 import Order from '@/models/Order';
-import Cart from "@/models/Cart";
 import type { OrderType, CreationParams, UpdateParams } from '@/types/order';
 import { UserType } from '@/types/user';
-import { CartType } from "@/types/cart";
-import Payment from "@/models/Paypal";
-import { defineStore } from "pinia";
 
-const useOrderStore =  defineStore("order", () => {
+const useOrderStore = () => {
   // State
-  const orders:  Ref<OrderType[]> = ref([]);
-  const order: Ref<OrderType> = ref({});
-  const cart: Ref<CartType> = ref({});
+  const orders = ref<OrderType[]>([]);
+  const order = ref<OrderType>({});
 
   // Getters
-  const getOrders = computed(() => orders);
-  const getOrder = computed(() => order);
-  const getCart = computed(() => cart);
+  const getOrders = computed(() => orders.value);
+  const getOrder = computed(() => order.value);
 
   // Actions
   const fetchOrders = async (user?: number) => {
@@ -26,13 +20,9 @@ const useOrderStore =  defineStore("order", () => {
     setOrders(data);
   };
 
-
-  const fetchOrderByCartId = async (cartId? : number) => {
-    const cartIdFromLocalStorage = cart.value.cartId! ?? localStorage.getItem("cartId");
-    if (cartIdFromLocalStorage !== null) {
-      const { data } = await new Order().order({ cartId: cartIdFromLocalStorage! });
-      setOrders(data);
-  }
+  const fetchOrderbyCartId = async (cartId?: string) => {
+    const { data } = await new Order().detail({ cartId });
+    setOrder(data);
   };
 
   const fetchOrdersById = async (userId?: number) => {
@@ -74,8 +64,8 @@ const useOrderStore =  defineStore("order", () => {
     deleteOrder,
     setOrder,
     fetchOrdersById,
-    fetchOrderByCartId
+    fetchOrderbyCartId
   };
-});
+};
 
 export default useOrderStore;

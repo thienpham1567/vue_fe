@@ -1,83 +1,76 @@
 <template>
   <div class="order-confirmation">
-    <h1 class="title">Order Confirmation</h1>
+    <h1 class="title">XÁC NHẬN ĐƠN HÀNG</h1>
     <div class="order-details">
-      <p><strong>Order Number:</strong> {{ order.orderNumber }}</p>
-      <p><strong>Order Date:</strong> {{ order.orderDate }}</p>
-      <p><strong>Payment Method:</strong> {{ order.paymentMethod }}</p>
-      <p><strong>Total Amount:</strong> ${{ order.totalAmount }}</p>
-      <p><strong>Shipping Cost:</strong> ${{ order.shippingCost }}</p>
+      <p><strong>Ngày thanh toán:</strong> {{ formattedDate }} </p>
+      <p><strong>Phương thức thanh toán:</strong> {{ getOrder.price }} Paypal </p>
+      <p><strong>Tổng tiền:</strong> {{ priceInVND(getOrder.orderTotalPrice) }} VND </p>
+      <p><strong>Tiền ship:</strong> 0.0 </p>
     </div>
-    <h2 class="section-title">Order Items:</h2>
-    <ul class="order-items">
-      <li v-for="(item, index) in order.orderItems" :key="index">
-        <div class="item-details">
-          <img :src="item.imageUrl" alt="Product Image" />
-          <div class="item-info">
-            <p><strong>Product Name:</strong> {{ item.productName }}</p>
-            <p><strong>Price:</strong> ${{ item.price }}</p>
-            <p><strong>Quantity:</strong> {{ item.quantity }}</p>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <button @click="goToOrderHistory">View Order History</button>
+    <Button class="cart-btn" @click="goToOrder">View Order History</Button>
   </div>
 </template>
 
 <script setup>
 // import { ref } from 'vue';
+import Order from '@/models/Order';
 import useCartStore from '@/store/Cart';
 import useOrderStore from '@/store/OrderStore';
 import { ref, computed, onMounted } from 'vue';
-
-const {
-  fetchOrderByCartId
-} = useOrderStore();
-const {
-  getCart
-} = useCartStore();
+import { useRouter } from 'vue-router';
+import moment from 'moment';
+import Button from 'primevue/button';
 
 
-onMounted(async () => {
-  try {
-    // console.log(userId);
-    const cartId = localStorage.getItem('cartId');
-    await fetchOrderByCartId(cartId);
-    console.log(fetchOrderByCartId);
-  } catch (error) {
-    console.error('Error fetching orders:', error);
-    // Handle error
-  }
-});
-const order = ref({
-  orderNumber: "123456",
-  orderDate: "2023-08-18",
-  paymentMethod: "PayPal",
-  totalAmount: 150.00,
-  shippingCost: 10.00,
-  orderItems: [
-    {
-      imageUrl: "path/to/image1.jpg",
-      productName: "Product 1",
-      price: 50.00,
-      quantity: 2
-    },
-    {
-      imageUrl: "path/to/image2.jpg",
-      productName: "Product 2",
-      price: 30.00,
-      quantity: 3
-    },
-    // Add more order items here
-  ]
-});
+const { fetchOrderbyCartId, getOrder } = useOrderStore();
+const id = localStorage.getItem('cartId');
+const router = useRouter();
 
-const goToOrderHistory = () => {
-  // Redirect to order history page
-  // Replace with actual route or URL
-  router.push("/order-history");
+
+const deleteCartItems = () => {
+  const cartIdFromLocalStorage = localStorage.getItem("cartId");
+  deleteCartItem(cartIdFromLocalStorage).then(() => {
+    localStorage.removeItem("cartId");
+  });
+
+}; 
+const deleteCartItem = async (cartItemId) => {
+ 
 };
+
+onMounted(() => {
+  fetchOrderbyCartId(id).then(() => { 
+    deleteCartItems();
+  });
+});
+
+const formattedDate = computed(() => {
+  if (getOrder.value && getOrder.value.createdAt) {
+    const datetime = moment(getOrder.value.createdAt, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
+    return datetime.format('YYYY-MM-DD HH:mm:ss');
+  }
+  return null;
+});
+
+const priceInVND = computed(() => {
+  const exchangeRate = 24000; // Tỷ giá: 1 USD = 24000 VND
+  return (usdPrice) => {
+      const vndPrice = usdPrice * exchangeRate;
+      return vndPrice.toLocaleString('en-US'); // Định dạng số với dấu phẩy
+  };
+});
+
+function goToOrder() {
+    router.push('/myaccount/view-order');
+}
+
+
+
+
+
+
+
+
 
 
 </script>
@@ -103,6 +96,7 @@ const goToOrderHistory = () => {
 
 .order-details {
   margin-bottom: 20px;
+
 }
 
 .order-items {

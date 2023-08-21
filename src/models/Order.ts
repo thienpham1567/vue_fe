@@ -6,6 +6,7 @@ import type {
   OrderById,
   OrderResponse,
   UpdateParams,
+  OrderByCartId
 } from "@/types/order";
 import { QueryUserParams } from "@/types/user";
 
@@ -26,8 +27,8 @@ class Order extends HTTPBaseService {
     return await this.instance.get("/orders/byuserid", {params});
   }
 
-  async detail(id: string): Promise<OrderResponse> {
-    return await this.instance.get(`/orders/${id}`);
+  async detail(params:  OrderByCartId): Promise<OrderResponse> {
+    return await this.instance.get("/orders/bycartid", {params});
   }
 
   async create(params: CreationParams): Promise<CreationResponse> {
