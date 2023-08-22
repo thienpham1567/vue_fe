@@ -109,6 +109,7 @@ import moment from 'moment';
 const orders = ref<OrderType[]>([]);
 const orderStore = useOrderStore();
 const dialogHeader = ref('');
+const { updateOrder } = useOrderStore();
 
 onMounted(async () => {
   try {
@@ -120,8 +121,6 @@ onMounted(async () => {
     // Handle error
   }
 });
-
-const { updateOrder } = useOrderStore();
 
 const updateOrderStatus = async (order: OrderType) => {
   await updateOrder(order.orderId, { ordersStatus: order.ordersStatus });
@@ -137,26 +136,9 @@ const statusOptions = [
   { label: 'Hoàn thành', value: 'Hoàn thành' },
 ];
 
-
-
-// function getStatusBadgeClass(status) {
-//   switch (status) {
-//     case 'Chưa xử lý':
-//       return 'status-pending';
-//     case 'Đang xử lý':
-//       return 'status-processing';
-//     case 'Hoàn thành':
-//       return 'status-completed';
-//     default:
-//       return '';
-//   }
-// }
-
-
 const dialogVisible = ref(false);
 const currentOrder = ref<OrderType | null>(null);
 const isEditing = ref(true);
-
 
 const formattedDate = computed(() => {
   if (currentOrder.value && currentOrder.value.createdAt) {
@@ -177,13 +159,6 @@ const openOrderDialog = (order: OrderType) => {
   currentOrder.value = { ...order };
   dialogHeader.value = `Thông tin đơn hàng `;
   dialogVisible.value = true;
-};
-
-const updateOrderStatusDialog = (order: OrderType) => {
-  currentOrder.value = { ...order };
-  dialogHeader.value = `Cập nhật trạng thái đơn hàng #${order.orderId}`;
-  dialogVisible.value = true;
-  isEditing.value = true; // Khóa việc chỉnh sửa
 };
 
 // Computed property for filtered orders based on filterKeyword and filterStatus
@@ -244,7 +219,6 @@ function resetFilters() {
   filteredOrders.value = orders.value;
 }
 
-
 const cancelEdit = () => {
   currentOrder.value = {};
   dialogVisible.value = false;
@@ -259,6 +233,7 @@ const priceInVND = computed(() => {
     return vndPrice.toLocaleString('en-US'); // Định dạng số với dấu phẩy
   };
 });
+
 </script>
 
 <style scoped>

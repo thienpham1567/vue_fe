@@ -1,14 +1,6 @@
 <template>
-  <div class="order-list">
-    <h1 class="order-list__title">Danh sách đơn hàng</h1>
-    <!-- <div class="order-list__filters">
-        <InputText v-model="filterKeyword" placeholder="Tìm kiếm theo tên khách hàng" />
-        <Dropdown v-model="filterStatus" :options="statusOptions" optionLabel="label" optionValue="value"
-          placeholder="Chọn trạng thái" />
-        <Button label="Áp dụng" icon="pi pi-search" @click="applyFilters" />
-        <Button label="Xóa bộ lọc" icon="pi pi-times" @click="resetFilters" />
-      </div> -->
-
+  <div class="order-list ">
+    <h1 class="order-list__title flex justify-center mt-4">DANH SÁCH ĐƠN HÀNG</h1>
     <DataTable :value="filteredOrders" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]"
       :sort-mode="'multiple'">
       <Column field="orderTotalPrice" header="Tổng số tiền" sortable="custom" :sort-function="customSort">
@@ -27,7 +19,7 @@
       <Column header="Xem đơn hàng" :body="viewOrderTemplate">
         <template #body="rowData">
           <div class="category-list__actions">
-            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success"
+            <Button icon="pi pi-pencil" class="p-button-sm p-button-success"
               @click="openOrderDialog(rowData.data)"></Button>
           </div>
         </template>
@@ -246,7 +238,11 @@ const cancelEdit = () => {
   border-radius: 4px;
 }
 .order-list {
-  padding: 20px;
+  padding: 0;
+  margin: 0 auto;
+  border: 2px solid #f9f2f2;
+  /* Viền xung quanh */
+  /* Màu xám nền */
 }
 
 .order-list__title {
