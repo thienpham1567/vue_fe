@@ -1,6 +1,6 @@
 <template>
   <div class="category-list">
-    <h1 class="category-list__title">Danh sách danh mục</h1>
+    <h1 class="flex font-bold text-4xl justify-center mb-4">DANH SÁCH DANH MỤC</h1>
     <div class="category-list__add-button">
       <span class="p-input-icon-left">
         <i class="pi pi-search" />
@@ -17,10 +17,10 @@
         <Column field="parentCategory.name" header="Danh mục cha"></Column>
         <Column header="Thao tác">
           <template #body="rowData">
-            <div class="category-list__actions">
-              <Button icon="pi pi-pencil" class="p-button-rounded p-button-success"
+            <div class="product-list__actions">
+              <Button icon="pi pi-pencil" class="p-button-sm p-button-success"
                 @click="showEditDialog(rowData.data)"></Button>
-              <Button icon="pi pi-trash" class="p-button-rounded p-button-danger"
+              <Button icon="pi pi-trash" class="p-button-sm p-button-danger"
                 @click="showDeleteDialog(rowData.data)"></Button>
             </div>
           </template>
@@ -70,7 +70,7 @@
 
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch, computed } from 'vue';
+import { ref, reactive, onMounted, computed } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
@@ -109,7 +109,7 @@ const filteredCategories = computed(() => {
   const searchValue = searchText.value.trim().toLowerCase();
 
   if (searchValue !== '') {
-    return filteredCategories3.filter((category : CategoryType) =>
+    return filteredCategories3.filter((category: CategoryType) =>
       category.name.toLowerCase().includes(searchValue)
     );
   }
@@ -218,11 +218,6 @@ const clearCurrentCategory = () => {
 
 .category-list__table {
   margin-bottom: 2rem;
-}
-
-.category-list__actions {
-  display: flex;
-  align-items: center;
 }
 
 .category-list__add-button {

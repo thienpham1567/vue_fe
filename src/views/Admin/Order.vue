@@ -1,6 +1,6 @@
 <template>
-  <div class="order-list">
-    <h1 class="order-list__title">Danh sách đơn hàng</h1>
+  <div class="">
+    <h1 class="flex font-bold text-4xl justify-center mb-4">DANH SÁCH ĐƠN HÀNG</h1>
     <div class="order-list__filters">
       <InputText v-model="filterKeyword" placeholder="Tìm kiếm theo tên khách hàng" />
       <Dropdown v-model="filterStatus" :options="statusOptions" optionLabel="label" optionValue="value"
@@ -76,10 +76,10 @@
               </template>
             </Column>
             <Column field="price" header="Giá">
-                        <template #body="rowData">
-                            <div class="vnd">{{ priceInVND(rowData.data.price) }} VND</div>
-                        </template>
-                    </Column>
+              <template #body="rowData">
+                <div class="vnd">{{ priceInVND(rowData.data.price) }} VND</div>
+              </template>
+            </Column>
             <Column field="quantity" header="Số lượng"></Column>
           </DataTable>
         </div>
@@ -328,6 +328,12 @@ const priceInVND = computed(() => {
   margin-bottom: 20px;
 }
 
+.p-dropdown .p-dropdown-label {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0 !important;
+}
+
 .order-list__dialog {
   max-width: 600px;
 }
@@ -336,6 +342,11 @@ const priceInVND = computed(() => {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.p-dropdown {
+  height: 49.6px;
+  width: 206.4px;
 }
 
 .status-badge {

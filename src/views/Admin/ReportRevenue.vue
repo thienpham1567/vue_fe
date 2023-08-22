@@ -5,10 +5,10 @@
     <Dropdown v-model="selectedSize" :options="sizes" placeholder="Select a Sizes" class="w-1/3" />
   </div>
   <DataTable :value="filteredReportByProductQuantitys" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
-    <Column field="name" header="Product Name"></Column>
-    <Column field="quantity" header="Quantity"></Column>
-    <Column field="color" header="Color"></Column>
-    <Column field="size" header="Size"></Column>
+    <Column field="name" header="Tên sản phẩm"></Column>
+    <Column field="quantity" header="Số lượng"></Column>
+    <Column field="color" header="Màu"></Column>
+    <Column field="size" header="Kích cở"></Column>
   </DataTable>
 </template>
   
@@ -131,6 +131,10 @@ const searchData = () => {
 .chart-top {
   width: 34rem;
   height: 17rem;
+}
+
+.search-down {
+  width: 100rem;
 }
 </style>
   

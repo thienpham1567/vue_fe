@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex font-bold text-4xl justify-center mb-4">Kích cở sản phẩm</div>
+        <div class="flex font-bold text-4xl justify-center mb-4">KÍCH CỞ SẢN PHẨM</div>
         <div class=" mb-4">
             <div class="flex justify-between ml-2 mr-4">
                 <div class="w-1/2 ml-2 mr-2">
@@ -45,12 +45,16 @@
             </div>
         </div>
         <div class="border-b border-gray-400"></div>
-        <div class=" mb-4 mt-12">
+        <div class=" mb-4 mt-4">
             <div class="product-list__table">
                 <div class="flex justify-center">
-                    <h2 class="text-3xl font-semibold">Danh sách Sản phẩm và Kích cở</h2>
+                    <h2 class="text-3xl font-semibold mb-4">DANH SÁCH SẢN PHẨM VÀ KÍCH CỞ </h2>
                 </div>
-                <DataTable :value="productVariationSizes" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
+                <div class="flex justify-end mb-4">
+                    <InputText v-model="searchText" placeholder="Tìm theo tên sản phẩm" @input="searchData"
+                        class="search-down"></InputText>
+                </div>
+                <DataTable :value="filtered" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
                     <Column field="productVariationSizeId" header="ID kích thước sản phẩm"></Column>
                     <Column field="quantity" header="Số lượng"></Column>
                     <Column field="productVariation.productVariationId" header="ID Chi tiết sản phẩm">
@@ -64,13 +68,12 @@
                         <template #body="rowData">
                             <div class="product-list__actions">
                                 <Button @click="editData(rowData)" icon="pi pi-pencil"
-                                    class=" p-button-rounded p-button-success"></Button>
+                                    class=" p-button-sm p-button-success"></Button>
                                 <Button @click="showDeleteDialog(rowData.data)" icon="pi pi-trash"
-                                    class="p-button-rounded p-button-danger"></Button>
+                                    class="p-button-sm p-button-danger"></Button>
                             </div>
                         </template>
                     </Column>
-                    <Column field="createdAt" header="ID kích thước sản phẩm"></Column>
                 </DataTable>
             </div>
 
@@ -93,6 +96,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import InputNumber from 'primevue/inputnumber';
+import InputText from 'primevue/inputtext';
 import Dropdown from 'primevue/dropdown';
 import Dialog from 'primevue/dialog';
 import { ProductType, UpdateAdminParams } from '@/types/product';
@@ -103,7 +107,6 @@ import { ref, onMounted, computed } from 'vue';
 import { SizeType } from '@/types/size';
 import { ProductVariationType } from '@/types/productVariation';
 import { ProductVariationSizeType, UpdateParams, CreationProductVariationSizeParams } from '@/types/productVariationSize';
-import { CreationParams } from '@/types/user';
 
 const dialogVisible = ref(false);
 const deleteDialogVisible = ref(false);
@@ -127,6 +130,26 @@ const sizeStore = useSizeStore();
 const sizes = ref<SizeType[]>([]);
 const selectedSize = ref<SizeType | null>(null);
 // const price = ref<number | null>(null);
+
+const searchKey = ref(0);
+const searchText = ref('');
+const searchData = () => {
+    searchKey.value += 1;
+};
+
+const filtered = computed(() => {
+    const filtereds = productVariationSizes.value;
+    const searchValue = searchText.value.trim().toLowerCase();
+
+    if (searchValue !== '') {
+        return filtereds.filter((product: ProductVariationSizeType) =>
+            product.productVariation?.product?.name?.toLowerCase().includes(searchValue)
+        );
+    }
+
+    return filtereds;
+});
+
 
 const productVariationWithLabel = computed(() =>
     productVariationStore.getproductVariations.value.filter(productVariation => productVariation.productVariationId !== null).map((productVariation) => ({
@@ -299,5 +322,9 @@ const editData = (rowData: { data: ProductVariationSizeType }) => {
 .product-list__dialog-buttons {
     display: flex;
     justify-content: flex-end;
+}
+
+.search-down {
+    width: 100rem;
 }
 </style>
