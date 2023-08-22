@@ -19,9 +19,9 @@
 
           <Button v-if="getCart.itemTotalQuantity === undefined || getCart.itemTotalQuantity <= 0"
             icon="pi pi-shopping-cart " class="cart-btn" :label="$t('my-cart')" raised
-            @click="dialogCartVisible = true" />
+            @click="showCart" />
           <Button v-else icon="pi pi-shopping-cart " class="cart-btn" :label="`Giỏ hàng ${getCart.itemTotalQuantity}`"
-            raised @click="dialogCartVisible = true" />
+            raised @click="showCart" />
         </div>
       </div>
 
@@ -66,7 +66,7 @@
       </MegaMenu>
     </div>
   </nav>
-  <Sidebar v-model:visible="dialogCartVisible" position="right">
+  <Sidebar v-model:visible="getIsShowSidebarCart" position="right">
     <template #header>
       <div class="text-2xl">{{ $t('my-cart') }}</div>
     </template>
@@ -110,7 +110,7 @@ import CoreDialog from '@/components/Core/CoreDialog.vue';
 import Sidebar from 'primevue/sidebar';
 import CartItem from "@/components/CartItems/CartItem.vue";
 import { useRouter } from 'vue-router';
-import { useBrandStore, useAccountStore, useCategoryStore, useCartStore } from "@/store";
+import { useBrandStore, useCategoryStore, useCartStore } from "@/store";
 import { onMounted, ref, watch, computed } from 'vue';
 import jwt_decode from "jwt-decode";
 import { useLanguageStore } from '@/store/language';
@@ -125,7 +125,7 @@ const router = useRouter();
 const { fetchAllProducts, getProducts } = useProductStore();
 const { getBrands, fetchBrands } = useBrandStore();
 const { getCategories, fetchCategories } = useCategoryStore();
-const { getCart, getCartItems, fetchCart } = useCartStore();
+const { getCart, getCartItems, fetchCart, getIsShowSidebarCart, showSidebarCart } = useCartStore();
 const searchQuery = ref('');
 const filteredProducts = ref([]);
 const items = ref([]);
@@ -145,7 +145,7 @@ watch(searchQuery, (newValue) => {
   filterProducts(newValue);
 });
 
-watch(dialogCartVisible, async () => {
+watch(getIsShowSidebarCart, async () => {
   await fetchCart();
 });
 
@@ -290,6 +290,10 @@ function goToViewOrders() {
 function goToFavorite() {
   dialogCartVisible.value = false;
   router.push('/favorite');
+}
+
+const showCart = () => {
+  showSidebarCart();
 }
 
 const languageStore = useLanguageStore();

@@ -9,11 +9,20 @@ const useCartStore = defineStore("cart", () => {
     // State
     const cartItems: Ref<CartItemType[]> = ref([]);
     const cart: Ref<CartType> = ref({});
+    let isShowSidebarCart: Ref<boolean> = ref(false);
 
     // Getters
     const getCartItems = computed(() => cartItems);
     const getCart = computed(() => cart);
+    const getIsShowSidebarCart = computed(() => isShowSidebarCart);
 
+    // Setters
+    const showSidebarCart = () => {
+        isShowSidebarCart.value = true
+    };
+    const hideSidebarCart = () => {
+        isShowSidebarCart.value = false
+    };
 
     // Actions
     const fetchCart = async () => {
@@ -38,6 +47,7 @@ const useCartStore = defineStore("cart", () => {
             cartItems.value = data?.cartItems ?? [];
             localStorage.setItem("cartId", cart.value.cartId!);
         }
+        showSidebarCart();
     };
 
     const removeItemFromCart = async (cartItemId: number) => {
@@ -69,6 +79,9 @@ const useCartStore = defineStore("cart", () => {
         deleteCart,
         deleteCartItem,
         clearCart,
+        getIsShowSidebarCart,
+        showSidebarCart,
+        hideSidebarCart
     };
 });
 
