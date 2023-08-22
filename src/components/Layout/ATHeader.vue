@@ -1,7 +1,7 @@
 <template>
   <nav>
-    <div class="flex items-center justify-between px-6">
-      <div class="flex items-center h-36">
+    <div class="flex items-center justify-between px-6 flex-wrap">
+      <div class="flex items-center">
         <Image :src="Logo" alt="Image" width="180" />
         <div class="p-inputgroup">
           <AutoComplete v-model="searchQuery" :suggestions="filteredProducts" @complete="onSearchComplete"
@@ -14,15 +14,11 @@
           </AutoComplete>
         </div>
       </div>
-      <div class="juistify-between">
-        <div class="flex">
-
-          <Button v-if="getCart.itemTotalQuantity === undefined || getCart.itemTotalQuantity <= 0"
-            icon="pi pi-shopping-cart " class="cart-btn" :label="$t('my-cart')" raised
-            @click="showCart" />
-          <Button v-else icon="pi pi-shopping-cart " class="cart-btn" :label="`Giỏ hàng ${getCart.itemTotalQuantity}`"
-            raised @click="showCart" />
-        </div>
+      <div class="pb-4 ms-6 md:pb-0">
+        <Button v-if="getCart.itemTotalQuantity === undefined || getCart.itemTotalQuantity <= 0"
+          icon="pi pi-shopping-cart " class="cart-btn" :label="$t('my-cart')" raised @click="showCart" />
+        <Button v-else icon="pi pi-shopping-cart " class="cart-btn" :label="`Giỏ hàng ${getCart.itemTotalQuantity}`"
+          raised @click="showCart" />
       </div>
 
     </div>
@@ -340,15 +336,15 @@ const logout = () => {
 checkToken();
 
 const priceInVND = computed(() => {
-    const usdPrice = getCart.value.itemSubtotalPrice;
-    const exchangeRate = 24000;
+  const usdPrice = getCart.value.itemSubtotalPrice;
+  const exchangeRate = 24000;
 
-    if (usdPrice) {
-        const vndPrice = usdPrice * exchangeRate;
-        return vndPrice.toLocaleString('en-US');
-    }
+  if (usdPrice) {
+    const vndPrice = usdPrice * exchangeRate;
+    return vndPrice.toLocaleString('en-US');
+  }
 
-    return null;
+  return null;
 });
 
 const fetchData = () => {

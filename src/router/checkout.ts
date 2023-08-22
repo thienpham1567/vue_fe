@@ -20,13 +20,5 @@ export const checkout = {
         requiresGuest: true,
       },
     },
-    {
-      path: "confirmation",
-      name: "Confirmation",
-      component: () => import("@/views/Checkout/Confirmation.vue"),
-      meta: {
-        requiresGuest: true,
-      },
-    },
   ],
 };
