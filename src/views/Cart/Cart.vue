@@ -40,13 +40,16 @@ import { onMounted } from 'vue';
 
 const router = useRouter();
 const $t = translate;
-const { getCart, getCartItems, fetchCart } = useCartStore();
+const { getCart, getCartItems, fetchCart, hideSidebarCart } = useCartStore();
 
 function goToCheckout() {
     router.push('/checkout/address');
 }
 
-onMounted(fetchCart);
+onMounted(() => {
+    fetchCart();
+    hideSidebarCart();
+});
 </script>
 
 
