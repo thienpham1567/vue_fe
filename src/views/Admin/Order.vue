@@ -19,33 +19,17 @@
           {{ priceInVND(rowData.data.orderTotalPrice) }} VND
         </template>
       </Column>
-      <Column header="Trạng thái" :body="statusEditTemplate">
+      <Column header="Trạng thái">
         <template #body="rowData">
           <Dropdown v-model="rowData.data.ordersStatus" :options="statusOptions" optionLabel="label" optionValue="value"
-            @change="updateOrderStatus(rowData.data.ordersStatus)" />
+            @change="updateOrderStatus(rowData.data)" />
         </template>
       </Column>
-
-      <!-- <Column header="Trạng thái" :body="statusEditTemplate">
-        <template #body="rowData">
-          <Dropdown v-model="rowData.data.ordersStatus" :options="statusOptions" optionLabel="label"
-            optionValue="value" />
-        </template>
-      </Column> -->
-      <!-- <Column field="ordersStatus" header="Trạng thái" :body="statusBodyTemplate" sortable="custom"
-        :sort-function="customSort">
-        <template #body="rowData">
-          <span :class="getStatusBadgeClass(rowData.data.ordersStatus)">
-            {{ rowData.data.ordersStatus }}
-          </span>
-        </template>
-      </Column> -->
       <Column header="Xem đơn hàng" :body="viewOrderTemplate">
         <template #body="rowData">
           <div class="category-list__actions">
             <Button icon="pi pi-pencil" class="p-button-rounded p-button-success"
               @click="openOrderDialog(rowData.data)"></Button>
-            <Button icon="" class="p-button-success" @click="updateOrderStatusDialog(rowData.data)"></Button>
           </div>
         </template>
       </Column>
@@ -79,10 +63,6 @@
         <div class="p-field">
           <label for="orderDate">Ngày đặt hàng</label>
           <Calendar id="orderDate" v-model="formattedDate" :disabled="isEditing"></Calendar>
-        </div>
-        <div class="p-field">
-          <label for="customerStatus">Trạng thái</label>
-          <InputText id="customerStatus" v-model="currentOrder.ordersStatus"></InputText>
         </div>
         <div class="p-field">
           <label for="products">Danh sách sản phẩm</label>
@@ -151,8 +131,9 @@ const updateOrderStatus = async (order: OrderType) => {
 const filterKeyword = ref('');
 const filterStatus = ref('');
 const statusOptions = [
-  { label: 'Chưa xử lý', value: 'Chưa xử lý' },
   { label: 'Đang xử lý', value: 'Đang xử lý' },
+  { label: 'Đã xác nhận', value: 'Đã xác nhận' },
+  { label: 'Đang giao', value: 'Đang giao' },
   { label: 'Hoàn thành', value: 'Hoàn thành' },
 ];
 
@@ -194,7 +175,7 @@ const formattedName = computed(() => {
 
 const openOrderDialog = (order: OrderType) => {
   currentOrder.value = { ...order };
-  dialogHeader.value = `Thông tin đơn hàng #${order.orderId}`;
+  dialogHeader.value = `Thông tin đơn hàng `;
   dialogVisible.value = true;
 };
 
