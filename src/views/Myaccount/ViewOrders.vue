@@ -3,9 +3,9 @@
     <h1 class="order-list__title flex justify-center mt-4">DANH SÁCH ĐƠN HÀNG</h1>
     <DataTable :value="filteredOrders" :paginator="true" :rows="10" :rows-per-page-options="[5, 10, 25]"
       :sort-mode="'multiple'">
-      <Column field="orderTotalPrice" header="Tổng số tiền" sortable="custom" :sort-function="customSort">
+      <Column field="createdAt" header="Ngày đặt hàng" sortable="custom" :sort-function="customSort">
         <template #body="rowData">
-          {{ priceInVND(rowData.data.orderTotalPrice) }} VND
+          {{ moment(rowData.data.createdAt, 'YYYY-MM-DD HH:mm:ss.SSSSSS').format('DD-MM-YYYY') }}
         </template>
       </Column>
       <Column field="ordersStatus" header="Trạng thái" :body="statusBodyTemplate" sortable="custom"
@@ -14,6 +14,11 @@
           <span :class="getStatusBadgeClass(rowData.data.ordersStatus)">
             {{ rowData.data.ordersStatus }}
           </span>
+        </template>
+      </Column>
+      <Column field="orderTotalPrice" header="Tổng số tiền" sortable="custom" :sort-function="customSort">
+        <template #body="rowData">
+          {{ priceInVND(rowData.data.orderTotalPrice) }} VND
         </template>
       </Column>
       <Column header="Xem đơn hàng" :body="viewOrderTemplate">
@@ -127,7 +132,7 @@ const priceInVND = computed(() => {
 const formattedDate = computed(() => {
   if (currentOrder.value && currentOrder.value.createdAt) {
     const datetime = moment(currentOrder.value.createdAt, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
-    return datetime.format('YYYY-MM-DD HH:mm:ss');
+    return datetime.format('DD-MM-YYYY HH:mm:ss');
   }
   return null;
 });
