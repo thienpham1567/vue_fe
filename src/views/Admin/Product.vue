@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex font-bold text-4xl justify-center mb-4">Sản phẩm</div>
+        <div class="flex font-bold text-4xl justify-center mb-4">SẢN PHẨM</div>
         <div class=" mb-4">
             <div class="flex justify-between ml-2 mr-4">
                 <div class="w-1/2 ml-2 mr-2">
@@ -59,12 +59,16 @@
             </div>
         </div>
         <div class="border-b border-gray-400"></div>
-        <div class=" mb-4 mt-12">
+        <div class=" mb-4 mt-4">
             <div class="product-list__table">
                 <div class="flex justify-center">
-                    <h2 class="text-3xl font-semibold">Danh sách sản phẩm</h2>
+                    <h2 class="text-3xl font-semibold mb-4">DANH SÁCH SẢN PHẨM</h2>
                 </div>
-                <DataTable :value="products" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
+                <div class="flex justify-end mb-4">
+                    <InputText v-model="searchText" placeholder="Tìm theo tên sản phẩm" @input="searchData"
+                        class="search-down"></InputText>
+                </div>
+                <DataTable :value="filtered" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
                     <Column field="productId" header="ID sản phẩm"></Column>
                     <Column field="brand.brandId" header="ID Thương hiệu">
                         <template #body="rowData">
@@ -104,9 +108,9 @@
                         <template #body="rowData">
                             <div class="product-list__actions">
                                 <Button @click="editData(rowData)" icon="pi pi-pencil"
-                                    class=" p-button-rounded p-button-success"></Button>
+                                    class=" p-button-sm p-button-success"></Button>
                                 <Button @click="showDeleteDialog(rowData.data)" icon="pi pi-trash"
-                                    class="p-button-rounded p-button-danger"></Button>
+                                    class="p-button-sm p-button-danger"></Button>
                             </div>
                         </template>
                     </Column>
@@ -159,6 +163,25 @@ const productStore = useProductAdminStore();
 const products = ref<ProductType[]>([]);
 const currentProduct = ref<ProductType>({});
 const selectedProduct = ref<ProductType | null>(null);
+
+const searchKey = ref(0);
+const searchText = ref('');
+const searchData = () => {
+    searchKey.value += 1;
+};
+
+const filtered = computed(() => {
+    const filtereds = products.value;
+    const searchValue = searchText.value.trim().toLowerCase();
+
+    if (searchValue !== '') {
+        return filtereds.filter((product: ProductType) =>
+            product.name?.toLowerCase().includes(searchValue)
+        );
+    }
+
+    return filtereds;
+});
 
 const categoriesWithLabel = computed(() =>
     categoryStore.getCategories.value.filter(category => category.parentCategory?.categoryId !== null).map((category) => ({
@@ -336,5 +359,13 @@ const priceInVND = computed(() => {
 
 .p-datatable tbody td .vnd {
     white-space: nowrap;
+}
+
+.search-down {
+    width: 100rem;
+}
+
+.p-inputext {
+    width: 100%;
 }
 </style>
