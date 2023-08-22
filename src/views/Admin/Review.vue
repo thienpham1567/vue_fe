@@ -1,22 +1,22 @@
 <template>
   <div class="account-management">
-    <div class="flex justify-center text-3xl font-bold mb-4">Reviews</div>
+    <div class="flex justify-center text-3xl font-bold mb-4">DANH SÁCH BÌNH LUẬN</div>
 
     <div class="account-management__user-accounts">
       <DataTable :value="reviews" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
-        <Column field="reviewId" header="Review Id"></Column>
-        <Column field="user.emailAddress" header="User email"></Column>
-        <Column field="productVariationId" header="Product Variation">
+        <Column field="reviewId" header="Id"></Column>
+        <Column field="user.emailAddress" header="Email"></Column>
+        <Column field="productVariationId" header="Sản phẩm">
           <template #body="rowData">
             <div>{{ getProductVariationName(rowData.data.productVariationId) }}</div>
           </template>
         </Column>
-        <Column field="content" header="Content"></Column>
+        <Column field="content" header="Nội dung"></Column>
 
-        <Column field="rateStar" header="Rate Star"></Column>
+        <Column field="rateStar" header="đánh giá sao"></Column>
         <!-- Add more columns as needed -->
 
-        <Column header="Tools">
+        <Column header="Công cụ">
           <template #body="rowData">
             <div class="product-list__actions">
               <Button @click="showDeleteDialog(rowData.data)" icon="pi pi-trash"

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex font-bold text-4xl justify-center mb-4">Hình sản phẩm</div>
+        <div class="flex font-bold text-4xl justify-center mb-4">HÌNH ẢNH SẢN PHẨM</div>
         <div class=" mb-4">
             <div class="flex justify-between ml-2 mr-2">
                 <div class="w-full ml-2 mr-2">
@@ -67,12 +67,16 @@
             </div>
         </div>
         <div class="border-b border-gray-400"></div>
-        <div class=" mb-4 mt-6">
+        <div class=" mb-4 mt-4">
             <div class="product-list__table">
-                <div class="flex justify-center mb-6">
-                    <h2 class="text-3xl font-semibold">Danh sách hình sản phẩm</h2>
+                <div class="flex justify-center mb-4">
+                    <h2 class="text-3xl font-semibold">DANH SÁCH HÌNH ẢNH SẢN PHẨM</h2>
                 </div>
-                <DataTable :value="productImages" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
+                <div class="flex justify-end mb-4">
+                    <InputText v-model="searchText" placeholder="Tìm theo tên sản phẩm" @input="searchData"
+                        class="search-down"></InputText>
+                </div>
+                <DataTable :value="filtered" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
                     <Column field="productImageld" header="ID hình sản phẩm"></Column>
                     <Column header="Hình">
                         <template #body="Props">
@@ -91,9 +95,9 @@
                         <template #body="rowData">
                             <div class="product-list__actions">
                                 <Button @click="editData(rowData)" icon="pi pi-pencil"
-                                    class=" p-button-rounded p-button-success"></Button>
+                                    class=" p-button-sm p-button-success"></Button>
                                 <Button @click="showDeleteDialog(rowData.data)" icon="pi pi-trash"
-                                    class="p-button-rounded p-button-danger"></Button>
+                                    class="p-button-sm p-button-danger"></Button>
                             </div>
                         </template>
                     </Column>
@@ -130,7 +134,6 @@ import useProductImageAdminStore from '@/store/ProductImageAdminStore';
 import useProductVariationAdminStore from '@/store/ProductVariationAdminStore';
 import { ProductImagesType, CreationProductImageParams, UpdateParams } from '@/types/productImages';
 import { ProductVariationType } from '@/types/productVariation';
-import ProductVariation from '@/models/ProductVariation';
 
 //---------------------------------------
 const ingredient = ref('false');
@@ -155,19 +158,29 @@ const productVariationWithLabel = computed(() =>
     }))
 );
 const currentImageURL = ref('');
+
+const searchKey = ref(0);
+const searchText = ref('');
+const searchData = () => {
+    searchKey.value += 1;
+};
+
+const filtered = computed(() => {
+    const filtereds = productImages.value;
+    const searchValue = searchText.value.trim().toLowerCase();
+
+    if (searchValue !== '') {
+        return filtereds.filter((product: ProductImagesType) =>
+            product.productVariation?.product?.name?.toLowerCase().includes(searchValue)
+        );
+    }
+
+    return filtereds;
+});
 watch(currentImageURL, (newValue) => {
 
 });
 
-// Tính toán productVariationWithLabel
-const productVariationsWithLabel = computed(() =>
-    productVariations.value
-        .filter(productVariation => productVariation.productVariationId !== null)
-        .map((productVariation) => ({
-            ...productVariation,
-            label: `${productVariation.product?.name}`
-        }))
-);
 // Method để tìm tên tương ứng với productVariationId
 function getProductVariationName(productVariationId: ProductVariationType) {
     const matchedProductVariation = productVariationWithLabel.value.find(
@@ -319,5 +332,9 @@ const editData = (rowData: { data: ProductImagesType }) => {
 .product-list__dialog-buttons {
     display: flex;
     justify-content: flex-end;
+}
+
+.search-down {
+    width: 100rem;
 }
 </style>

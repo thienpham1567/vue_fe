@@ -32,7 +32,7 @@
             </div>
             <div class="mt-4">
                 <div
-                    v-if="selectedProduct.product?.category?.parentCategory?.name === 'Men' || selectedProduct.product?.category?.parentCategory?.name === 'Women'">
+                    v-if="sizeShoesMenWomen">
                     <label class="text-l font-semibold">Men's Sizes:</label>
                     <div class="flex flex-row flex-wrap gap-2 mt-1">
                         <div v-for="size in adultShoesSizes" :key="size.sizeId" class="size">
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </div>
-                <div v-else-if="selectedProduct.product?.category?.parentCategory?.name === 'Kid'">
+                <div v-else-if="sizeShoesKids">
                     <label class="text-l font-semibold">Kid's Sizes:</label>
                     <div class="flex flex-row flex-wrap gap-2 mt-1">
                         <div v-for="size in kidShoesSizes" :key="size.sizeId" class="size">
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                 </div>
-                <div v-else-if="selectedProduct.product?.category?.code === 'Clothing'">
+                <div v-else-if="sizeClothing">
                     <label class="text-l font-semibold">Clothing's Sizes:</label>
                     <div class="flex flex-row flex-wrap gap-2 mt-1">
                         <div v-for="size in clothingSizes" :key="size.sizeId" class="size">
@@ -84,9 +84,6 @@
     </div>
 
     <!-- Product like Detail Brand -->
-
-
-
 
     <!-- Review Product -->
     <div class="font-semibold text-2xl">ĐÁNH GIÁ SẢN PHẨM</div>
@@ -161,7 +158,7 @@ const ratingSubmitValue = ref('');
 const commentsValue = ref('');
 const route = useRoute();
 const { productId } = route.params;
-const { getProduct, getAllProducts, fetchOneProduct, getProducts } = useProductStore();
+const { getProduct, getAllProducts, fetchOneProduct, getProducts, fetchProducts, fetchAllProducts } = useProductStore();
 const { fetchReviews, getAllReviews } = useReviewStore();
 const { fetchSizes, getSizes } = useSizeStore();
 const { addUpdateToCart } = useCartStore();
@@ -225,6 +222,7 @@ const clothingSizes = computed(() => {
     });
     return sizes.map(size => {
         let productSizes = selectedProduct.value.productVariationSizes;
+        let productSize = productSizes?.find(sizeProduct => size.sizeId === sizeProduct.size?.sizeId && sizeProduct.quantity! > 0);
         if (productSizes?.find(sizeProduct => size.sizeId === sizeProduct.size?.sizeId && sizeProduct.quantity! > 0)) {
             return {
                 ...size, isOutOfStock: false, productSize: productSize,
@@ -237,9 +235,12 @@ const clothingSizes = computed(() => {
     });
 });
 
-const primaryImage = computed(() => selectedProduct.value.productImages?.find(productImage => productImage.isPrimary));
-const orderImages = computed(() => selectedProduct.value.productImages?.filter(productImage => !productImage.isPrimary));
+const primaryImage = computed(() => selectedProduct.value.productImages?.find(productImage => productImage?.isPrimary));
+const orderImages = computed(() => selectedProduct.value.productImages?.filter(productImage => !productImage?.isPrimary));
 
+const sizeShoesMenWomen = computed(() => (selectedProduct.value.product?.category?.parentCategory?.name === 'Men' || selectedProduct.value.product?.category?.parentCategory?.name === 'Women') && selectedProduct.value.product?.category?.code !== 'Clothing');
+const sizeShoesKids = computed(() => selectedProduct.value.product?.category?.parentCategory?.name === 'Kid' && selectedProduct.value.product?.category?.code !== 'Clothing');
+const sizeClothing = computed(() => selectedProduct.value.product?.category?.code === 'Clothing');
 const handleSaveReview = async () => {
     try {
         const token = localStorage.getItem("token");
@@ -280,12 +281,19 @@ const onSelectProduct = (product: ProductVariationType) => {
 }
 
 const fetchData = () => {
-    Promise.all([fetchReviews(), fetchSizes(), fetchOneProduct(+productId)]).then(() => {
-        selectedProduct.value = getProduct.value;
+    Promise.all([fetchReviews(), fetchSizes()]).then(async () => {
+        if (getProducts.value.length === 0 || getProducts.value == undefined || getProducts.value == null) {
+            await fetchAllProducts();
+            selectedProduct.value = getProducts.value.find(p => p.productVariationId === +productId)!;
+            await fetchProducts(selectedProduct.value.product?.productId!);
+        } else {
+            selectedProduct.value = getProducts.value.find(p => p.productVariationId === +productId)!;
+            await fetchProducts(selectedProduct.value.product?.productId!);
+        }
         filterReviews();
         loadInitialReviews();
+        console.log(selectedProduct.value );
     });
-    console.log(selectedProduct);
 }
 
 const filterReviews = () => {

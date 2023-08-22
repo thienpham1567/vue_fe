@@ -1,20 +1,8 @@
 <template>
   <div class="account-management">
-    <h1 class="account-management__title">Quản lý tài khoản</h1>
-
-    <div class="account-management__stats">
-      <div class="account-management__stat">
-        <div class="account-management__stat-value">{{ userCount }}</div>
-        <div class="account-management__stat-label">Người dùng</div>
-      </div>
-      <div class="account-management__stat">
-        <div class="account-management__stat-value">{{ guestCount }}</div>
-        <div class="account-management__stat-label">Khách vãng lai</div>
-      </div>
-    </div>
+    <h1 class="flex justify-center text-3xl font-bold mb-4">QUẢN LÝ TÀI KHOẢN</h1>
 
     <div class="account-management__admin-accounts">
-      <h2 class="account-management__section-title">Quản lý tài khoản </h2>
       <div class="card flex justify-content-center">
         <input type="text" v-model="searchEmail" placeholder="Tìm kiếm email" class="md:w-20rem w-full h-10"
           @input="searchByEmail" />
@@ -38,7 +26,7 @@
 
 
     <div class="account-management__admin-accounts">
-      <h2 class="account-management__section-title">Phân Quyền</h2>
+      <h2 class="flex justify-center text-3xl font-bold mb-4">PHÂN QUYỀN</h2>
       <div class="card flex justify-content-center">
         <Dropdown v-model="selectedRole" @update:model-value="onSelectRole" :options="roles" optionLabel="code"
           placeholder="Chọn quyền" class="w-full md:w-14rem" />
@@ -272,10 +260,6 @@ function cancelDelete() {
 </script>
   
 <style scoped>
-.account-management {
-  padding: 20px;
-}
-
 .account-management__title {
   font-size: 24px;
   font-weight: bold;

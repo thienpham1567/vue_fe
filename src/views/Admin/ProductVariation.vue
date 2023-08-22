@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex font-bold text-4xl justify-center mb-4">Chi tiết sản phẩm</div>
+        <div class="flex font-bold text-4xl justify-center mb-4">MÀU SẢN PHẨM</div>
         <div class=" mb-4">
             <div class="flex justify-between ml-2 mr-4">
                 <div class="w-1/2 ml-2 mr-2">
@@ -25,22 +25,41 @@
             </div>
         </div>
         <div class="border-b border-gray-400"></div>
-        <div class=" mb-4 mt-12">
+        <div class=" mb-4 mt-4">
             <!--ProductVariation-->
             <div class="account-management__user-accounts">
                 <div class="flex justify-center">
-                    <h2 class="text-3xl font-semibold">Danh sách chi tiết sản phẩm</h2>
+                    <h2 class="text-3xl font-semibold mb-4">DANH SÁCH MÀU SẢN PHẨM</h2>
                 </div>
-                <DataTable :value="productVariations" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
+                <div class="flex w-full">
+                    <div class="mb-4 w-1/2 mr-2 ml-4    ">
+                        <InputText v-model="searchName" placeholder="Tìm theo tên sản phẩm" @input="searchData"
+                            class="md:w-14rem sea">
+                        </InputText>
+                    </div>
+                    <div class="w-1/2 ml-2 mr-4">
+                        <Dropdown v-model="selectedColor" :options="colorss" placeholder="Chọn màu"
+                            class="md:w-14rem  drops" />
+                    </div>
+                </div>
+                <DataTable :value="filtered" :paginator="true" :rows="10" :rowsPerPageOptions="[5, 10, 15]">
                     <Column field="productVariationId" header="ID Chi tiết sản phẩm"></Column>
-                    <Column field="color.value" header="ID màu"></Column>
-                    <Column field="product.name" header="ID sản phẩm"></Column>
+                    <Column header="ID màu">
+                        <template #body="rowData">
+                            {{ rowData.data.color.value }}
+                        </template>
+                    </Column>
+                    <Column header="ID sản phẩm">
+                        <template #body="rowData">
+                            {{ rowData.data.product.name }}
+                        </template>
+                    </Column>
                     <!-- Add more columns as needed -->
                     <Column header="Chỉnh sửa">
                         <template #body="rowData">
                             <div class="brand-list__actions">
                                 <Button @click="showDeleteDialog(rowData.data)" icon="pi pi-trash"
-                                    class="p-button-rounded p-button-danger"></Button>
+                                    class="p-button-sm p-button-danger"></Button>
                             </div>
                         </template>
                     </Column>
@@ -67,7 +86,7 @@ import Column from 'primevue/column';
 // import Textarea from 'primevue/textarea';
 // import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
-// import InputText from 'primevue/inputtext';
+import InputText from 'primevue/inputtext';
 // import TabView from 'primevue/tabview';
 // import TabPanel from 'primevue/tabpanel';
 import Dropdown from 'primevue/dropdown';
@@ -96,11 +115,44 @@ const selectedProduct = ref<ProductType | null>(null);
 /*--ProductVariation: select color--*/
 const colorStore = useColorStore();
 const colors = ref<ColorType[]>([]);
-const selectedColor = ref(null);
+const selectedColor = ref<string | null>(null);
 
 const productVariationStore = useProductVariationAdminStore();
 const productVariations = ref<ProductVariationType[]>([]);
 const currentProductVariation = ref<ProductVariationType>({});
+
+const searchKey = ref(0);
+const searchName = ref("");
+const searchData = () => {
+    searchKey.value += 1;
+};
+
+const colorss = computed(() => {
+    const uniqueColors = Array.from(new Set(productVariations.value.map((item) => item.color)));
+    return uniqueColors.map((color) => color?.value);
+});
+
+
+const filtered = computed(() => {
+    return uniqueReportByProductQuantitys.value.filter((item) => {
+        const nameMatch = !searchName.value || item.product?.name?.toLowerCase().includes(searchName.value.toLowerCase());
+        const colorMatch = !selectedColor.value || item.color.value === selectedColor.value;
+        return nameMatch && colorMatch;
+    });
+});
+
+// Các biến và hàm khác bạn đã sử dụng trong mã gốc
+const uniqueReportByProductQuantitys = computed(() => {
+    const uniqueItems = new Map();
+    for (const item of productVariations.value) {
+        const key = item.product?.name + item.color?.value;
+        if (!uniqueItems.has(key)) {
+            uniqueItems.set(key, item);
+        }
+    }
+    return Array.from(uniqueItems.values());
+});
+
 
 /*--Insert productVariation in admin page--*/
 const handleSaveProductVariation = async () => {
@@ -218,5 +270,15 @@ const handleDelete = async () => {
 .product-list__dialog-buttons {
     display: flex;
     justify-content: flex-end;
+}
+
+.sea {
+    width: 100%;
+    height: 38.7px !important;
+}
+
+.drops {
+    width: 100%;
+    height: 38.7px !important;
 }
 </style>

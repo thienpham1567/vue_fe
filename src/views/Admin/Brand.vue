@@ -1,6 +1,6 @@
 <template>
   <div class="brand-list">
-    <h1 class="brand-list__title">Danh sách thương hiệu</h1>
+    <h1 class="flex font-bold text-4xl justify-center mb-4">DANH SÁCH THƯƠNG HIỆU</h1>
 
     <div class="brand-list__add-button">
       <Button class="p-button-primary" label="Thêm thương hiệu" @click="showAddDialog"></Button>
@@ -13,9 +13,9 @@
         <Column header="Thao tác">
           <template #body="rowData">
             <div class="brand-list__actions">
-              <Button icon="pi pi-pencil" class="p-button-rounded p-button-success"
+              <Button icon="pi pi-pencil" class="p-button-sm p-button-success"
                 @click="showEditDialog(rowData.data)"></Button>
-              <Button icon="pi pi-trash" class="p-button-rounded p-button-danger"
+              <Button icon="pi pi-trash" class="p-button-sm p-button-danger"
                 @click="showDeleteDialog(rowData.data)"></Button>
             </div>
           </template>
@@ -63,12 +63,12 @@ import InputText from 'primevue/inputtext';
 import useBrandStore from '@/store/BrandStore';
 import { BrandType, CreationParams, UpdateParams } from '@/types/brand';
 
-const { 
-    getBrands,
-    fetchBrands,
-    addBrand,
-    updateBrand,
-    deleteBrand
+const {
+  getBrands,
+  fetchBrands,
+  addBrand,
+  updateBrand,
+  deleteBrand
 } = useBrandStore();
 const currentBrand = ref<BrandType>({});
 const dialogVisible = ref(false);
@@ -87,7 +87,7 @@ onMounted(async () => {
 
 
 const showAddDialog = (brand: BrandType) => {
-  currentBrand.value = { ...brand};
+  currentBrand.value = { ...brand };
   isEditing.value = false;
   dialogVisible.value = true;
 };
