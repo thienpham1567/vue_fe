@@ -30,12 +30,12 @@ const useProductStore = defineStore("product", () => {
     await fetchProducts();
   };
 
-  const fetchProducts = async () => {
-    const { data } = await new Product().list({ productId: product.value.product?.productId! });
+  const fetchProducts = async (productId: number) => {
+    const { data } = await new Product().list({ productId: productId });
     products.value = data;
   }
 
-  return { getProduct, getProducts, getAllProducts, fetchAllProducts, fetchOneProduct };
+  return { getProduct, getProducts, getAllProducts, fetchAllProducts, fetchOneProduct, fetchProducts };
 });
 
 export default useProductStore;

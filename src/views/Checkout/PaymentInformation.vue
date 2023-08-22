@@ -120,8 +120,8 @@ onMounted(() => {
 	if (token) {
 		const userDecode = jwt_decode(token);
 		fetchUserAddresses({ userId: userDecode.userId, isDefault: true }).then(async () => {
-			const userAddress = getUserAddresses.value[0];
-			await fetchAddress(userAddress.addressId!);
+			const userAddress = getUserAddresses?.value[0];
+			await fetchAddress(userAddress?.addressId!);
 			await Promise.all([fetchWards(), fetchDistrict(getAddress.value?.districtId!), fetchProvince(getAddress.value?.provinceId!)]);
 			let ward = getWards.value.find(w => w.wardId === getAddress.value?.wardId);
 			setWard(ward!);
