@@ -1,13 +1,25 @@
 <template>
   <div class="order-confirmation">
-    <h1 class="title">XÁC NHẬN ĐƠN HÀNG</h1>
-    <div class="order-details">
-      <p><strong>Ngày thanh toán:</strong> {{ formattedDate }} </p>
-      <p><strong>Phương thức thanh toán:</strong> {{ getOrder.price }} Paypal </p>
-      <p><strong>Tổng tiền:</strong> {{ priceInVND(getOrder.orderTotalPrice) }} VND </p>
-      <p><strong>Tiền ship:</strong> 0.0 </p>
+    <div class="title flex justify-center mb-4 text-3xl font-bold "> XÁC NHẬN ĐƠN HÀNG </div>
+    <h1 class="title flex justify-center mb-4"> CẢM ƠN BẠN ĐÃ MUA HÀNG </h1>
+    <div class="flex mb-4">
+      <div class="w-1/2 justify-end text-right">
+        <p><strong>Ngày thanh toán:</strong> </p>
+        <p><strong>Phương thức thanh toán:</strong></p>
+        <p><strong>Tổng tiền:</strong> </p>
+        <p><strong>Tiền ship:</strong> </p>
+      </div>
+      <div class="w-1/2 text-left ml-4">
+        <p>{{ formattedDate }} </p>
+        <p>{{ getOrder.price }} Paypal </p>
+        <p>{{ priceInVND(getOrder.orderTotalPrice) }} VND </p>
+        <p> 0.0 </p>
+      </div>
     </div>
-    <Button class="cart-btn" @click="goToOrder">View Order History</Button>
+    <div  class="flex justify-center mb-4">
+      <Button class="cart-btn " @click="goToOrder">View Order History</Button>
+    </div>
+    
   </div>
 </template>
 
@@ -58,7 +70,6 @@ onMounted(() => {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  text-align: center;
   border: 2px solid #333;
   /* Viền xung quanh */
   background-color: #f5f5f5;
@@ -100,4 +111,5 @@ onMounted(() => {
 
 .item-info {
   text-align: left;
-}</style>
+}
+</style>
