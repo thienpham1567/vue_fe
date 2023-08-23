@@ -20,6 +20,7 @@ export interface UserRoleResponse {
     message?: string;
 }
 export type UpdateUserRoleParams = Omit<UserRoleType, "id">;
+
 export interface ListResponse {
     status: boolean;
     data?: UserRoleType[];
