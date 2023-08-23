@@ -1,7 +1,7 @@
 <template>
   <nav>
-    <div class="flex items-center justify-between px-6">
-      <div class="flex items-center h-36">
+    <div class="flex items-center justify-between px-6 flex-wrap">
+      <div class="flex items-center">
         <Image :src="Logo" alt="Image" width="180" />
         <div class="p-inputgroup">
           <AutoComplete v-model="searchQuery" :suggestions="filteredProducts" @complete="onSearchComplete"
@@ -14,15 +14,11 @@
           </AutoComplete>
         </div>
       </div>
-      <div class="juistify-between">
-        <div class="flex">
-
-          <Button v-if="getCart.itemTotalQuantity === undefined || getCart.itemTotalQuantity <= 0"
-            icon="pi pi-shopping-cart " class="cart-btn" :label="$t('my-cart')" raised
-            @click="dialogCartVisible = true" />
-          <Button v-else icon="pi pi-shopping-cart " class="cart-btn" :label="`Giỏ hàng ${getCart.itemTotalQuantity}`"
-            raised @click="dialogCartVisible = true" />
-        </div>
+      <div class="pb-4 ms-6 md:pb-0">
+        <Button v-if="getCart.itemTotalQuantity === undefined || getCart.itemTotalQuantity <= 0"
+          icon="pi pi-shopping-cart " class="cart-btn" :label="$t('my-cart')" raised @click="showCart" />
+        <Button v-else icon="pi pi-shopping-cart " class="cart-btn" :label="`Giỏ hàng ${getCart.itemTotalQuantity}`"
+          raised @click="showCart" />
       </div>
 
     </div>
@@ -66,7 +62,7 @@
       </MegaMenu>
     </div>
   </nav>
-  <Sidebar v-model:visible="dialogCartVisible" position="right">
+  <Sidebar v-model:visible="getIsShowSidebarCart" position="right">
     <template #header>
       <div class="text-2xl">{{ $t('my-cart') }}</div>
     </template>
@@ -92,9 +88,9 @@
   <CoreDialog :visible="dialogSignInVisible" header="Sign In" widthSize='500px' position="center"
     @close-dialog="dialogSignInVisible = false">
     <div class="sign-in-btns">
-      <Button label="Sign in with atsport" class="btn" size="small" outlined @click="goToLogin" />
+      <Button label="Đăng nhập với tài khoản Atsport" class="btn" size="small" outlined @click="goToLogin" />
       <p class="text-center">or</p>
-      <Button label="Create your atsport account" class="btn" size="small" outlined @click="goToRegister" />
+      <Button label="Tạo tài khoản Atsport" class="btn" size="small" outlined @click="goToRegister" />
     </div>
   </CoreDialog>
 </template>
@@ -110,7 +106,7 @@ import CoreDialog from '@/components/Core/CoreDialog.vue';
 import Sidebar from 'primevue/sidebar';
 import CartItem from "@/components/CartItems/CartItem.vue";
 import { useRouter } from 'vue-router';
-import { useBrandStore, useAccountStore, useCategoryStore, useCartStore } from "@/store";
+import { useBrandStore, useCategoryStore, useCartStore } from "@/store";
 import { onMounted, ref, watch, computed } from 'vue';
 import jwt_decode from "jwt-decode";
 import { useLanguageStore } from '@/store/language';
@@ -125,7 +121,7 @@ const router = useRouter();
 const { fetchAllProducts, getProducts } = useProductStore();
 const { getBrands, fetchBrands } = useBrandStore();
 const { getCategories, fetchCategories } = useCategoryStore();
-const { getCart, getCartItems, fetchCart } = useCartStore();
+const { getCart, getCartItems, fetchCart, getIsShowSidebarCart, showSidebarCart } = useCartStore();
 const searchQuery = ref('');
 const filteredProducts = ref([]);
 const items = ref([]);
@@ -145,7 +141,7 @@ watch(searchQuery, (newValue) => {
   filterProducts(newValue);
 });
 
-watch(dialogCartVisible, async () => {
+watch(getIsShowSidebarCart, async () => {
   await fetchCart();
 });
 
@@ -292,6 +288,10 @@ function goToFavorite() {
   router.push('/favorite');
 }
 
+const showCart = () => {
+  showSidebarCart();
+}
+
 const languageStore = useLanguageStore();
 
 const selectedLanguage = computed({
@@ -336,15 +336,15 @@ const logout = () => {
 checkToken();
 
 const priceInVND = computed(() => {
-    const usdPrice = getCart.value.itemSubtotalPrice;
-    const exchangeRate = 24000;
+  const usdPrice = getCart.value.itemSubtotalPrice;
+  const exchangeRate = 24000;
 
-    if (usdPrice) {
-        const vndPrice = usdPrice * exchangeRate;
-        return vndPrice.toLocaleString('en-US');
-    }
+  if (usdPrice) {
+    const vndPrice = usdPrice * exchangeRate;
+    return vndPrice.toLocaleString('en-US');
+  }
 
-    return null;
+  return null;
 });
 
 const fetchData = () => {

@@ -19,7 +19,7 @@
                 <label class="text-4xl">{{ priceInVND }} VND</label>
             </div>
             <div class="mt-4">
-                <label class="text-l font-semibold">Color: <span class="inline font-normal">{{ selectedProduct.color?.value
+                <label class="text-l font-semibold">Màu: <span class="inline font-normal">{{ selectedProduct.color?.value
                 }}</span> </label>
                 <div class="flex flex-wrap gap-2 items-center mt-1">
                     <div v-for="product in getAllProducts" :key="product.productVariationId" class="color-product"
@@ -33,7 +33,7 @@
             <div class="mt-4">
                 <div
                     v-if="sizeShoesMenWomen">
-                    <label class="text-l font-semibold">Men's Sizes:</label>
+                    <label class="text-l font-semibold">Kích cỡ người lớn:</label>
                     <div class="flex flex-row flex-wrap gap-2 mt-1">
                         <div v-for="size in adultShoesSizes" :key="size.sizeId" class="size">
                             <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div v-else-if="sizeShoesKids">
-                    <label class="text-l font-semibold">Kid's Sizes:</label>
+                    <label class="text-l font-semibold">Kích cỡ trẻ em:</label>
                     <div class="flex flex-row flex-wrap gap-2 mt-1">
                         <div v-for="size in kidShoesSizes" :key="size.sizeId" class="size">
                             <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
@@ -53,7 +53,7 @@
                     </div>
                 </div>
                 <div v-else-if="sizeClothing">
-                    <label class="text-l font-semibold">Clothing's Sizes:</label>
+                    <label class="text-l font-semibold">Kích cỡ quần áo:</label>
                     <div class="flex flex-row flex-wrap gap-2 mt-1">
                         <div v-for="size in clothingSizes" :key="size.sizeId" class="size">
                             <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"

@@ -76,7 +76,7 @@ import Order from '@/components/Checkout/Order.vue'
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/yup';
 import * as yup from 'yup';
-import { useDistrictStore, useWardStore, useProvinceStore, useAddressStore, useAccountStore, useUserAddressStore } from '@/store';
+import { useDistrictStore, useWardStore, useProvinceStore, useAddressStore, useAccountStore, useUserAddressStore, useCartStore } from '@/store';
 import { onMounted } from 'vue';
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
@@ -98,6 +98,7 @@ const items = ref([
 ]);
 
 const router = useRouter();
+const { hideSidebarCart } = useCartStore();
 const { fetchWards, fetchWard, getWards, getWard, setWard } = useWardStore();
 const { fetchDistricts, fetchDistrict, getDistricts, getDistrict } = useDistrictStore();
 const { fetchProvinces, fetchProvince, getProvinces, getProvince } = useProvinceStore();
@@ -183,6 +184,7 @@ const backToCart = () => {
 }
 
 const fetchData = () => {
+	hideSidebarCart();
 	Promise.all([fetchWards(), fetchDistricts(), fetchProvinces()]).then(() => {
 		const token = getCurrentToken();
 		if (token) {
