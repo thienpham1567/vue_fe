@@ -1,5 +1,5 @@
 <template>
-  <div class="order-confirmation">
+  <div class="border shadow rounded p-4">
     <div class="title flex justify-center mb-4 text-3xl font-bold "> XÁC NHẬN ĐƠN HÀNG </div>
     <h1 class="title flex justify-center mb-4"> CẢM ƠN BẠN ĐÃ MUA HÀNG </h1>
     <div class="flex mb-4">
@@ -17,14 +17,13 @@
       </div>
     </div>
     <div  class="flex justify-center mb-4">
-      <Button class="cart-btn " @click="goToOrder">View Order History</Button>
+      <Button class="cart-btn btn-color-medium" @click="goToOrder">View Order History</Button>
     </div>
     
   </div>
 </template>
 
 <script setup lang="ts">
-// import { ref } from 'vue';
 import useCartStore from '@/store/Cart';
 import useOrderStore from '@/store/OrderStore';
 import { computed, onMounted } from 'vue';
