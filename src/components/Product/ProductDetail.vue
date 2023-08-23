@@ -1,143 +1,147 @@
 <template>
-    <div class="flex justify-center gap-2">
-        <div class="w-full lg:w-7/12 ml-2 mr-2 mb-4">
-            <Image :src="primaryImage?.imageUrl" alt="Image" preview />
-            <div class="flex gap-1">
-                <div v-for="image in orderImages">
-                    <Image :src="image?.imageUrl" alt="Image" preview />
-                </div>
-            </div>
-        </div>
-        <div class="lg:w-5/12 mr-4 mb-4 sticky top-0">
-            <div>
-                <label class="text-2xl">{{ selectedProduct.product?.brand?.name }}</label>
-            </div>
-            <div class="mt-2">
-                <label class="text-xl">{{ selectedProduct.product?.name }}</label>
-            </div>
-            <div class="mt-2">
-                <label class="text-4xl">{{ priceInVND }} VND</label>
-            </div>
-            <div class="mt-4">
-                <label class="text-l font-semibold">Màu: <span class="inline font-normal">{{ selectedProduct.color?.value
-                }}</span> </label>
-                <div class="flex flex-wrap gap-2 items-center mt-1">
-                    <div v-for="product in getAllProducts" :key="product.productVariationId" class="color-product"
-                        :class="{ 'selected-color': selectedProduct.color?.colorId === product.color?.colorId }"
-                        @click="onSelectProduct(product)">
-                        <Image :src="product.productImages?.find(image => image.isPrimary === true)?.imageUrl" alt="Image"
-                            width="80" />
+    <div v-if="loading" class="text-center max-h-screen mt-96">
+        <ProgressSpinner />
+    </div>
+    <div v-else>
+        <div class="flex justify-center gap-2">
+            <div class="w-full lg:w-7/12 ml-2 mr-2 mb-4">
+                <Image :src="primaryImage?.imageUrl" alt="Image" preview />
+                <div class="flex gap-1">
+                    <div v-for="image in orderImages">
+                        <Image :src="image?.imageUrl" alt="Image" preview />
                     </div>
                 </div>
             </div>
-            <div class="mt-4">
-                <div
-                    v-if="sizeShoesMenWomen">
-                    <label class="text-l font-semibold">Kích cỡ người lớn:</label>
-                    <div class="flex flex-row flex-wrap gap-2 mt-1">
-                        <div v-for="size in adultShoesSizes" :key="size.sizeId" class="size">
-                            <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
-                                :disabled="size.isOutOfStock" />
-                            <label :for="size.sizeId?.toString()">{{ size.value }}</label>
-                        </div>
-                    </div>
-                </div>
-                <div v-else-if="sizeShoesKids">
-                    <label class="text-l font-semibold">Kích cỡ trẻ em:</label>
-                    <div class="flex flex-row flex-wrap gap-2 mt-1">
-                        <div v-for="size in kidShoesSizes" :key="size.sizeId" class="size">
-                            <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
-                                :disabled="size.isOutOfStock" />
-                            <label :for="size.sizeId?.toString()">{{ size.value }}</label>
-                        </div>
-                    </div>
-                </div>
-                <div v-else-if="sizeClothing">
-                    <label class="text-l font-semibold">Kích cỡ quần áo:</label>
-                    <div class="flex flex-row flex-wrap gap-2 mt-1">
-                        <div v-for="size in clothingSizes" :key="size.sizeId" class="size">
-                            <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
-                                :disabled="size.isOutOfStock" />
-                            <label :for="size.sizeId?.toString()">{{ size.value }}</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-3">
-                <Button label="Add to cart" class="btn w-full" size="small" @click="addCart" />
-            </div>
-
-            <div class="mt-4">
-                <div class="font-semibold text-2xl">ĐÁNH GIÁ CỦA BẠN</div>
-                <div class="border-b border-gray-400 mb-4"></div>
-                <div class="flex justify-center">
-                    <Rating v-model="ratingSubmitValue" class="mb-2" />
-                </div>
-                <div class="w-full mt-2">
-                    <Textarea v-model="commentsValue" rows="5" class="w-full" />
+            <div class="lg:w-5/12 mr-4 mb-4 sticky top-0">
+                <div>
+                    <label class="text-2xl">{{ selectedProduct.product?.brand?.name }}</label>
                 </div>
                 <div class="mt-2">
-                    <Button label="GỬI ĐÁNH GIÁ CỦA BẠN" class="btn w-full" size="small" @click="handleSaveReview" />
+                    <label class="text-xl">{{ selectedProduct.product?.name }}</label>
+                </div>
+                <div class="mt-2">
+                    <label class="text-4xl">{{ priceInVND }} VND</label>
+                </div>
+                <div class="mt-4">
+                    <label class="text-l font-semibold">Màu: <span class="inline font-normal">{{
+                        selectedProduct.color?.value
+                    }}</span> </label>
+                    <div class="flex flex-wrap gap-2 items-center mt-1">
+                        <div v-for="product in getAllProducts" :key="product.productVariationId" class="color-product"
+                            :class="{ 'selected-color': selectedProduct.color?.colorId === product.color?.colorId }"
+                            @click="onSelectProduct(product)">
+                            <Image :src="product.productImages?.find(image => image.isPrimary === true)?.imageUrl"
+                                alt="Image" width="80" />
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div v-if="sizeShoesMenWomen">
+                        <label class="text-l font-semibold">Kích cỡ người lớn:</label>
+                        <div class="flex flex-row flex-wrap gap-2 mt-1">
+                            <div v-for="size in adultShoesSizes" :key="size.sizeId" class="size">
+                                <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
+                                    :disabled="size.isOutOfStock" />
+                                <label :for="size.sizeId?.toString()">{{ size.value }}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else-if="sizeShoesKids">
+                        <label class="text-l font-semibold">Kích cỡ trẻ em:</label>
+                        <div class="flex flex-row flex-wrap gap-2 mt-1">
+                            <div v-for="size in kidShoesSizes" :key="size.sizeId" class="size">
+                                <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
+                                    :disabled="size.isOutOfStock" />
+                                <label :for="size.sizeId?.toString()">{{ size.value }}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else-if="sizeClothing">
+                        <label class="text-l font-semibold">Kích cỡ quần áo:</label>
+                        <div class="flex flex-row flex-wrap gap-2 mt-1">
+                            <div v-for="size in clothingSizes" :key="size.sizeId" class="size">
+                                <RadioButton v-model="selectedSize" :inputId="size.sizeId?.toString()" :value="size"
+                                    :disabled="size.isOutOfStock" />
+                                <label :for="size.sizeId?.toString()">{{ size.value }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <Button label="Add to cart" class="btn w-full" size="small" @click="addCart" />
+                </div>
+
+                <div class="mt-4">
+                    <div class="font-semibold text-2xl">ĐÁNH GIÁ CỦA BẠN</div>
+                    <div class="border-b border-gray-400 mb-4"></div>
+                    <div class="flex justify-center">
+                        <Rating v-model="ratingSubmitValue" class="mb-2" />
+                    </div>
+                    <div class="w-full mt-2">
+                        <Textarea v-model="commentsValue" rows="5" class="w-full" />
+                    </div>
+                    <div class="mt-2">
+                        <Button label="GỬI ĐÁNH GIÁ CỦA BẠN" class="btn w-full" size="small" @click="handleSaveReview" />
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Product like Detail Brand -->
-
-    <!-- Review Product -->
-    <div class="font-semibold text-2xl">ĐÁNH GIÁ SẢN PHẨM</div>
-    <div class="border-b border-gray-400 mb-4"></div>
-    <div class="flex mb-4" v-for="(review, index) in displayedReviews" :key="review.reviewId">
-        <div class="w-1/12">
-            <div class=" bg-slate-300 rounded-3xl h-10 ">
-                <div class="flex justify-center pt-2 ">
-                    <i class="pi pi-user" style="font-size: 2rem"></i>
+        <!-- Review Product -->
+        <div class="font-semibold text-2xl">ĐÁNH GIÁ SẢN PHẨM</div>
+        <div class="border-b border-gray-400 mb-4"></div>
+        <div class="flex mb-4" v-for="(review, index) in displayedReviews" :key="review.reviewId">
+            <div class="w-1/12">
+                <div class=" bg-slate-300 rounded-3xl h-10 ">
+                    <div class="flex justify-center pt-2 ">
+                        <i class="pi pi-user" style="font-size: 2rem"></i>
+                    </div>
                 </div>
             </div>
+            <div class="w-2/3 pl-4">
+                <div class="font-semibold mb-2">{{ review?.user.emailAddress }}</div>
+                <div class=" mb-2">Sản phẩm: {{ selectedProduct?.product?.name }}</div>
+                <Rating v-model="review.rateStar" class="mb-2" :cancel="false" readonly />
+                <div class="mb-2">Thương hiệu:
+                    {{ selectedProduct.product?.brand?.name }}</div>
+                <div mb-2>Đã đánh giá: {{ review.content }}</div>
+            </div>
         </div>
-        <div class="w-2/3 pl-4">
-            <div class="font-semibold mb-2">{{ review?.user.emailAddress }}</div>
-            <div class=" mb-2">Sản phẩm: {{ selectedProduct?.product?.name }}</div>
-            <Rating v-model="review.rateStar" class="mb-2" :cancel="false" readonly />
-            <div class="mb-2">Thương hiệu:
-                {{ selectedProduct.product?.brand?.name }}</div>
-            <div mb-2>Đã đánh giá: {{ review.content }}</div>
+        <div class="flex justify-center">
+            <div v-if="displayedReviews.length < filteredReviews.length" class="flex justify-center mr-4">
+                <button @click="loadMoreReviews" class="text-blue-500 hover:text-blue-700 text-lg font-semibold">Xem
+                    thêm
+                    <i class="pi pi-chevron-down"></i>
+                </button>
+            </div>
+            <div v-if="displayedReviews.length > reviewsPerLoad" class="flex justify-center">
+                <button @click="collapseReviews" class="text-blue-500 hover:text-blue-700 text-lg font-semibold">Thu
+                    lại
+                    <i class="pi pi-chevron-up"></i>
+                </button>
+            </div>
         </div>
-    </div>
-    <div class="flex justify-center">
-        <div v-if="displayedReviews.length < filteredReviews.length" class="flex justify-center mr-4">
-            <button @click="loadMoreReviews" class="text-blue-500 hover:text-blue-700 text-lg font-semibold">Xem
-                thêm
-                <i class="pi pi-chevron-down"></i>
-            </button>
-        </div>
-        <div v-if="displayedReviews.length > reviewsPerLoad" class="flex justify-center">
-            <button @click="collapseReviews" class="text-blue-500 hover:text-blue-700 text-lg font-semibold">Thu
-                lại
-                <i class="pi pi-chevron-up"></i>
-            </button>
-        </div>
-    </div>
 
-    <!-- Product -->
-    <div class="mt-4 mb-4">
-        <div class="font-semibold text-2xl">SẢN PHẨM CÓ THỂ BẠN QUAN TÂM</div>
-        <div class="border-b border-gray-400"></div>
-    </div>
+        <!-- Product -->
+        <div class="mt-4 mb-4">
+            <div class="font-semibold text-2xl">SẢN PHẨM CÓ THỂ BẠN QUAN TÂM</div>
+            <div class="border-b border-gray-400"></div>
+        </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 justify-center">
-        <Product v-for="(product, index) in randomsProducts" :key="product.id" :product="product" class="" />
-    </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 justify-center">
+            <Product v-for="(product, index) in randomsProducts" :key="product.id" :product="product" class="" />
+        </div>
 
-    <div class="  justify-center text-center animate-bounce">
-        <Button v-if="showLoadMoreRandomsButton" text @click="loadMoreRandomsProducts"
-            class="w-full sign-in-register-btn justify-center">Show
-            more</Button>
+        <div class="  justify-center text-center animate-bounce">
+            <Button v-if="showLoadMoreRandomsButton" text @click="loadMoreRandomsProducts"
+                class="w-full sign-in-register-btn justify-center">Show
+                more</Button>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import ProgressSpinner from 'primevue/progressspinner';
 import Rating from 'primevue/rating';
 import Textarea from 'primevue/textarea';
 import 'primeicons/primeicons.css';
@@ -165,6 +169,7 @@ const { addUpdateToCart } = useCartStore();
 const reviewStore = useReviewStore();
 let displayedReviews = ref([]);
 const reviewsPerLoad = 2;
+let loading = ref(false);
 
 let selectedProduct: Ref<ProductVariationType> = ref({});
 let selectedSize: Ref<ProductVariationSizeType> = ref({});
@@ -281,18 +286,21 @@ const onSelectProduct = (product: ProductVariationType) => {
 }
 
 const fetchData = () => {
+    loading.value = true;
     Promise.all([fetchReviews(), fetchSizes()]).then(async () => {
         if (getProducts.value.length === 0 || getProducts.value == undefined || getProducts.value == null) {
             await fetchAllProducts();
             selectedProduct.value = getProducts.value.find(p => p.productVariationId === +productId)!;
             await fetchProducts(selectedProduct.value.product?.productId!);
+            loading.value = false;
         } else {
             selectedProduct.value = getProducts.value.find(p => p.productVariationId === +productId)!;
             await fetchProducts(selectedProduct.value.product?.productId!);
+            loading.value = false;
         }
         filterReviews();
         loadInitialReviews();
-        console.log(selectedProduct.value );
+        console.log(selectedProduct.value);
     });
 }
 

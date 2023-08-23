@@ -1,5 +1,8 @@
 <template>
-    <div class="flex">
+    <div v-if="loading" class="text-center max-h-screen mt-96">
+        <ProgressSpinner />
+    </div>
+    <div v-else class="flex">
         <div class="flex flex-col h-full mt-4">
             <aside class="  flex-grow rounded-lg md:w-80 lg:w-80">
                 <div class="mb-4" v-if="checkBrand">
@@ -96,6 +99,7 @@
 </template>
 
 <script setup lang="ts">
+import ProgressSpinner from 'primevue/progressspinner';
 import { useProductStore } from '@/store';
 import { onMounted, watch, ref } from 'vue'
 import Product from '@/components/Product/Product.vue'
@@ -105,28 +109,33 @@ import Checkbox from 'primevue/checkbox';
 
 const route = useRoute();
 const { fetchAllProducts, getProducts } = useProductStore();
+let loading = ref(false);
 
 
 watch(
     () => route.query,
     toParams => {
         if (toParams.brand || toParams.category) {
+            loading.value = true;
             fetchAllProducts(toParams.brand, toParams.category).then(() => {
                 check();
                 if (selectedPrices.value && selectedSizes.value && selectedBrands.value) {
                     productAll.value = getProducts.value;
                 }
+                loading.value = false;
             });;
         }
     }
 );
 
 onMounted(() => {
+    loading.value = true;
     fetchAllProducts(route.query.brand, route.query.category).then(() => {
         check();
         if (selectedPrices.value && selectedSizes.value && selectedBrands.value) {
             productAll.value = getProducts.value;
         }
+        loading.value = false;
     });
 });
 

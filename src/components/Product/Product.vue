@@ -12,7 +12,6 @@
             </div>
         </template>
         <template #content>{{ priceInVND }} VND</template>
-        <template #footer></template>
     </Card>
 </template>
 
