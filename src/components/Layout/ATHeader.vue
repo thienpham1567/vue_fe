@@ -2,7 +2,7 @@
   <nav>
     <div class="flex items-center justify-between px-6 flex-wrap">
       <div class="flex items-center">
-        <Image :src="Logo" alt="Image" width="180" />
+        <Image :src="Logo" alt="Image" width="180" @click="backHome" class="cursor-pointer"/>
         <div class="p-inputgroup">
           <AutoComplete v-model="searchQuery" :suggestions="filteredProducts" @complete="onSearchComplete"
             placeholder="Search for shoes, clothes, etc." field="name">
@@ -144,6 +144,10 @@ watch(searchQuery, (newValue) => {
 watch(getIsShowSidebarCart, async () => {
   await fetchCart();
 });
+
+const backHome = () => {
+  router.push({name: "Home"});
+}
 
 
 function filterProducts(query: string) {
