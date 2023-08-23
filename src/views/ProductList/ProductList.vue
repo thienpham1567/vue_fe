@@ -4,90 +4,99 @@
     </div>
     <div v-else class="flex">
         <div class="flex flex-col h-full mt-4">
-            <aside class="  flex-grow rounded-lg md:w-80 lg:w-80">
-                <div class="mb-4" v-if="checkBrand">
-                    <button class="text-xl font-bold ml-0 block" @click="toggleSection('category')">
-                        <span v-if="showCategorySection">
-                            <i class="pi pi-chevron-down"></i>
-                        </span>
-                        <span v-else>
-                            <i class="pi pi-chevron-up"></i>
-                        </span>
-                        Phân loại
-                    </button>
-                </div>
-                <div v-show="!showCategorySection" v-if="checkBrand">
-                    <div class="flex flex-col">
-                        <div v-for="category of categoryObject" :key="category.key"
-                            class="flex align-items-center mb-3 ml-5">
-                            <Checkbox v-model="selectedCategorys" :inputId="category.key" name="category"
-                                :value="category.value" @update:modelValue="filterProduct" />
-                            <label :for="category.key" class="ml-1">{{ category.name }}</label>
-                        </div>
+            <aside class="flex-grow rounded-lg w-72">
+                <div class="border p-2" v-if="checkBrand">
+                    <div class="mb-2" v-if="checkBrand">
+                        <button class="ml-0 block text-lg font-medium" @click="toggleSection('category')">
+                            <span v-if="showCategorySection">
+                                <i class="pi pi-chevron-down"></i>
+                            </span>
+                            <span v-else>
+                                <i class="pi pi-chevron-up"></i>
+                            </span>
+                            Phân loại
+                        </button>
                     </div>
-                </div>
-                <div class="mb-4" v-if="!checkBrand">
-                    <button class="text-xl font-bold ml-0 block" @click="toggleSection('brand')">
-                        <span v-if="showBrandSection">
-                            <i class="pi pi-chevron-down"></i>
-                        </span>
-                        <span v-else>
-                            <i class="pi pi-chevron-up"></i>
-                        </span>
-                        Thương hiệu
-                    </button>
-                </div>
-                <div v-show="!showBrandSection" v-if="!checkBrand">
-                    <div class="flex flex-col">
-                        <div v-for="brand of brandObject" :key="brand.key" class="flex align-items-center mb-3 ml-5">
-                            <Checkbox v-model="selectedBrands" :inputId="brand.key" name="brand" :value="brand.value"
-                                @update:modelValue="filterProduct" />
-                            <label :for="brand.key" class="ml-1">{{ brand.value }}</label>
+                    <div v-show="!showCategorySection" v-if="checkBrand">
+                        <div class="flex flex-col">
+                            <div v-for="category of categoryObject" :key="category.key"
+                                class="flex align-items-center mb-3 ml-5">
+                                <Checkbox v-model="selectedCategorys" :inputId="category.key" name="category"
+                                    :value="category.value" @update:modelValue="filterProduct" />
+                                <label :for="category.key" class="ml-1">{{ category.name }}</label>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <button class="text-xl font-bold ml-0 block" @click="toggleSection('price')">
-                        <span v-if="showPriceSection">
-                            <i class="pi pi-chevron-down"></i>
-                        </span>
-                        <span v-else>
-                            <i class="pi pi-chevron-up"></i>
-                        </span>
-                        Khoảng giá
-                    </button>
-                </div>
-                <div v-show="!showPriceSection">
-                    <div class="flex flex-col">
-                        <div v-for="price of priceObject" :key="price.key" class="flex align-items-center mb-3 ml-5">
-                            <Checkbox v-model="selectedPrices" :inputId="price.key" name="price" :value="price.value"
-                                @update:modelValue="filterProduct" />
-                            <label :for="price.key" class="ml-1">{{ price.name }}</label>
+                <div class="border p-2" v-if="!checkBrand">
+                    <div class="mb-2" v-if="!checkBrand">
+                        <button class="text-lg font-medium ml-0 block" @click="toggleSection('brand')">
+                            <span v-if="showBrandSection">
+                                <i class="pi pi-chevron-down"></i>
+                            </span>
+                            <span v-else>
+                                <i class="pi pi-chevron-up"></i>
+                            </span>
+                            Thương hiệu
+                        </button>
+                    </div>
+                    <div v-show="!showBrandSection" v-if="!checkBrand">
+                        <div class="flex flex-col">
+                            <div v-for="brand of brandObject" :key="brand.key" class="flex align-items-center mb-3 ml-5">
+                                <Checkbox v-model="selectedBrands" :inputId="brand.key" name="brand" :value="brand.value"
+                                    @update:modelValue="filterProduct" />
+                                <label :for="brand.key" class="ml-1">{{ brand.value }}</label>
+                            </div>
                         </div>
-                        <!-- Thêm các checkbox khoảng giá khác nếu cần -->
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <button class="text-xl font-bold ml-0 block" @click="toggleSection('size')">
-                        <span v-if="showSizeSection">
-                            <i class="pi pi-chevron-down"></i>
-                        </span>
-                        <span v-else>
-                            <i class="pi pi-chevron-up"></i>
-                        </span>
-                        Kích cỡ
-                    </button>
-                </div>
-                <div class="mb-2" v-show="!showSizeSection">
-                    <div class="flex flex-row flex-wrap gap-2 mt-1">
-                        <div v-for="size of sizeObject" :key="size.key" class="sizes">
-                            <Checkbox v-model="selectedSizes" :inputId="size.key" name="size" :value="size.value"
-                                @update:modelValue="filterProduct" />
-                            <label :for="size.key">{{ size.value }}</label>
+                <div class="border p-2">
+                    <div class="mb-2">
+                        <button class="text-lg font-medium ml-0 block" @click="toggleSection('price')">
+                            <span v-if="showPriceSection">
+                                <i class="pi pi-chevron-down"></i>
+                            </span>
+                            <span v-else>
+                                <i class="pi pi-chevron-up"></i>
+                            </span>
+                            Khoảng giá
+                        </button>
+                    </div>
+                    <div v-show="!showPriceSection">
+                        <div class="flex flex-col">
+                            <div v-for="price of priceObject" :key="price.key" class="flex align-items-center mb-3 ml-5">
+                                <Checkbox v-model="selectedPrices" :inputId="price.key" name="price" :value="price.value"
+                                    @update:modelValue="filterProduct" />
+                                <label :for="price.key" class="ml-1">{{ price.name }}</label>
+                            </div>
+                            <!-- Thêm các checkbox khoảng giá khác nếu cần -->
                         </div>
-                        <!-- Thêm các checkbox khoảng giá khác nếu cần -->
+                    </div>
+                </div>
+
+                <div class="border p-2">
+                    <div class="mb-2">
+                        <button class="text-lg font-medium ml-0 block" @click="toggleSection('size')">
+                            <span v-if="showSizeSection">
+                                <i class="pi pi-chevron-down"></i>
+                            </span>
+                            <span v-else>
+                                <i class="pi pi-chevron-up"></i>
+                            </span>
+                            Kích cỡ
+                        </button>
+                    </div>
+                    <div class="mb-2" v-show="!showSizeSection">
+                        <div class="flex flex-row flex-wrap gap-2 mt-1 justify-center">
+                            <div v-for="size of sizeObject" :key="size.key" class="sizes">
+                                <Checkbox v-model="selectedSizes" :inputId="size.key" name="size" :value="size.value"
+                                    @update:modelValue="filterProduct" />
+                                <label :for="size.key">{{ size.value }}</label>
+                            </div>
+                            <!-- Thêm các checkbox khoảng giá khác nếu cần -->
+                        </div>
                     </div>
                 </div>
             </aside>
@@ -195,10 +204,10 @@ const sizeObject = ref([
 ]);
 
 const priceObject = ref([
-    { name: "0 VNĐ - 2.400.000 VNĐ", key: "1", value: [0, 100] },
-    { name: "2.400.000 VNĐ - 4.800.000 VNĐ", key: "2", value: [100, 200] },
-    { name: "4.800.000 VNĐ - 9.600.000 VNĐ", key: "3", value: [200, 300] },
-    { name: "9.600.000 VNĐ - 19.200.000 VNĐ", key: "4", value: [300, 400] }
+    { name: "0 - 2.400.000 VNĐ", key: "1", value: [0, 100] },
+    { name: "2.400.000 - 4.800.000 VNĐ", key: "2", value: [100, 200] },
+    { name: "4.800.000 - 9.600.000 VNĐ", key: "3", value: [200, 300] },
+    { name: "9.600.000 - 19.200.000 VNĐ", key: "4", value: [300, 400] }
 ]);
 
 const categoryObject = ref([
