@@ -88,9 +88,9 @@
   <CoreDialog :visible="dialogSignInVisible" header="Sign In" widthSize='500px' position="center"
     @close-dialog="dialogSignInVisible = false">
     <div class="sign-in-btns">
-      <Button label="Sign in with atsport" class="btn" size="small" outlined @click="goToLogin" />
+      <Button label="Đăng nhập với tài khoản Atsport" class="btn" size="small" outlined @click="goToLogin" />
       <p class="text-center">or</p>
-      <Button label="Create your atsport account" class="btn" size="small" outlined @click="goToRegister" />
+      <Button label="Tạo tài khoản Atsport" class="btn" size="small" outlined @click="goToRegister" />
     </div>
   </CoreDialog>
 </template>
