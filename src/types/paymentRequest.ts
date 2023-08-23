@@ -3,7 +3,7 @@ import { UserType } from "./user";
 
 export interface PaymentRequestType {
     userId?: number;
-    denormalizedAddress?: string;
+    addressId?: number;
     cart?: CartType;
 }
 
